@@ -30,6 +30,7 @@ public class Controller {
         group.getChildren().add(new Circle(400,400,100));
         mainScrollPane.setContent(group);
 
+
     }
 
 }
