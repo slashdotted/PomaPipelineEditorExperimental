@@ -15,7 +15,6 @@ public class Value <T>{
     }
 
     String getType(){
-
        return String.valueOf(value.getClass());
     }
 
