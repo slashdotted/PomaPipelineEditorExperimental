@@ -1,4 +1,4 @@
-package main;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-public class Controller {
+public class MainWindowController {
 
     @FXML
     private ScrollPane mainScrollPane;
@@ -18,16 +18,16 @@ public class Controller {
     @FXML
     private Button redo;
 
-    public void addCircle(){
+    public void addCircle() {
 
 
-        Rectangle rect = new Rectangle(200, 200, Color.RED);
-      //  mainScrollPane.setContent(rect);
+        // Rectangle rect = new Rectangle(200, 200, Color.RED);
+        //  mainScrollPane.setContent(rect);
 
 
-        Group group =new Group();
-        group.getChildren().add(rect);
-        group.getChildren().add(new Circle(400,400,100));
+        Group group = new Group();
+        //group.getChildren().add(rect);
+        //group.getChildren().add(new Circle(400,400,100));
         mainScrollPane.setContent(group);
 
 
