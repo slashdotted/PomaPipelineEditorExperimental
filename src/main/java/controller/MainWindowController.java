@@ -18,17 +18,19 @@ public class MainWindowController {
     @FXML
     private Button redo;
 
+
     public void addCircle() {
 
 
-        // Rectangle rect = new Rectangle(200, 200, Color.RED);
+        Rectangle rect = new Rectangle(200, 200, Color.RED);
         //  mainScrollPane.setContent(rect);
 
 
         Group group = new Group();
-        //group.getChildren().add(rect);
-        //group.getChildren().add(new Circle(400,400,100));
+        group.getChildren().add(rect);
+        group.getChildren().add(new Circle(400,400,100));
         mainScrollPane.setContent(group);
+
 
 
     }
