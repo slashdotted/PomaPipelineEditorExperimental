@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
    <top>
       <VBox prefHeight="66.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -41,11 +43,11 @@
    <left>
       <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="333.0" prefWidth="122.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox prefHeight="331.0" prefWidth="198.0" />
+            <VBox fx:id="moduleVBox" prefHeight="331.0" prefWidth="198.0" />
          </content>
       </ScrollPane>
    </left>
    <center>
-      <ScrollPane id="mainScrollPane" fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <ScrollPane id="mainScrollPane" fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
