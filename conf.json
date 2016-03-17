@@ -1,0 +1,66 @@
+[
+  {
+    "name" : "stream_capture",
+    "type" : "StreamCapture",
+    "description" : " sorgente che legge da uno stream ",
+    "imageURL" : "stream_capture.png",
+    "optParams" : [
+      {"name" : "camdirection", "type" : "String"}
+    ],
+    "mandatoryParams" : [
+      {"name" : "path", "type" : "String"},
+      {"name" : "name", "type" : "String"},
+      {"name" : "fps", "type" : "Integer", "default" : -1},
+      {"name" : "retry", "type" : "Boolean"},
+      {"name" : "retryinterval", "type" : "Integer"}
+    ]
+  },
+  {
+    "name" : "stream_capture",
+    "type" : "BlobCapture",
+    "description" : " sorgente che legge da uno stream ",
+    "imageURL" : "stream_capture.png",
+    "optParams" : [
+      {"name" : "camdirection", "type" : "String"}
+    ],
+    "mandatoryParams" : [
+      {"name" : "path", "type" : "String"},
+      {"name" : "name", "type" : "String"},
+      {"name" : "fps", "type" : "Integer", "default" : -1},
+      {"name" : "retry", "type" : "Boolean"},
+      {"name" : "retryinterval", "type" : "Integer"}
+    ]
+  },
+  {
+    "name" : "stream_capture",
+    "type" : "StreamCapture",
+    "description" : " sorgente che legge da uno stream ",
+    "imageURL" : "stream_capture.png",
+    "optParams" : [
+      {"name" : "camdirection", "type" : "String"}
+    ],
+    "mandatoryParams" : [
+      {"name" : "path", "type" : "String"},
+      {"name" : "name", "type" : "String"},
+      {"name" : "fps", "type" : "Integer", "default" : -1},
+      {"name" : "retry", "type" : "Boolean"},
+      {"name" : "retryinterval", "type" : "Integer"}
+    ]
+  },
+  {
+  "name" : "stream_capture",
+  "type" : "StreamCapture",
+  "description" : " sorgente che legge da uno stream ",
+  "imageURL" : "stream_capture.png",
+  "optParams" : [
+    {"name" : "camdirection", "type" : "String"}
+  ],
+  "mandatoryParams" : [
+    {"name" : "path", "type" : "String"},
+    {"name" : "name", "type" : "String"},
+    {"name" : "fps", "type" : "Integer", "default" : -1},
+    {"name" : "retry", "type" : "Boolean"},
+    {"name" : "retryinterval", "type" : "Integer"}
+  ]
+}
+]

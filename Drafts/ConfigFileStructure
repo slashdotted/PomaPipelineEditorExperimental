@@ -1,0 +1,21 @@
+
+Config File example
+
+[
+          {
+            "name" : "stream_capture",  //-> name (module instance name)
+            "type" : "StreamCapture",
+            "description" : " sorgente che legge da uno stream ",
+            "optParams" : [
+                "camdirection" : "String"
+            ],
+            "mandatoryParams" : [
+                "path" : "String",
+                "name" : "String",
+                "fps"  : "Integer",     //-> -1 for autodetect
+                "#default" : -1,
+                "retry": "Boolean",
+                "retryinterval": "Integer"
+            ]
+         }
+]

@@ -5,17 +5,35 @@ package model;
  */
 public class Value <T>{
 
+    boolean hasDefault;
     String name;
+
     T value;
-
-    Value (String name,T val){
-
+    public Value (String name,T val, boolean hasDefault){
         this.name=name;
         this.value=val;
+        this.hasDefault = hasDefault;
     }
 
-    String getType(){
+    public T getValue() {
+        return value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isHasDefault() {
+        return hasDefault;
+    }
+
+    public void setValue(T value){
+        this.value = value;
+    }
+
+    public String getType(){
        return String.valueOf(value.getClass());
     }
+
 
 }

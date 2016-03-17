@@ -1,5 +1,10 @@
 package model;
 
+import javafx.scene.image.Image;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -7,6 +12,8 @@ import java.util.UUID;
  * Created by felipe on 08/03/16.
  */
 public class ModuleTemplate {
+    public static final String DEFAULT_TEMPLATE_IMAGE_URL = "moduleImage.png";
+
     private UUID id;
     private String name;
 
@@ -14,7 +21,8 @@ public class ModuleTemplate {
     private String type;
     private Map<String, Value> optParameters;
     private Map<String, Value> mandatoryParameters;
-    private String imageURL;
+    //private Map<String, Value> outputData;
+    private String imageURL = DEFAULT_TEMPLATE_IMAGE_URL;
     //TODO: insert cparams field in the instance configuration
 
     //public ModuleTemplate
@@ -22,14 +30,13 @@ public class ModuleTemplate {
     private ModuleTemplate() {
 
         this.id = UUID.randomUUID();
+
+        //this.optParameters = new HashMap<>();
+        //this.mandatoryParameters = new HashMap<>();
     }
 
     public static ModuleTemplate getInstance() {
         ModuleTemplate template = new ModuleTemplate();
-
-
-        //TODO: load from configuration JSON
-
         return template;
     }
 
@@ -55,9 +62,11 @@ public class ModuleTemplate {
         return imageURL;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageURL(String imageURL){
+        if (ClassLoader.getSystemResource(imageURL)!=null)
+            this.imageURL = imageURL;
     }
+
     public String getDescription() {
         return description;
     }
