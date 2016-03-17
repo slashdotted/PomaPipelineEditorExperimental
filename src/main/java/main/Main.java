@@ -24,7 +24,7 @@ public class Main extends Application {
             //System.out.println(tmp.getId());
 
             tmp.setName("tmp" + i);
-            tmp.setImageURL("/moduleImage.png");
+            tmp.setImageURL("moduleImage.png");
             tmp.setDescription("Description " + i);
             tmp.setType("Type " + i);
 
