@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
@@ -32,6 +34,8 @@ public class MainWindow extends BorderPane {
     private ModuleItem draggableModuleItem =null;
 
 
+    @FXML
+    private VBox vBoxMenuAndTool;
 
     @FXML
     private ScrollPane mainScrollPane;
@@ -97,7 +101,16 @@ public class MainWindow extends BorderPane {
         }
         //Create a new group to manage all nodes in mainScrollPane
         Group group=new Group();
+
+        // mainScrollPane.setContent(group);
         mainScrollPane.setContent(group);
+
+        //TODO create true size
+        group.getChildren().add(new Pane());
+
+        mainScrollPane.setFitToHeight(true);
+        mainScrollPane.setFitToWidth(true);
+
         buildDragHandlers();
 
         group.getChildren().add(new Pane());
@@ -222,12 +235,25 @@ public class MainWindow extends BorderPane {
                         System.out.println("before creating draggableModule");
                         System.out.println(draggableModuleItem.getName());
                         System.out.println(Main.templates.get(draggableModuleItem.getTemplateId()));
+
                         DraggableModule node=new DraggableModule(draggableModuleItem.getTemplateId());
                         Group group= (Group) mainScrollPane.getContent();
+
+                        if(mainScrollPane.isPannable()){
+                            System.out.println("soy pannable");
+                        }
+
+                        System.out.println(mainScrollPane.getWidth()+"-W-H"+mainScrollPane.getHeight());
                         group.getChildren().add(node);
                         Point2D mousePoint =container.getValue("scene_coords");
                         System.out.println(mousePoint.getX()+"--"+mousePoint.getY());
-                        node.relocate(mousePoint.getX(),mousePoint.getY());
+
+
+
+                        node.relocateToPoint(new Point2D(mousePoint.getX()-50,mousePoint.getY()-50));
+
+
+
                     }
                 }
 

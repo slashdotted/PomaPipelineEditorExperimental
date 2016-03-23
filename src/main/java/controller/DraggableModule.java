@@ -3,11 +3,15 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import main.Main;
 import model.ModuleTemplate;
 
@@ -17,14 +21,17 @@ import java.util.UUID;
 /**
  * Created by Marco on 10/03/2016.
  */
-public class DraggableModule extends AnchorPane {
+public class DraggableModule extends Pane {
 
     private UUID draggableModuleID;
     private Point2D mDragOffset = new Point2D (0.0, 0.0);
 
+    private final DraggableModule self;
+
 
     @FXML
-    private AnchorPane modelPane;
+    private Pane modelPane;
+
     @FXML
     private Label modelItemLabel;
 
@@ -42,6 +49,7 @@ public class DraggableModule extends AnchorPane {
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
+        self=this;
         try {
             fxmlLoader.load();
         } catch (IOException e) {
@@ -59,12 +67,26 @@ public class DraggableModule extends AnchorPane {
 
         //relocates the object to a point that has been converted to
         //scene coordinates
-        Point2D localCoords = getParent().sceneToLocal(p);
+        System.out.println("entro wui");
+
+
+        System.out.println("parent: " + getParent().getClass().getName());
+        Group theparent = (Group) getParent();
+        Point2D localCoords;
+        localCoords = getParent().sceneToLocal(p);
+
+
+        System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
+        System.out.println( (int) (localCoords.getY()) - mDragOffset.getY());
+
+
 
         relocate (
                 (int) (localCoords.getX() - mDragOffset.getX()),
                 (int) (localCoords.getY() - mDragOffset.getY())
         );
+
+
     }
 
 
