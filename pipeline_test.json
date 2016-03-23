@@ -1,0 +1,230 @@
+{
+  "modules": {
+    "stream_capture": {
+      "type": "StreamCapture",
+      "name": "MyCamera",
+      "path": "rtsp://193.5.152.72:554/ufirststream",
+      "fps": -1
+
+    },
+    "stats1": {
+      "type": "Stats"
+    },
+    "skipper": {
+      "type": "Skipper",
+      "skipinterval": 4
+    },
+    "stats2": {
+      "type": "Stats"
+    },
+    "blob_tracker": {
+      "type": "BlobTracker",
+      "debug": "false",
+      "vector": "20,20,580,20,580,434,20,434",
+      "cparams": [
+        "hog/cascade.xml",
+        "hog/hogcascade_pedestrians.xml"
+      ]
+    },
+    "stats3": {
+      "type": "Stats"
+    },
+    "buffer1": {
+      "type": "Buffer"
+    },
+    "classifier": {
+      "type": "GenericClassifier",
+      "cparams": [
+        "ObjectClassifier",
+        "default/deploy.prototxt",
+        "default/model.caffemodel",
+        "default/imagenet_mean.binaryproto",
+        "default/classes.txt",
+        "fc7"
+      ]
+    },
+    "face_detector": {
+      "type": "FaceDetector",
+      "cparams": [
+        "/home/devel/Development/opencv-3.0.0/data/haarcascades/haarcascade_frontalface_alt2.xml"
+      ]
+    },
+    "body_color": {
+      "type": "BodyColorClassifierEx",
+      "bodycolortemplatesdir": "colors/",
+      "renormalize": true,
+      "intersection": true,
+      "correlation": true,
+      "chisquare": true,
+      "bhattacharyya": true,
+      "cparams": [
+        "red",
+        "green",
+        "blue",
+        "yellow",
+        "black",
+        "white",
+        "purple",
+        "pink",
+        "orange",
+        "brown"
+      ]
+    },
+    "car_color": {
+      "type": "ColorClassifierEx",
+      "colortemplatesdir": "colors/",
+      "denoise": true,
+      "renormalize": true,
+      "correlation": true,
+      "intersection": true,
+      "chisquare": true,
+      "bhattacharyya": true,
+      "cparams": [
+        "red",
+        "green",
+        "blue",
+        "yellow",
+        "black",
+        "white",
+        "purple",
+        "pink",
+        "orange",
+        "brown"
+      ]
+    },
+    "splitter": {
+      "type": "GenericSplitter",
+      "cparams": [
+        "ObjectClassifier.class"
+      ]
+    },
+    "direction": {
+      "type": "DirectionEstimator",
+      "camdirection": "O"
+    },
+    "speed": {
+      "type": "SpeedEstimator",
+      "cparams": [
+        "blobtracker.speed",
+        "ObjectClassifier.class"
+      ]
+    },
+    "viewer": {
+      "type": "Viewer"
+    },
+    "colormatcher": {
+      "type": "ColorMatcher"
+    },
+    "imgwriter": {
+      "type": "ImageWriter",
+      "imgpath": "blobs/"
+    }
+  },
+  "links": [
+    {
+      "from": "stream_capture",
+      "to": "stats1"
+    },
+    {
+      "from": "stats1",
+      "to": "skipper"
+    },
+    {
+      "from": "skipper",
+      "to": "stats2"
+    },
+    {
+      "from": "stats2",
+      "to": "blob_tracker"
+    },
+    {
+      "from": "blob_tracker",
+      "to": "buffer1"
+    },
+    {
+      "from": "buffer1",
+      "to": "stats3"
+    },
+    {
+      "from": "stats3",
+      "to": "classifier"
+    },
+    {
+      "from": "classifier",
+      "to": "splitter"
+    },
+    {
+      "from": "splitter",
+      "to": "face_detector",
+      "channel": "Man"
+    },
+    {
+      "from": "splitter",
+      "to": "face_detector",
+      "channel": "Couple-Group"
+    },
+    {
+      "from": "face_detector",
+      "to": "body_color"
+    },
+    {
+      "from": "splitter",
+      "to": "car_color",
+      "channel": "Citycar"
+    },
+    {
+      "from": "splitter",
+      "to": "car_color",
+      "channel": "FamilyCar"
+    },
+    {
+      "from": "splitter",
+      "to": "car_color",
+      "channel": "Motorbike-Scooter"
+    },
+    {
+      "from": "splitter",
+      "to": "car_color",
+      "channel": "SmallTruck"
+    },
+    {
+      "from": "splitter",
+      "to": "car_color",
+      "channel": "StationVagon"
+    },
+    {
+      "from": "splitter",
+      "to": "car_color",
+      "channel": "Truck-Camion"
+    },
+    {
+      "from": "splitter",
+      "to": "car_color",
+      "channel": "Van-SUV"
+    },
+    {
+      "from": "body_color",
+      "to": "direction"
+    },
+    {
+      "from": "car_color",
+      "to": "direction"
+    },
+    {
+      "from": "direction",
+      "to": "colormatcher"
+    },
+    {
+      "from": "colormatcher",
+      "to": "speed"
+    },
+    {
+      "from": "speed",
+      "to": "viewer"
+    },
+    {
+      "from": "viewer",
+      "to": "imgwriter"
+    }
+  ]
+}

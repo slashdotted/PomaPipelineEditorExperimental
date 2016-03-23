@@ -16,51 +16,57 @@
     ]
   },
   {
-    "name" : "stream_capture",
+    "name" : "blob_capture",
     "type" : "BlobCapture",
-    "description" : " sorgente che legge da uno stream ",
-    "imageURL" : "stream_capture.png",
+    "description" : "sorgente che legge da una directory i file con estensione _blob.jpg e _mask.jpg",
+    "imageURL" : "blob_capture.png",
     "optParams" : [
-      {"name" : "camdirection", "type" : "String"}
+
     ],
     "mandatoryParams" : [
-      {"name" : "path", "type" : "String"},
-      {"name" : "name", "type" : "String"},
-      {"name" : "fps", "type" : "Integer", "default" : -1},
-      {"name" : "retry", "type" : "Boolean"},
-      {"name" : "retryinterval", "type" : "Integer"}
+      {"name" : "blobdir", "type" : "String"}
     ]
   },
   {
-    "name" : "stream_capture",
-    "type" : "StreamCapture",
-    "description" : " sorgente che legge da uno stream ",
-    "imageURL" : "stream_capture.png",
+    "name" : "blob_color",
+    "type" : "BlobColor",
+    "description" : "ritorna le componenti RGB del frame",
+    "imageURL" : "blob_color.png",
     "optParams" : [
-      {"name" : "camdirection", "type" : "String"}
+
     ],
     "mandatoryParams" : [
-      {"name" : "path", "type" : "String"},
-      {"name" : "name", "type" : "String"},
-      {"name" : "fps", "type" : "Integer", "default" : -1},
-      {"name" : "retry", "type" : "Boolean"},
-      {"name" : "retryinterval", "type" : "Integer"}
+
     ]
   },
   {
-  "name" : "stream_capture",
-  "type" : "StreamCapture",
-  "description" : " sorgente che legge da uno stream ",
+  "name" : "blob_tracker",
+  "type" : "BlobTracker",
+  "description" : " traccia oggetti in movimento",
   "imageURL" : "stream_capture.png",
   "optParams" : [
-    {"name" : "camdirection", "type" : "String"}
+
   ],
   "mandatoryParams" : [
-    {"name" : "path", "type" : "String"},
-    {"name" : "name", "type" : "String"},
-    {"name" : "fps", "type" : "Integer", "default" : -1},
-    {"name" : "retry", "type" : "Boolean"},
-    {"name" : "retryinterval", "type" : "Integer"}
+    {"name" : "color", "type" : "Boolean"},
+    {"name" : "shadow", "type" : "Boolean"},
+    {"name" : "minarea", "type" : "Integer"},
+    {"name" : "maxarea", "type" : "Integer"},
+    {"name" : "distance", "type" : "Integer"},
+    {"name" : "frames", "type" : "Integer"},
+    {"name" : "saveinterval", "type" : "Integer"},
+    {"name" : "saved", "type" : "Integer"},
+    {"name" : "boundsize", "type" : "Integer"},
+    {"name" : "history", "type" : "Integer"},
+    {"name" : "resize", "type" : "Integer"},
+    {"name" : "vector", "type" : "String"},
+    {"name" : "debug", "type" : "Boolean"},
+    {"name" : "maskthreshold", "type" : "Integer", "default" : 128},
+    {"name" : "structsize", "type" : "Integer", "default" : 7},
+    {"name" : "structpoint", "type" : "Integer", "default" : 3},
+    {"name" : "resize", "type" : "Integer"},
+
+
   ]
 }
 ]

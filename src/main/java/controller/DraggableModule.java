@@ -6,6 +6,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import main.Main;
 import model.ModuleTemplate;
@@ -16,14 +17,14 @@ import java.util.UUID;
 /**
  * Created by Marco on 10/03/2016.
  */
-public class DraggableModule extends Pane {
+public class DraggableModule extends AnchorPane {
 
     private UUID draggableModuleID;
     private Point2D mDragOffset = new Point2D (0.0, 0.0);
 
 
     @FXML
-    private Pane modelPane;
+    private AnchorPane modelPane;
     @FXML
     private Label modelItemLabel;
 

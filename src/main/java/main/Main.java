@@ -1,22 +1,26 @@
 package main;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import controller.MainWindow;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.Module;
 import model.ModuleTemplate;
 import utils.EditorConfManager;
 import utils.PersistenceManager;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
 public class Main extends Application {
 
-    public static Map<UUID, ModuleTemplate> templates = new TreeMap<>();
+    public static Map<UUID, ModuleTemplate> templates = new HashMap<>();
+    public static Map<String, Module> modules = new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) throws Exception {

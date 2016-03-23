@@ -13,6 +13,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -98,6 +99,9 @@ public class MainWindow extends BorderPane {
         Group group=new Group();
         mainScrollPane.setContent(group);
         buildDragHandlers();
+
+        group.getChildren().add(new Pane());
+
     }
 
 
