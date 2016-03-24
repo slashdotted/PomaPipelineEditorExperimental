@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class Main extends Application {
 
-    public static Map<UUID, ModuleTemplate> templates = new HashMap<>();
+    public static Map<String, ModuleTemplate> templates = new TreeMap<>();
     public static Map<String, Module> modules = new HashMap<>();
 
     @Override

@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 public class ModuleItem extends Pane{
 
-    private UUID templateId;
+    private String type;
     private boolean isShadow;
 
     @FXML
@@ -34,9 +34,9 @@ public class ModuleItem extends Pane{
 
 
 
-    public ModuleItem(UUID templateId, boolean isShadow){
+    public ModuleItem(String type, boolean isShadow){
 
-        this.templateId = templateId;
+        this.type = type;
         this.isShadow=isShadow;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/moduleItem.fxml"));
@@ -58,22 +58,22 @@ public class ModuleItem extends Pane{
     private void initialize() {
 
         if(!isShadow) {
-            setParametri(this.templateId);
+            setParametri(this.type);
         }
 
     }
 
-    public void setParametri(UUID templateId) {
+    public void setParametri(String type) {
 
-        this.templateId = templateId;
-        ModuleTemplate template = Main.templates.get(templateId);
-        modelItemLabel.setText(template.getName());
+        this.type = type;
+        ModuleTemplate template = Main.templates.get(type);
+        modelItemLabel.setText(template.getType());
         modelItemImage.setImage(new Image(template.getImageURL()));
         modelItemLabel.setTooltip(new Tooltip(template.getDescription()));
     }
 
-    public UUID getTemplateId() {
-        return templateId;
+    public String getTemplateType() {
+        return this.type;
     }
 
     public void relocate (Point2D p) {
@@ -87,7 +87,7 @@ public class ModuleItem extends Pane{
                 (int) (localCoords.getY() - (getBoundsInLocal().getHeight() / 2))
         );
     }
-    public String getName(){
+  /*  public String getName(){
       return  modelItemLabel.getText();
-    }
+    }*/
 }

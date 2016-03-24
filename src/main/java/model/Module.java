@@ -22,8 +22,11 @@ public class Module {
 
     private Module(ModuleTemplate template){
         this.template =template;
+        this.name=template.getType()+template.getCounter();
+        //TODO init cparams and parameters
+
     }
-    public Module getInstance(ModuleTemplate template){
+    public static Module getInstance(ModuleTemplate template){
         Module module = new Module(template);
 
 

@@ -75,9 +75,9 @@ public class MainWindow extends BorderPane {
         //on both sides of the split pane.
         boolean isShadow=true;
         shadowModule=ModuleTemplate.getInstance();
-        shadowModule.setName("");
+       /// shadowModule.setName("");
 
-        draggableModuleItem=new ModuleItem(shadowModule.getId(),isShadow);
+        draggableModuleItem=new ModuleItem(shadowModule.getType(),isShadow);
         draggableModuleItem.setVisible(false);
         draggableModuleItem.setOpacity(0.65);
         getChildren().add(draggableModuleItem);
@@ -85,16 +85,17 @@ public class MainWindow extends BorderPane {
         //Sort all modules by name
         List<ModuleTemplate> templates = new ArrayList<>(Main.templates.values());
 
-
-        Collections.sort(templates, (o1, o2) -> {
+    //now is a treeMap
+      /*  Collections.sort(templates, (o1, o2) -> {
             //System.out.println(((ModuleTemplate)o2).getName());
-            return o1.getName().compareTo(o2.getName());
-        });
+            return o1.getType().compareTo(o2.getType());
+        });*/
+
        //Populate left pane with all modules
         for (ModuleTemplate template: templates) {
-            System.out.println(template.getId());
+            System.out.println(template.getType());
             isShadow=false;
-            ModuleItem item = new ModuleItem(template.getId(),isShadow);
+            ModuleItem item = new ModuleItem(template.getType(),isShadow);
             moduleVBox.getChildren().add(item);
             addDragDetection(item);
             System.out.println("ModuleItem created with drag detection associated");
@@ -113,7 +114,7 @@ public class MainWindow extends BorderPane {
 
         buildDragHandlers();
 
-        group.getChildren().add(new Pane());
+
 
     }
 
@@ -149,14 +150,14 @@ public class MainWindow extends BorderPane {
                 //drag operations
                     //set shadowModule of draggableModuleItem
 
-                draggableModuleItem.setParametri(itemClicked.getTemplateId());
+                draggableModuleItem.setParametri(itemClicked.getTemplateType());
                 draggableModuleItem.relocate(new Point2D(event.getSceneX(),event.getSceneY()));
 
 
                 ClipboardContent content =new ClipboardContent();
                 DragContainer container=new DragContainer();
 
-                container.addData("TemplateId",draggableModuleItem.getTemplateId());
+                container.addData("TemplateType",draggableModuleItem.getTemplateType());
                 content.put(DragContainer.AddNode,container);
 
                 draggableModuleItem.startDragAndDrop(TransferMode.ANY).setContent(content);
@@ -177,6 +178,7 @@ public class MainWindow extends BorderPane {
             public void handle(DragEvent event) {
 
                 Point2D point= mainScrollPane.sceneToLocal(event.getSceneX(),event.getSceneY());
+
 
                 //controls if we are in the mainScrollPane's limits
                 if(!mainScrollPane.boundsInLocalProperty().get().contains(point)){
@@ -210,6 +212,7 @@ public class MainWindow extends BorderPane {
                 container.addData("scene_coords",new Point2D(event.getSceneX(),event.getSceneY()));
 
                 ClipboardContent content=new ClipboardContent();
+
                 content.put(DragContainer.AddNode,container);
 
                 event.getDragboard().setContent(content);
@@ -233,15 +236,13 @@ public class MainWindow extends BorderPane {
                     if(container.getValue("scene_coords")!=null){
                        //creo instance of model
                         System.out.println("before creating draggableModule");
-                        System.out.println(draggableModuleItem.getName());
-                        System.out.println(Main.templates.get(draggableModuleItem.getTemplateId()));
+                        System.out.println(draggableModuleItem.getTemplateType());
+                        System.out.println(Main.templates.get(draggableModuleItem.getTemplateType()));
 
-                        DraggableModule node=new DraggableModule(draggableModuleItem.getTemplateId());
+                        DraggableModule node=new DraggableModule(draggableModuleItem.getTemplateType());
                         Group group= (Group) mainScrollPane.getContent();
 
-                        if(mainScrollPane.isPannable()){
-                            System.out.println("soy pannable");
-                        }
+
 
                         System.out.println(mainScrollPane.getWidth()+"-W-H"+mainScrollPane.getHeight());
                         group.getChildren().add(node);

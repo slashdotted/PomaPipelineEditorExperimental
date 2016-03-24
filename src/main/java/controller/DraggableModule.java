@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import main.Main;
+import model.Module;
 import model.ModuleTemplate;
 
 import java.io.IOException;
@@ -23,8 +24,10 @@ import java.util.UUID;
  */
 public class DraggableModule extends Pane {
 
-    private UUID draggableModuleID;
+    //private UUID draggableModuleID;
+    private String type;
     private Point2D mDragOffset = new Point2D (0.0, 0.0);
+    private Module module;
 
     private final DraggableModule self;
 
@@ -38,9 +41,9 @@ public class DraggableModule extends Pane {
     @FXML
     private ImageView modelItemImage;
 
-    public DraggableModule(UUID idModelModule ){
+    public DraggableModule(String type ){
 
-        this.draggableModuleID = idModelModule;
+        this.type = type;
 
         //TODO set default to create and show view
 
@@ -56,10 +59,14 @@ public class DraggableModule extends Pane {
             e.printStackTrace();
         }
 
-        ModuleTemplate temp=Main.templates.get(idModelModule);
+        ModuleTemplate temp=Main.templates.get(this.type);
+        this.module =Module.getInstance(temp);
+
+
         System.out.println("in draggableModule");
-        System.out.println(temp.getName());
-        this.modelItemLabel.setText(temp.getName());
+        System.out.println(temp.getType());
+
+        this.modelItemLabel.setText(temp.getType());
         this.modelItemImage.setImage(new Image(temp.getImageURL()));
     }
 
@@ -87,6 +94,11 @@ public class DraggableModule extends Pane {
         );
 
 
+    }
+
+
+    public Module getModule() {
+        return module;
     }
 
 

@@ -66,13 +66,12 @@ public class EditorConfManager implements PersistenceManager {
             JSONArray jsonMndParams = (JSONArray) object.get("mandatoryParams");
             getParameters(mandatoryParameters, jsonMndParams);
 
-            moduleTemplate.setName(name);
             moduleTemplate.setDescription(description);
             moduleTemplate.setType(type);
 
             moduleTemplate.setImageURL(imageURL);
 
-            Main.templates.put(moduleTemplate.getId(), moduleTemplate);
+            Main.templates.put(moduleTemplate.getType(), moduleTemplate);
 
         }
 

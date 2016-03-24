@@ -14,9 +14,10 @@ import java.util.UUID;
 public class ModuleTemplate {
     public static final String DEFAULT_TEMPLATE_IMAGE_URL = "moduleImage.png";
 
-    private UUID id;
-    private String name;
+   // private UUID id;
+  //  private String name;
 
+    private int counter;
     private String description;
     private String type;
     private Map<String, Value> optParameters;
@@ -29,7 +30,9 @@ public class ModuleTemplate {
 
     private ModuleTemplate() {
 
-        this.id = UUID.randomUUID();
+        this.counter=0;
+
+      //  this.id = UUID.randomUUID();
 
         //this.optParameters = new HashMap<>();
         //this.mandatoryParameters = new HashMap<>();
@@ -41,21 +44,6 @@ public class ModuleTemplate {
     }
 
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
 
     public String getImageURL() {
@@ -100,4 +88,7 @@ public class ModuleTemplate {
     }
 
 
+    public int getCounter() {
+        return this.counter++;
+    }
 }
