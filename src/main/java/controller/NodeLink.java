@@ -1,6 +1,7 @@
 package controller;
 
 
+import javafx.scene.control.Label;
 
 /**
  * Created by Marco on 18/03/2016.
@@ -11,6 +12,7 @@ public class NodeLink {
     private DraggableModule to;
 
     private String channel;
+    private Label label;
 
     public NodeLink(){}
 
@@ -24,7 +26,9 @@ public class NodeLink {
     }
 
     public void setChannel(String channel) {
+
         this.channel = channel;
+        this.label.setText(channel);
     }
 
 

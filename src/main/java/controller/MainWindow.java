@@ -238,8 +238,11 @@ public class MainWindow extends BorderPane {
                         System.out.println("before creating draggableModule");
                         System.out.println(draggableModuleItem.getTemplateType());
                         System.out.println(Main.templates.get(draggableModuleItem.getTemplateType()));
-
+                        System.out.println("create a new draggable");
                         DraggableModule node=new DraggableModule(draggableModuleItem.getTemplateType());
+
+                        node.setStyle("-fx-border-color: black;");
+
                         Group group= (Group) mainScrollPane.getContent();
 
 

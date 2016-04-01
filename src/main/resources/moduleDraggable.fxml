@@ -14,7 +14,11 @@
    <children>
       <VBox>
          <children>
-            <Label fx:id="modelItemLabel" text="Label" />
+            <Pane fx:id="titleBar" prefHeight="20.0" prefWidth="100.0" styleClass="pane-tittle" stylesheets="@application.css">
+               <children>
+                  <Label fx:id="modelItemLabel" alignment="CENTER" text="Label" textAlignment="CENTER" />
+               </children>
+            </Pane>
             <ImageView fx:id="modelItemImage" fitHeight="61.0" fitWidth="82.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </VBox>
