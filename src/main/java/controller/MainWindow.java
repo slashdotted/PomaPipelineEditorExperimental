@@ -19,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import main.Main;
 import model.ModuleTemplate;
@@ -121,13 +122,24 @@ public class MainWindow extends BorderPane {
 
     public void addCircle() {
 
+        Group group = (Group) mainScrollPane.getContent();
+        LinkView prova=new LinkView();
+        prova.setStart(new Point2D(0,0));
+        prova.setEnd(new Point2D(500,500));
+        Line line=new Line();
+        line.setStartX(0);
+        line.setStartY(0);
+        line.setEndY(500);
+        line.setEndX(500);
+        group.getChildren().add(line);
+/*
         Rectangle rect = new Rectangle(200, 200, Color.RED);
         //  mainScrollPane.setContent(rect);
 
         Group group = new Group();
         group.getChildren().add(rect);
         group.getChildren().add(new Circle(400, 400, 100));
-        mainScrollPane.setContent(group);
+        mainScrollPane.setContent(group);*/
 
 
 
@@ -241,7 +253,8 @@ public class MainWindow extends BorderPane {
                         System.out.println("create a new draggable");
                         DraggableModule node=new DraggableModule(draggableModuleItem.getTemplateType());
 
-                        node.setStyle("-fx-border-color: black;");
+
+
 
                         Group group= (Group) mainScrollPane.getContent();
 

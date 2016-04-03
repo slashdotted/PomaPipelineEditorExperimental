@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.Link;
 import model.Module;
 import model.ModuleTemplate;
 import utils.EditorConfManager;
@@ -21,6 +22,8 @@ public class Main extends Application {
 
     public static Map<String, ModuleTemplate> templates = new TreeMap<>();
     public static Map<String, Module> modules = new HashMap<>();
+    //usefull to find a link by name '--
+    public static Map<String, Link> links =new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) throws Exception {

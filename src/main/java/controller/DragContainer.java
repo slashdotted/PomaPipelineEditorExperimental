@@ -29,7 +29,7 @@ public class DragContainer implements Serializable {
             new DataFormat("controller.DraggableModule.drag");
 
     public static final DataFormat AddLink =
-            new DataFormat("controller.NodeLink.add");
+            new DataFormat("controller.LinkView.add");
 
     private final List<Pair<String, Object> > mDataPairs = new ArrayList<Pair<String, Object> >();
 

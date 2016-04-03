@@ -4,27 +4,21 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import main.Main;
 import model.Module;
 import model.ModuleTemplate;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Marco on 10/03/2016.
@@ -37,9 +31,10 @@ public class DraggableModule extends Pane {
     private Point2D mDragOffset = new Point2D (0.0, 0.0);
     private Module module;
 
-
+    private final List<String> links =new ArrayList<>();
 
     private final DraggableModule self;
+
 
 
     @FXML
@@ -54,8 +49,17 @@ public class DraggableModule extends Pane {
     @FXML
     private ImageView modelItemImage;
 
-    private EventHandler<DragEvent> mContextDrag;
-    private EventHandler <DragEvent> mContextDrop;
+    //handlers to drag and drop of modules
+    private EventHandler<DragEvent> mModuleHandlerDrag;
+    private EventHandler <DragEvent> mModuleHandlerDrop;
+
+    //handlers and vars to create links through drag and drop
+    private LinkView mShadowLink = null;
+
+    private EventHandler <MouseEvent> mLinkHandleDragDetected;
+    private EventHandler <DragEvent> mLinkHandleDragDropped;
+    private EventHandler <DragEvent> mContextLinkDragOver;
+    private EventHandler <DragEvent> mContextLinkDragDropped;
 
     public DraggableModule(String type ){
 
@@ -92,11 +96,116 @@ public class DraggableModule extends Pane {
     @FXML
     private void initialize(){
         buildNodeDragHandlers();
+        buildLinkDragHandlers();
+
+        modelItemImage.setOnDragDetected(mLinkHandleDragDetected);
+        modelItemImage.setOnDragDropped(mLinkHandleDragDropped);
+
+        mShadowLink =new LinkView();
+        mShadowLink.setVisible(false);
 
     }
 
+    private void buildLinkDragHandlers() {
+
+        mLinkHandleDragDetected= new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                getParent().getParent().setOnDragOver(null);
+                getParent().getParent().setOnDragDropped(null);
+
+                getParent().getParent().setOnDragOver(mContextLinkDragOver);
+                getParent().getParent().setOnDragDropped(mContextLinkDragDropped);
+
+                //Set up user-draggable link
+               // right_pane.getChildren().add(0,mDragLink);
+
+              //  mShadowLink.setVisible(false);
+
+                Point2D p=new Point2D(
+                        getLayoutX()+(getWidth()/2),
+                        getLayoutY()+(getHeight()/2)
+                );
+                mShadowLink.setStart(p);
+                //Drag content code
+                ClipboardContent content = new ClipboardContent();
+                DragContainer container = new DragContainer ();
+
+                container.addData("from", type);
+                content.put(DragContainer.AddLink,container);
+
+                startDragAndDrop(TransferMode.ANY).setContent(content);
+
+                event.consume();
+
+
+            }
+        };
+
+        mLinkHandleDragDropped=new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                getParent().getParent().setOnDragOver(null);
+                getParent().getParent().setOnDragDropped(null);
+
+                //get back the drag from the container.Controll if
+                //is the drag that we need
+                DragContainer container=(DragContainer)event.getDragboard().getContent(DragContainer.AddLink);
+
+                if (container!=null){
+                    //stop using shadowlink
+
+                    //shadowLink.setVisible(false);
+                    //getParent().getParent().getChildren().remove(0);
+
+                    ClipboardContent content=new ClipboardContent();
+                    //information about where finish the link
+                    container.addData("to",getId());
+                    content.put(DragContainer.AddLink,container);
+                    event.getDragboard().setContent(content);
+                    event.setDropCompleted(true);
+                    event.consume();
+
+                }
+
+            }
+
+        };
+        mContextLinkDragOver =new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                event.acceptTransferModes(TransferMode.ANY);
+
+                //update end position of shadowLink
+                if(!mShadowLink.isVisible()){
+                    mShadowLink.setVisible(true);
+                }
+                mShadowLink.setEnd(new Point2D(event.getX(),event.getY()));
+            }
+        };
+    //creation of link
+
+        mContextLinkDragDropped=new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                System.out.println("link drag dropped");
+
+                getParent().getParent().setOnDragOver(null);
+                getParent().getParent().setOnDragDropped(null);
+
+                //remove shodow
+                mShadowLink.setVisible(false);
+                //getChildren().remove(0);
+
+                event.setDropCompleted(true);
+                event.consume();
+            }
+        };
+    }
+
     private void buildNodeDragHandlers() {
-        mContextDrag =new EventHandler<DragEvent>() {
+        mModuleHandlerDrag =new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
@@ -107,7 +216,7 @@ public class DraggableModule extends Pane {
         };
 
         //dropping of node
-        mContextDrop=new EventHandler<DragEvent>() {
+        mModuleHandlerDrop =new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
 
@@ -130,8 +239,8 @@ public class DraggableModule extends Pane {
                 getParent().getParent().setOnDragOver(null);
                 getParent().getParent().setOnDragDropped(null);
 
-                getParent().getParent().setOnDragOver(mContextDrag);
-                getParent().getParent().setOnDragDropped(mContextDrop);
+                getParent().getParent().setOnDragOver(mModuleHandlerDrag);
+                getParent().getParent().setOnDragDropped(mModuleHandlerDrop);
 
                 //set operations drag
                 mDragOffset=new Point2D(event.getX(),event.getY());
