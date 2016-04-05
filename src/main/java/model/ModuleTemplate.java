@@ -1,12 +1,6 @@
 package model;
 
-import javafx.scene.image.Image;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 
 /**
@@ -15,8 +9,8 @@ import java.util.UUID;
 public class ModuleTemplate {
     public static final String DEFAULT_TEMPLATE_IMAGE_URL = "moduleImage.png";
 
-   // private UUID id;
-  //  private String name;
+    // private UUID id;
+    //  private String name;
 
     private int counter;
     private String description;
@@ -31,9 +25,9 @@ public class ModuleTemplate {
 
     private ModuleTemplate() {
 
-        this.counter=0;
+        this.counter = 0;
 
-      //  this.id = UUID.randomUUID();
+        //  this.id = UUID.randomUUID();
 
         //this.optParameters = new HashMap<>();
         //this.mandatoryParameters = new HashMap<>();
@@ -45,14 +39,12 @@ public class ModuleTemplate {
     }
 
 
-
-
     public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(String imageURL){
-        if (ClassLoader.getSystemResource(imageURL)!=null)
+    public void setImageURL(String imageURL) {
+        if (ClassLoader.getSystemResource(imageURL) != null)
             this.imageURL = imageURL;
     }
 
@@ -88,8 +80,22 @@ public class ModuleTemplate {
         this.mandatoryParameters = mandatoryParameters;
     }
 
+    public String getNameInstance() {
+        return this.type.toLowerCase() + this.counter++;
+    }
+
 
     public int getCounter() {
         return this.counter++;
+    }
+
+    @Override
+    public String toString() {
+        return "ModuleTemplate{" +
+                " counter=" + counter +
+                ", description='" + description + '\'' +
+                ", type='" + type + '\'' +
+                ", imageURL='" + imageURL + '\'' +
+                " }";
     }
 }

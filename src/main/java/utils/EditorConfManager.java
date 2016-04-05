@@ -48,14 +48,14 @@ public class EditorConfManager implements PersistenceManager {
             e.printStackTrace();
         }
 
+        jsonModules.forEach(obj ->{
+            JSONObject object = (JSONObject) obj;
 
-        for (int i = 0; i < jsonModules.size(); i++) {
-            JSONObject object = (JSONObject) jsonModules.get(i);
             ModuleTemplate moduleTemplate = ModuleTemplate.getInstance();
             Map<String, Value> optParameters = new HashMap<>();
             Map<String, Value> mandatoryParameters = new HashMap<>();
 
-            String name = (String) object.get("name");
+            // String name = (String) object.get("name");
             String description = (String) object.get("description");
             String type = (String) object.get("type");
             String imageURL = (String) object.get("imageURL");
@@ -66,6 +66,9 @@ public class EditorConfManager implements PersistenceManager {
             JSONArray jsonMndParams = (JSONArray) object.get("mandatoryParams");
             getParameters(mandatoryParameters, jsonMndParams);
 
+            moduleTemplate.setMandatoryParameters(mandatoryParameters);
+            moduleTemplate.setOptParameters(optParameters);
+
             moduleTemplate.setDescription(description);
             moduleTemplate.setType(type);
 
@@ -73,12 +76,12 @@ public class EditorConfManager implements PersistenceManager {
 
             Main.templates.put(moduleTemplate.getType(), moduleTemplate);
 
-        }
-
+        });
 
     }
 
     private void getParameters(Map<String, Value> map, JSONArray params) {
+        // TODO add to conf.json description of parameters and parse them here
 
         for (int j = 0; j < params.size(); j++) {
             JSONObject param = (JSONObject) params.get(j);

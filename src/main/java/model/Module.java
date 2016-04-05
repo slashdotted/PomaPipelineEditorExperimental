@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class Module {
 
     private Module(ModuleTemplate template){
         this.template =template;
-        this.name=template.getType()+template.getCounter();
+        //this.name=template.getNameInstance();
         //TODO init cparams and parameters
 
     }
@@ -79,5 +80,13 @@ public class Module {
 
     public void setParameters(Map<String, Value> parameters) {
         this.parameters = parameters;
+    }
+
+    @Override
+    public String toString() {
+        return "Module{" +
+                "name='" + name + '\'' +
+                ", template=" + template.getType()+
+                '}';
     }
 }

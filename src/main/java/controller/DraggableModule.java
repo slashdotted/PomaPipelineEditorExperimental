@@ -28,13 +28,12 @@ public class DraggableModule extends Pane {
     //private UUID draggableModuleID;
     private String type;
     private Point2D position;
-    private Point2D mDragOffset = new Point2D (0.0, 0.0);
+    private Point2D mDragOffset = new Point2D(0.0, 0.0);
     private Module module;
 
-    private final List<String> links =new ArrayList<>();
+    private final List<String> links = new ArrayList<>();
 
     private final DraggableModule self;
-
 
 
     @FXML
@@ -51,17 +50,17 @@ public class DraggableModule extends Pane {
 
     //handlers to drag and drop of modules
     private EventHandler<DragEvent> mModuleHandlerDrag;
-    private EventHandler <DragEvent> mModuleHandlerDrop;
+    private EventHandler<DragEvent> mModuleHandlerDrop;
 
     //handlers and vars to create links through drag and drop
     private LinkView mShadowLink = null;
 
-    private EventHandler <MouseEvent> mLinkHandleDragDetected;
-    private EventHandler <DragEvent> mLinkHandleDragDropped;
-    private EventHandler <DragEvent> mContextLinkDragOver;
-    private EventHandler <DragEvent> mContextLinkDragDropped;
+    private EventHandler<MouseEvent> mLinkHandleDragDetected;
+    private EventHandler<DragEvent> mLinkHandleDragDropped;
+    private EventHandler<DragEvent> mContextLinkDragOver;
+    private EventHandler<DragEvent> mContextLinkDragDropped;
 
-    public DraggableModule(String type ){
+    public DraggableModule(String type) {
 
         this.type = type;
 
@@ -72,43 +71,44 @@ public class DraggableModule extends Pane {
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
-        self=this;
+        self = this;
         try {
             fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        ModuleTemplate temp=Main.templates.get(this.type);
-        this.module =Module.getInstance(temp);
+        ModuleTemplate temp = Main.templates.get(this.type);
+        this.module = Module.getInstance(temp);
 
 
         System.out.println("in draggableModule");
-        System.out.println(temp.getType());
+        //System.out.println(temp.getType());
 
 
         this.modelItemLabel.setText(temp.getType());
         this.modelItemImage.setImage(new Image(temp.getImageURL()));
-        position=new Point2D(0,0);
+        position = new Point2D(0, 0);
 
 
     }
+
     @FXML
-    private void initialize(){
+    private void initialize() {
         buildNodeDragHandlers();
         buildLinkDragHandlers();
 
         modelItemImage.setOnDragDetected(mLinkHandleDragDetected);
         modelItemImage.setOnDragDropped(mLinkHandleDragDropped);
 
-        mShadowLink =new LinkView();
+        mShadowLink = new LinkView();
         mShadowLink.setVisible(false);
 
     }
 
     private void buildLinkDragHandlers() {
 
-        mLinkHandleDragDetected= new EventHandler<MouseEvent>() {
+        mLinkHandleDragDetected = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
 
@@ -119,21 +119,21 @@ public class DraggableModule extends Pane {
                 getParent().getParent().setOnDragDropped(mContextLinkDragDropped);
 
                 //Set up user-draggable link
-               // right_pane.getChildren().add(0,mDragLink);
+                // right_pane.getChildren().add(0,mDragLink);
 
-              //  mShadowLink.setVisible(false);
+                //  mShadowLink.setVisible(false);
 
-                Point2D p=new Point2D(
-                        getLayoutX()+(getWidth()/2),
-                        getLayoutY()+(getHeight()/2)
+                Point2D p = new Point2D(
+                        getLayoutX() + (getWidth() / 2),
+                        getLayoutY() + (getHeight() / 2)
                 );
                 mShadowLink.setStart(p);
                 //Drag content code
                 ClipboardContent content = new ClipboardContent();
-                DragContainer container = new DragContainer ();
+                DragContainer container = new DragContainer();
 
                 container.addData("from", type);
-                content.put(DragContainer.AddLink,container);
+                content.put(DragContainer.AddLink, container);
 
                 startDragAndDrop(TransferMode.ANY).setContent(content);
 
@@ -143,7 +143,7 @@ public class DraggableModule extends Pane {
             }
         };
 
-        mLinkHandleDragDropped=new EventHandler<DragEvent>() {
+        mLinkHandleDragDropped = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 getParent().getParent().setOnDragOver(null);
@@ -151,18 +151,18 @@ public class DraggableModule extends Pane {
 
                 //get back the drag from the container.Controll if
                 //is the drag that we need
-                DragContainer container=(DragContainer)event.getDragboard().getContent(DragContainer.AddLink);
+                DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddLink);
 
-                if (container!=null){
+                if (container != null) {
                     //stop using shadowlink
 
                     //shadowLink.setVisible(false);
                     //getParent().getParent().getChildren().remove(0);
 
-                    ClipboardContent content=new ClipboardContent();
+                    ClipboardContent content = new ClipboardContent();
                     //information about where finish the link
-                    container.addData("to",getId());
-                    content.put(DragContainer.AddLink,container);
+                    container.addData("to", getId());
+                    content.put(DragContainer.AddLink, container);
                     event.getDragboard().setContent(content);
                     event.setDropCompleted(true);
                     event.consume();
@@ -172,21 +172,21 @@ public class DraggableModule extends Pane {
             }
 
         };
-        mContextLinkDragOver =new EventHandler<DragEvent>() {
+        mContextLinkDragOver = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
 
                 //update end position of shadowLink
-                if(!mShadowLink.isVisible()){
+                if (!mShadowLink.isVisible()) {
                     mShadowLink.setVisible(true);
                 }
-                mShadowLink.setEnd(new Point2D(event.getX(),event.getY()));
+                mShadowLink.setEnd(new Point2D(event.getX(), event.getY()));
             }
         };
-    //creation of link
+        //creation of link
 
-        mContextLinkDragDropped=new EventHandler<DragEvent>() {
+        mContextLinkDragDropped = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 System.out.println("link drag dropped");
@@ -194,9 +194,9 @@ public class DraggableModule extends Pane {
                 getParent().getParent().setOnDragOver(null);
                 getParent().getParent().setOnDragDropped(null);
 
-                //remove shodow
+                //remove shadow
                 mShadowLink.setVisible(false);
-                //getChildren().remove(0);
+                getChildren().remove(0);
 
                 event.setDropCompleted(true);
                 event.consume();
@@ -205,18 +205,18 @@ public class DraggableModule extends Pane {
     }
 
     private void buildNodeDragHandlers() {
-        mModuleHandlerDrag =new EventHandler<DragEvent>() {
+        mModuleHandlerDrag = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
-                relocateToPoint(new Point2D(event.getSceneX(),event.getSceneY()));
+                relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
 
                 event.consume();
             }
         };
 
         //dropping of node
-        mModuleHandlerDrop =new EventHandler<DragEvent>() {
+        mModuleHandlerDrop = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
 
@@ -243,15 +243,15 @@ public class DraggableModule extends Pane {
                 getParent().getParent().setOnDragDropped(mModuleHandlerDrop);
 
                 //set operations drag
-                mDragOffset=new Point2D(event.getX(),event.getY());
+                mDragOffset = new Point2D(event.getX(), event.getY());
 
-                relocateToPoint(new Point2D(event.getSceneX(),event.getSceneY()));
+                relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
 
-                ClipboardContent content =new ClipboardContent();
-                DragContainer container=new DragContainer();
+                ClipboardContent content = new ClipboardContent();
+                DragContainer container = new DragContainer();
 
-                container.addData("type",type);
-                content.put(DragContainer.DragNode,container);
+                container.addData("type", type);
+                content.put(DragContainer.DragNode, container);
 
                 startDragAndDrop(TransferMode.ANY).setContent(content);
 
@@ -261,28 +261,28 @@ public class DraggableModule extends Pane {
 
     }
 
-    public void relocateToPoint (Point2D p) {
+    public void relocateToPoint(Point2D p) {
 
         //relocates the object to a point that has been converted to
         //scene coordinates
-        System.out.println("entro wui");
+        //System.out.println("entro qui");
 
 
-      //  System.out.println("parent: " + getParent().getClass().getName());
-      //  Group theparent = (Group) getParent();
+        //  System.out.println("parent: " + getParent().getClass().getName());
+        //  Group theparent = (Group) getParent();
         Point2D localCoords;
         localCoords = getParent().sceneToLocal(p);
 
 
         System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
-        System.out.println( (int) (localCoords.getY()) - mDragOffset.getY());
+        System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
 
-        position= new Point2D(localCoords.getX() -mDragOffset.getX(),localCoords.getY() - mDragOffset.getY());
+        position = new Point2D(localCoords.getX() - mDragOffset.getX(), localCoords.getY() - mDragOffset.getY());
 
-        relocate (
+        relocate(
                 (int) position.getX(), (int) position.getY()
-               // (int) (localCoords.getX() - mDragOffset.getX()),
-               // (int) (localCoords.getY() - mDragOffset.getY())
+                // (int) (localCoords.getX() - mDragOffset.getX()),
+                // (int) (localCoords.getY() - mDragOffset.getY())
         );
 
 

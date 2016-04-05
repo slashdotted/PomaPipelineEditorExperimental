@@ -1,6 +1,5 @@
 package controller;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -8,14 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import main.Main;
 import model.ModuleTemplate;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * Created by felipe on 08/03/16.
@@ -30,6 +26,8 @@ public class ModuleItem extends Pane{
 
     @FXML
     private ImageView modelItemImage;
+
+    //TODO add a module reference with getter and setter (Maybe new constructor?)
 
 
 
@@ -58,13 +56,14 @@ public class ModuleItem extends Pane{
     private void initialize() {
 
         if(!isShadow) {
-            setParametri(this.type);
+            setParameters(this.type);
         }
 
     }
 
-    public void setParametri(String type) {
+    public void setParameters(String type) {
 
+        // TODO fix label with associated module not template
         this.type = type;
         ModuleTemplate template = Main.templates.get(type);
         modelItemLabel.setText(template.getType());
@@ -75,6 +74,7 @@ public class ModuleItem extends Pane{
     public String getTemplateType() {
         return this.type;
     }
+
 
     public void relocate (Point2D p) {
 

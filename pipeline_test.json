@@ -5,7 +5,6 @@
       "name": "MyCamera",
       "path": "rtsp://193.5.152.72:554/ufirststream",
       "fps": -1
-
     },
     "stats1": {
       "type": "Stats"
