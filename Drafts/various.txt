@@ -1,0 +1,3 @@
+
+SlideBar tutorial
+http://blog.physalix.com/javafx2-borderpane-which-slides-in-and-out-on-command/
