@@ -21,8 +21,13 @@ public class Move implements Command {
 
     @Override
     public boolean execute() {
-        // TODO implement this
-        return false;
+
+        draggableModule.relocate (
+                (int) newCoords.getX(), (int) newCoords.getY()
+
+        );
+        draggableModule.getModule().setPosition(newCoords);
+        return true;
     }
 
     @Override

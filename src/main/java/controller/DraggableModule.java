@@ -310,11 +310,7 @@ public class DraggableModule extends Pane {
         Command move=new Move(this,oldPosition,position);
         move.execute();
         //TODO implements adding to memento
-        relocate (
-                (int) position.getX(), (int) position.getY()
-               // (int) (localCoords.getX() - mDragOffset.getX()),
-               // (int) (localCoords.getY() - mDragOffset.getY())
-        );
+
 
 
         for(LinkView lv:links){
