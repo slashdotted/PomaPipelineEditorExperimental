@@ -1,5 +1,7 @@
 package model;
 
+import javafx.geometry.Point2D;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ public class Module {
     private ModuleTemplate template;
     private ArrayList<String> cparams;
     private Map<String, Value> parameters;
+    private Point2D position=new Point2D (0.0, 0.0);;
 
 
     private Module(ModuleTemplate template){
@@ -89,4 +92,12 @@ public class Module {
                 ", template=" + template.getType()+
                 '}';
     }
+    public Point2D getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point2D position) {
+        this.position = position;
+    }
+
 }

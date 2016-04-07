@@ -1,5 +1,7 @@
 package controller;
 
+import commands.Command;
+import commands.Move;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -296,19 +298,24 @@ public class DraggableModule extends Pane {
       //  System.out.println("parent: " + getParent().getClass().getName());
       //  Group theparent = (Group) getParent();
         Point2D localCoords;
+        Point2D oldPosition;
         localCoords = getParent().sceneToLocal(p);
 
 
         System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
         System.out.println( (int) (localCoords.getY()) - mDragOffset.getY());
-
+        oldPosition=position;
         position= new Point2D(localCoords.getX() -mDragOffset.getX(),localCoords.getY() - mDragOffset.getY());
 
+        Command move=new Move(this,oldPosition,position);
+        move.execute();
+        //TODO implements adding to memento
         relocate (
                 (int) position.getX(), (int) position.getY()
                // (int) (localCoords.getX() - mDragOffset.getX()),
                // (int) (localCoords.getY() - mDragOffset.getY())
         );
+
 
         for(LinkView lv:links){
 
