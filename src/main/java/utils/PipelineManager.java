@@ -1,34 +1,42 @@
 package utils;
 
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by felipe on 02/03/16.
  */
-public class PipelineManager implements PersistenceManager {
-
-    public static DataFormat MODULES_DATAFORMAT = new DataFormat("modules");
-    public static DataFormat LINKS_DATAFORMAT = new DataFormat("links");
+public class PipelineManager {
 
 
     private ClipboardContent clipboard = new ClipboardContent();
 
-    @Override
-    public void save(File output) {
-        //TODO
+
+    public boolean save(File output, JSONObject pipelineModules, JSONArray pipelineLinks) {
+
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(output);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            writer.write(Converter.getPipelineString(pipelineModules, pipelineLinks));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
-    @Override
-    public void load(File input) {
+
+    public boolean load(File input) {
         FileReader fileReader = null;
         JSONParser parser = new JSONParser();
         JSONObject root = new JSONObject();
@@ -47,15 +55,15 @@ public class PipelineManager implements PersistenceManager {
         //final JSONObject jsonModules = (JSONObject) root.get("modules");
         //final JSONArray jsonArray = (JSONArray) root.get("links");
 
-        clipboard.put(MODULES_DATAFORMAT, root.get("modules"));
-        clipboard.put(LINKS_DATAFORMAT, root.get("links"));
+        clipboard.put(Converter.MODULES_DATA_FORMAT, root.get("modules"));
+        clipboard.put(Converter.LINKS_DATA_FORMAT, root.get("links"));
 
-
+        return true;
     }
 
 //    private Map<String, Module> getModules(JSONObject jsonModules) {
 //        Map<String, Module> modules = new HashMap<>();
-//        // ClipboardContent content = Main.modulesClipboard;
+//        // ClipboardContent content = Main.modules;
 //        jsonModules.keySet().forEach(key -> {
 //            DataFormat keyDF = new DataFormat(key.toString());
 //            clipboard.put(keyDF, (JSONObject) jsonModules.get(key));

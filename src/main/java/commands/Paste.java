@@ -14,12 +14,14 @@ public class Paste implements Command {
     }
 
     @Override
-    public void execute() {
+    public boolean execute() {
 
+        return true;
     }
 
     @Override
-    public void revert() {
-
+    public boolean reverse() {
+        return false;
     }
+
 }

@@ -1,38 +1,28 @@
 package utils;
 
-import javafx.scene.image.Image;
 import main.Main;
 import model.ModuleTemplate;
 import model.Value;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by felipe on 10/03/16.
  */
-public class EditorConfManager implements PersistenceManager {
+public class EditorConfManager {
 
 
-    @Override
-    public void save(File output) {
-        // does nothing for now...
-    }
-
-    @Override
-    public void load(File input) {
+    public boolean load(File input) {
         FileReader fileReader = null;
         JSONParser parser = new JSONParser();
         JSONArray jsonModules = new JSONArray();
@@ -48,7 +38,7 @@ public class EditorConfManager implements PersistenceManager {
             e.printStackTrace();
         }
 
-        jsonModules.forEach(obj ->{
+        jsonModules.forEach(obj -> {
             JSONObject object = (JSONObject) obj;
 
             ModuleTemplate moduleTemplate = ModuleTemplate.getInstance();
@@ -78,6 +68,7 @@ public class EditorConfManager implements PersistenceManager {
 
         });
 
+        return true;
     }
 
     private void getParameters(Map<String, Value> map, JSONArray params, boolean isMandatory) {
@@ -108,13 +99,12 @@ public class EditorConfManager implements PersistenceManager {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-            if (param.get("default") != null){
+            if (param.get("default") != null) {
                 val = param.get("default");
 
             }
 
             value = new Value(paramName, val, false, isMandatory);
-
 
 
             map.put(paramName, value);

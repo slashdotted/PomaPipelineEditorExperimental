@@ -1,7 +1,6 @@
 package commands;
 
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -11,8 +10,6 @@ import utils.Converter;
 import utils.PipelineManager;
 
 import java.io.File;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
 
 /**
  * Created by felipe on 31/03/16.
@@ -27,8 +24,8 @@ public class Import implements Command {
     }
 
     @Override
-    public void execute() {
-        //ClipboardContent clipboard = Main.modulesClipboard;
+    public boolean execute() {
+        //ClipboardContent clipboard = Main.modules;
         //clipboard.clear();
         PipelineManager pipelineLoader = new PipelineManager();
 
@@ -38,12 +35,13 @@ public class Import implements Command {
 
         //TODO check duplicates before import
 
-        JSONObject jsonModules = (JSONObject) clipboard.get(PipelineManager.MODULES_DATAFORMAT);
-        JSONArray jsonArray = (JSONArray) clipboard.get(PipelineManager.LINKS_DATAFORMAT);
+        JSONObject jsonModules = (JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
+        JSONArray jsonArray = (JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
 
 
         jsonModules.keySet().forEach(key -> {
             Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
+
             Main.modules.put(String.valueOf(key), module);
             Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
         });
@@ -56,14 +54,17 @@ public class Import implements Command {
             if(channel == null)
                 channel = "default";
             Main.linksClipboard.put(link.getJsonId(channel),jsonLink);
+
         });
 
 
-        // Main.modulesClipboard.putAll(clipboard);
+        // Main.modules.putAll(clipboard);
+        return true;
     }
 
     @Override
-    public void revert() {
-
+    public boolean reverse() {
+        return false;
     }
+
 }

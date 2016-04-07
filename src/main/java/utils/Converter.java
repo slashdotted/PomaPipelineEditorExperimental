@@ -1,6 +1,7 @@
 package utils;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import javafx.scene.input.DataFormat;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -17,6 +18,8 @@ import java.util.Map;
  * Created by felipe on 23/03/16.
  */
 public class Converter {
+    public static DataFormat MODULES_DATA_FORMAT = new DataFormat("modules");
+    public static DataFormat LINKS_DATA_FORMAT = new DataFormat("links");
 
     //TODO check for comment parameter
 
@@ -153,6 +156,39 @@ public class Converter {
 
         return params;
     }
+
+    /**
+     * Method for generate a pipeline string from modules
+     * Better checkMatching before calling this method.
+     * @param pipelineModules
+     * @param pipelineLinks
+     * @return
+     */
+    public static String getPipelineString(JSONObject pipelineModules, JSONArray pipelineLinks){
+        StringBuffer pipelineStringBuffer = new StringBuffer();
+
+        pipelineStringBuffer.append("{\n\t\"modules\" : ");
+        pipelineStringBuffer.append(pipelineModules.toJSONString());
+        pipelineStringBuffer.append(",\n\t\"links\" : ");
+        pipelineStringBuffer.append(pipelineLinks.toJSONString());
+        pipelineStringBuffer.append("\n}");
+
+        return pipelineStringBuffer.toString();
+    }
+
+
+    public static boolean checkMatching(JSONObject pipelineModules, JSONArray pipelineLinks){
+
+        for (Object pipelineLink : pipelineLinks) {
+            JSONObject link = (JSONObject) pipelineLink;
+            if(!(pipelineModules.containsKey(link.get("from")) && pipelineModules.containsKey(link.get("to"))));
+            return false;
+        }
+
+        return true;
+    }
+
+
 
 
 }

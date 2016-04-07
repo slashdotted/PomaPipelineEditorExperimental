@@ -6,8 +6,6 @@ import commands.Save;
 import controller.MainWindow;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Link;
@@ -16,7 +14,6 @@ import model.ModuleTemplate;
 import org.json.simple.JSONObject;
 import utils.Converter;
 import utils.EditorConfManager;
-import utils.PersistenceManager;
 
 import java.io.File;
 import java.util.HashMap;
@@ -24,7 +21,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Main extends Application {
-
 
     public static Map<String, ModuleTemplate> templates = new TreeMap<>();
 
@@ -40,7 +36,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        PersistenceManager confManager = new EditorConfManager();
+        EditorConfManager confManager = new EditorConfManager();
         File conf = new File("conf.json");
         confManager.load(conf);
 
@@ -50,33 +46,27 @@ public class Main extends Application {
 
         Command importCommand = new Import(conf);
         importCommand.execute();
+
+
+        File saveFile = new File("pipeline_saved_test.json");
+
+        Command save = new Save(saveFile, modulesClipboard, linksClipboard);
+        save.execute();
+
+        importCommand = new Import(saveFile);
+        importCommand.execute();
+
         System.out.println("Imported modules:" + modules.size());
-
-//        links.values().forEach(link -> {
-//            System.out.println(link.getID());
-//        });
-
-
-//        modules.keySet().forEach(key -> {
-//            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
-//        });
-
-        System.out.println("\nImported links:" + links.size());
-        System.out.println("\nClipBoarded links:" + linksClipboard.size());
-        linksClipboard.keySet().forEach(key->{
-            System.out.println(key + " : " + linksClipboard.get(key));
+        modules.keySet().forEach(key -> {
+            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
         });
 
-//        linksClipboard.values().forEach(value ->{
-//            System.out.println(value.toJSONString());
-//        });
 
-//        links.keySet().forEach(key -> {
-//            System.out.println(key + " = " + Converter.linkToJSON(links.get(key)).toJSONString());
-//        });
-
-        Command save = new Save(null, modulesClipboard, linksClipboard);
-        save.execute();
+        System.out.println("\nImported links:" + links.size());
+        System.out.println("ClipBoarded links:" + linksClipboard.size());
+        linksClipboard.keySet().forEach(key -> {
+            System.out.println(key + " : " + linksClipboard.get(key));
+        });
 
 
         // long startTime = System.currentTimeMillis();
@@ -97,4 +87,13 @@ public class Main extends Application {
         launch(args);
 
     }
+
+    private static void clearData() {
+        modules.clear();
+        modulesClipboard.clear();
+
+        links.clear();
+        linksClipboard.clear();
+    }
+
 }
