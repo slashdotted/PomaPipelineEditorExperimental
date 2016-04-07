@@ -30,6 +30,11 @@ public class Link {
             return null;
     }
 
+    public Link (boolean isShadow){
+        moduleA=null;
+        moduleB=null;
+
+    }
     public String getID() {
         return moduleA.getName() + "-" + moduleB.getName();
     }

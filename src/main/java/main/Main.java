@@ -33,6 +33,7 @@ public class Main extends Application {
 
     public static Map<String, JSONObject> modulesClipboard = new HashMap<>();
     public static Map<String, JSONObject> linksClipboard = new HashMap<>();
+    public static Scene mScene;
 
     //public static String currentJSON = "";
 
@@ -83,7 +84,8 @@ public class Main extends Application {
         // System.out.println(System.currentTimeMillis()-startTime);
 
         primaryStage.setTitle("PoorMans Pipeline Editor");
-        primaryStage.setScene(new Scene(root, 600, 600));
+        mScene=new Scene(root, 600, 600);
+        primaryStage.setScene(mScene);
 
 
         primaryStage.show();

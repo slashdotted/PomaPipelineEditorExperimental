@@ -5,25 +5,35 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import main.Main;
 import model.ModuleTemplate;
 
 import java.io.IOException;
+import java.util.*;
 
 public class MainWindow extends BorderPane {
 
-    private ModuleTemplate shadowModule = null;
-    private ModuleItem draggableModuleItem = null;
+    public static Map<String, DraggableModule> allDraggableModule= new HashMap<>();
+    public static Map<String, LinkView> allLinkView= new HashMap<>();
+    private ModuleTemplate shadowModule=null;
+    private ModuleItem draggableModuleItem =null;
 
 
     @FXML
@@ -60,45 +70,40 @@ public class MainWindow extends BorderPane {
 
 
     @FXML
-    private void initialize() {
+    private void initialize(){
 
-        //Add one icon that will be used for the drag-drop process
+         //Add one icon that will be used for the drag-drop process
         //This is added as a child to the root anchorpane so it can be visible
         //on both sides of the split pane.
-        boolean isShadow = true;
-        shadowModule = ModuleTemplate.getInstance();
-        /// shadowModule.setName("");
+        boolean isShadow=true;
+        shadowModule=ModuleTemplate.getInstance();
+       /// shadowModule.setName("");
 
-        draggableModuleItem = new ModuleItem(shadowModule.getType(), isShadow);
+        draggableModuleItem=new ModuleItem(shadowModule.getType(),isShadow);
         draggableModuleItem.setVisible(false);
         draggableModuleItem.setOpacity(0.65);
         getChildren().add(draggableModuleItem);
 
-//        //Sort all modules by name
-//        List<ModuleTemplate> templates = new ArrayList<>(Main.templates.values());
-//
-//
-//        //Populate left pane with all modules
-//        for (ModuleTemplate template : templates) {
-//            //System.out.println(template.getType());
-//            isShadow = false;
-//            ModuleItem item = new ModuleItem(template.getType(), isShadow);
-//            moduleVBox.getChildren().add(item);
-//            addDragDetection(item);
-//            //System.out.println("ModuleItem created with drag detection associated");
-//        }
+        //Sort all modules by name
+        List<ModuleTemplate> templates = new ArrayList<>(Main.templates.values());
 
+    //now is a treeMap
+      /*  Collections.sort(templates, (o1, o2) -> {
+            //System.out.println(((ModuleTemplate)o2).getName());
+            return o1.getType().compareTo(o2.getType());
+        });*/
 
-        Main.templates.values().forEach(template -> {
-            ModuleItem item = new ModuleItem(template.getType(), false);
+       //Populate left pane with all modules
+        for (ModuleTemplate template: templates) {
+            System.out.println(template.getType());
+            isShadow=false;
+            ModuleItem item = new ModuleItem(template.getType(),isShadow);
             moduleVBox.getChildren().add(item);
             addDragDetection(item);
-        });
-
-
-
+            System.out.println("ModuleItem created with drag detection associated");
+        }
         //Create a new group to manage all nodes in mainScrollPane
-        Group group = new Group();
+        Group group=new Group();
 
         // mainScrollPane.setContent(group);
         mainScrollPane.setContent(group);
@@ -106,10 +111,10 @@ public class MainWindow extends BorderPane {
         //TODO create true size
         group.getChildren().add(new Pane());
 
-       // mainScrollPane.setFitToHeight(true);
-       // mainScrollPane.setFitToWidth(true);
-        buildDragHandlers();
+        //mainScrollPane.setFitToHeight(true);
+        //mainScrollPane.setFitToWidth(true);
 
+        buildDragHandlers();
 
 
 
@@ -118,16 +123,16 @@ public class MainWindow extends BorderPane {
 
     public void addCircle() {
 
-        Group group = (Group) mainScrollPane.getContent();
-        LinkView prova = new LinkView();
-        prova.setStart(new Point2D(0, 0));
-        prova.setEnd(new Point2D(500, 500));
-        Line line = new Line();
+      /*  Group group = (Group) mainScrollPane.getContent();
+        LinkView prova=new LinkView();
+        prova.setStart(new Point2D(0,0));
+        prova.setEnd(new Point2D(500,500));
+        Line line=new Line();
         line.setStartX(0);
         line.setStartY(0);
         line.setEndY(500);
         line.setEndX(500);
-        group.getChildren().add(line);
+        group.getChildren().add(line);*/
 /*
         Rectangle rect = new Rectangle(200, 200, Color.RED);
         //  mainScrollPane.setContent(rect);
@@ -138,115 +143,186 @@ public class MainWindow extends BorderPane {
         mainScrollPane.setContent(group);*/
 
 
-    }
 
+
+    }
     private void addDragDetection(ModuleItem moduleItem) {
 
-        moduleItem.setOnDragDetected(event -> {
-            //set drag respective events
-            splitPane.setOnDragOver(mModuleItemOverRoot);
-            mainScrollPane.setOnDragOver(mModuleItemOverMainScrollPane);
-            mainScrollPane.setOnDragDropped(mModuleItemDropped);
+        moduleItem.setOnDragDetected(new EventHandler <MouseEvent>(){
 
-            //get the item clicked
-            ModuleItem itemClicked = (ModuleItem) event.getSource();
+            @Override
+            public void handle(MouseEvent event) {
+                //set drag respective events
+                splitPane.setOnDragOver(mModuleItemOverRoot);
+                mainScrollPane.setOnDragOver(mModuleItemOverMainScrollPane);
+                mainScrollPane.setOnDragDropped(mModuleItemDropped);
 
-            //drag operations
-            //set shadowModule of draggableModuleItem
+                //get the item clicked
+                ModuleItem itemClicked =(ModuleItem) event.getSource();
 
-            draggableModuleItem.setParameters(itemClicked.getTemplateType());
-            draggableModuleItem.relocate(new Point2D(event.getSceneX(), event.getSceneY()));
+                //drag operations
+                    //set shadowModule of draggableModuleItem
+
+                draggableModuleItem.setParameters(itemClicked.getTemplateType());
+                draggableModuleItem.relocate(new Point2D(event.getSceneX(),event.getSceneY()));
 
 
-            ClipboardContent content = new ClipboardContent();
-            DragContainer container = new DragContainer();
+                ClipboardContent content =new ClipboardContent();
+                DragContainer container=new DragContainer();
 
-            container.addData("TemplateType", draggableModuleItem.getTemplateType());
-            content.put(DragContainer.AddNode, container);
+                container.addData("TemplateType",draggableModuleItem.getTemplateType());
+                content.put(DragContainer.AddNode,container);
 
-            draggableModuleItem.startDragAndDrop(TransferMode.ANY).setContent(content);
-            draggableModuleItem.setVisible(true);
-            draggableModuleItem.setMouseTransparent(true);
-            event.consume();
+                draggableModuleItem.startDragAndDrop(TransferMode.ANY).setContent(content);
+                draggableModuleItem.setVisible(true);
+                draggableModuleItem.setMouseTransparent(true);
+                event.consume();
 
+            }
         });
 
     }
-
-    private void buildDragHandlers() {
+    private void buildDragHandlers(){
 
 
         //to manage the movement from left to right pane
-        mModuleItemOverRoot = event -> {
+        mModuleItemOverRoot = new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
 
-            Point2D point = mainScrollPane.sceneToLocal(event.getSceneX(), event.getSceneY());
+                Point2D point= mainScrollPane.sceneToLocal(event.getSceneX(),event.getSceneY());
 
 
-            //controls if we are in the mainScrollPane's limits
-            if (!mainScrollPane.boundsInLocalProperty().get().contains(point)) {
-                event.acceptTransferModes(TransferMode.ANY);
-                draggableModuleItem.relocate(new Point2D(event.getSceneX(), event.getSceneY()));
-                return;
+                //controls if we are in the mainScrollPane's limits
+                if(!mainScrollPane.boundsInLocalProperty().get().contains(point)){
+                    event.acceptTransferModes(TransferMode.ANY);
+                    draggableModuleItem.relocate(new Point2D (event.getSceneX(),event.getSceneY()));
+                    return;
+                }
+
+                event.consume();
             }
-
-            event.consume();
         };
 
-        mModuleItemOverMainScrollPane = event -> {
-            event.acceptTransferModes(TransferMode.ANY);
-            //mouse coordinates->scene coordinates ->draggableModuleItem's parent
-            //but now draggableModuleItem must be in the splitPane's coordinates to work
-            draggableModuleItem.relocate(new Point2D(event.getSceneX(), event.getSceneY()));
-            event.consume();
+        mModuleItemOverMainScrollPane  =new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+
+                event.acceptTransferModes(TransferMode.ANY);
+
+                //mouse coordinates->scene coordinates ->draggableModuleItem's parent
+                //but now draggableModuleItem must be in the splitPane's coordinates to work
+
+                draggableModuleItem.relocate(new Point2D(event.getSceneX(),event.getSceneY()));
+                event.consume();
+            }
         };
-        mModuleItemDropped = event -> {
-            DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
-            System.out.println(event.getSceneX() + "--" + event.getSceneY());
-            container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
+        mModuleItemDropped =new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                DragContainer container=(DragContainer)event.getDragboard().getContent(DragContainer.AddNode);
+                System.out.println(event.getSceneX()+"--"+event.getSceneY());
+                container.addData("scene_coords",new Point2D(event.getSceneX(),event.getSceneY()));
 
-            ClipboardContent content = new ClipboardContent();
+                ClipboardContent content=new ClipboardContent();
 
-            content.put(DragContainer.AddNode, container);
+                content.put(DragContainer.AddNode,container);
 
-            event.getDragboard().setContent(content);
-            event.setDropCompleted(true);
+                event.getDragboard().setContent(content);
+                event.setDropCompleted(true);
+            }
         };
-        this.setOnDragDone(event -> {
+        this.setOnDragDone(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
 
-            mainScrollPane.removeEventHandler(DragEvent.DRAG_OVER, mModuleItemOverMainScrollPane);
-            mainScrollPane.removeEventHandler(DragEvent.DRAG_DROPPED, mModuleItemDropped);
-            splitPane.removeEventHandler(DragEvent.DRAG_OVER, mModuleItemOverRoot);
+                mainScrollPane.removeEventHandler(DragEvent.DRAG_OVER, mModuleItemOverMainScrollPane);
+                mainScrollPane.removeEventHandler(DragEvent.DRAG_DROPPED, mModuleItemDropped);
+                splitPane.removeEventHandler(DragEvent.DRAG_OVER, mModuleItemOverRoot);
 
-            draggableModuleItem.setVisible(false);
+                draggableModuleItem.setVisible(false);
 
-            //Create node drag operation
-            DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
+                //Create node drag operation
+                DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
 
-            if (container != null) {
-                if (container.getValue("scene_coords") != null) {
-                    //creating instance of model
-                    System.out.println("before creating draggableModule");
-                    System.out.println(draggableModuleItem.getTemplateType());
-                    System.out.println(Main.templates.get(draggableModuleItem.getTemplateType()));
-                    System.out.println("create a new draggable");
-                    DraggableModule node = new DraggableModule(draggableModuleItem.getTemplateType());
-
-
-                    Group group = (Group) mainScrollPane.getContent();
-
-
-                    System.out.println(mainScrollPane.getWidth() + "-W-H" + mainScrollPane.getHeight());
-                    group.getChildren().add(node);
-                    Point2D mousePoint = container.getValue("scene_coords");
-                    System.out.println(mousePoint.getX() + "--" + mousePoint.getY());
+                if (container != null) {
+                    if (container.getValue("scene_coords") != null) {
+                        //creo instance of model
+                        System.out.println("before creating draggableModule");
+                        System.out.println(draggableModuleItem.getTemplateType());
+                        System.out.println(Main.templates.get(draggableModuleItem.getTemplateType()));
+                        System.out.println("create a new draggable");
+                        DraggableModule node = new DraggableModule(draggableModuleItem.getTemplateType());
 
 
-                    node.relocateToPoint(new Point2D(mousePoint.getX() - 50, mousePoint.getY() - 50));
+                        Group group = (Group) mainScrollPane.getContent();
+                        allDraggableModule.put(node.getName(),node);
+
+                        group.getChildren().add(node);
+                        Point2D mousePoint = container.getValue("scene_coords");
+                        System.out.println(mousePoint.getX() + "--" + mousePoint.getY());
 
 
+                        node.relocateToPoint(new Point2D(mousePoint.getX() - 50, mousePoint.getY() - 50));
+
+
+                    }
+                }
+                //AddLink drag operation
+                container =
+                        (DragContainer) event.getDragboard().getContent(DragContainer.AddLink);
+
+                if (container != null) {
+
+                    //bind the ends of our link to the nodes whose id's are stored in the drag container
+
+                    String fromId = container.getValue("fromId");
+                    String toId = container.getValue("toId");
+
+
+                    if (fromId != null && toId != null) {
+                        System.out.println("tengo from e to");
+                        System.out.println(container.getData());
+
+
+                        DraggableModule from = allDraggableModule.get(fromId);
+                        DraggableModule to = allDraggableModule.get(toId);
+
+
+                        //add our link at the top of the rendering order so it's rendered first
+
+
+                       /* for (Node n: group.getChildren()) {
+
+                            if (n.getId() == null)
+                                continue;
+
+                            if (n.getId().equals(fromId))
+                                from = (DraggableModule) n;
+
+                            if (n.getId().equals(toId))
+                                to = (DraggableModule) n;
+
+                        }
+*/
+
+                        if (from != null && to != null) {
+                            LinkView linkV = new LinkView(from, to, "");
+                            Group group = (Group) mainScrollPane.getContent();
+                            Group group1 =new Group();
+
+                            group1.getChildren().addAll(linkV,new ImageView("ChannelIn.png"));
+
+                            group.getChildren().add(0, linkV);
+                           // group.getChildren().add(0,group1);
+                            allLinkView.put(linkV.getId(),linkV);
+                            System.out.println("sfdafasf-------------");
+                            linkV.bindLink(from, to);
+                            linkV.bindBottonChannels();
+                        }
+                    }
                 }
             }
-
         });
 
     }

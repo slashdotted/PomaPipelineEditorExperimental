@@ -12,14 +12,18 @@
 
 <fx:root fx:id="mopdelPane" prefHeight="100.0" prefWidth="100.0" styleClass="draggable-module" stylesheets="@application.css" type="Pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox>
+      <VBox alignment="CENTER">
          <children>
             <Pane fx:id="titleBar" prefHeight="20.0" prefWidth="100.0" styleClass="pane-tittle" stylesheets="@application.css">
                <children>
                   <Label fx:id="modelItemLabel" alignment="CENTER" text="Label" textAlignment="CENTER" />
                </children>
             </Pane>
-            <ImageView fx:id="modelItemImage" fitHeight="61.0" fitWidth="82.0" pickOnBounds="true" preserveRatio="true" />
+            <Pane fx:id="paneItemImage">
+               <children>
+                  <ImageView fx:id="modelItemImage" fitHeight="77.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </Pane>
          </children>
       </VBox>
    </children>
