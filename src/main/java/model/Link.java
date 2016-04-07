@@ -23,6 +23,13 @@ public class Link {
 //        moduleB = null;
 //    }
 
+    public String getJsonId(String channel) {
+        if (channelsAToB.contains(channel) || channelsBToA.contains(channel))
+            return getID() + channel;
+        else
+            return null;
+    }
+
     public String getID() {
         return moduleA.getName() + "-" + moduleB.getName();
     }
@@ -55,7 +62,7 @@ public class Link {
         return false;
     }
 
-    public boolean removeChannel(Module from, Module to, String channel){
+    public boolean removeChannel(Module from, Module to, String channel) {
         if (from.equals(moduleA)) {
             if (to.equals(moduleB)) {
                 channelsAToB.remove(channel);

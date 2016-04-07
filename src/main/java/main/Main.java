@@ -2,6 +2,7 @@ package main;
 
 import commands.Command;
 import commands.Import;
+import commands.Save;
 import controller.MainWindow;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -55,26 +56,27 @@ public class Main extends Application {
 //        });
 
 
-        modules.keySet().forEach(key -> {
-            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
-        });
+//        modules.keySet().forEach(key -> {
+//            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
+//        });
 
         System.out.println("\nImported links:" + links.size());
+        System.out.println("\nClipBoarded links:" + linksClipboard.size());
+        linksClipboard.keySet().forEach(key->{
+            System.out.println(key + " : " + linksClipboard.get(key));
+        });
 
+//        linksClipboard.values().forEach(value ->{
+//            System.out.println(value.toJSONString());
+//        });
 
 //        links.keySet().forEach(key -> {
 //            System.out.println(key + " = " + Converter.linkToJSON(links.get(key)).toJSONString());
 //        });
 
-        // FIXME: DataFormat not really practical in our context -> Move from ClipboardContent to a simple HashMap
-        /*
-        System.out.println(linksClipboard.containsKey(DataFormat.lookupMimeType("car_color-direction:default")));
-        linksClipboard.remove(DataFormat.lookupMimeType("car_color-direction:default"));
-        System.out.println(linksClipboard.containsKey(DataFormat.lookupMimeType("car_color-direction:default")));
+        Command save = new Save(null, modulesClipboard, linksClipboard);
+        save.execute();
 
-
-        linksClipboard.put(new DataFormat("car_color-direction:default"), Converter.linkToJSON(links.get("car_color-direction:default")));
-        */
 
         // long startTime = System.currentTimeMillis();
         BorderPane root = new MainWindow();

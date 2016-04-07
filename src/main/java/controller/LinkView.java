@@ -40,7 +40,6 @@ public class LinkView extends Group{
     }
 
     public void setChannel(String channel) {
-
         this.channel = channel;
         this.label.setText(channel);
     }

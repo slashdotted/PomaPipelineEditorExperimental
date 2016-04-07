@@ -52,7 +52,10 @@ public class Import implements Command {
             JSONObject jsonLink = (JSONObject) obj;
             Link link = Converter.jsonToLink(jsonLink);
             Main.links.put(link.getID(), link);
-            Main.linksClipboard.put(link.getID(),(JSONObject) obj);
+            String channel = (String)jsonLink.get("channel");
+            if(channel == null)
+                channel = "default";
+            Main.linksClipboard.put(link.getJsonId(channel),jsonLink);
         });
 
 
