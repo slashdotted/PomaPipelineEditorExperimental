@@ -8,4 +8,9 @@ public class Save implements Command {
     public void execute() {
 
     }
+
+    @Override
+    public void revert() {
+
+    }
 }

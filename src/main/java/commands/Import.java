@@ -44,7 +44,6 @@ public class Import implements Command {
 
         jsonModules.keySet().forEach(key -> {
             Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
-
             Main.modules.put(String.valueOf(key), module);
             Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
         });
@@ -58,5 +57,10 @@ public class Import implements Command {
 
 
         // Main.modulesClipboard.putAll(clipboard);
+    }
+
+    @Override
+    public void revert() {
+
     }
 }

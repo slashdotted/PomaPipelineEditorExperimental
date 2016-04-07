@@ -62,9 +62,9 @@ public class Main extends Application {
         System.out.println("\nImported links:" + links.size());
 
 
-        links.keySet().forEach(key -> {
-            System.out.println(key + " = " + Converter.linkToJSON(links.get(key)).toJSONString());
-        });
+//        links.keySet().forEach(key -> {
+//            System.out.println(key + " = " + Converter.linkToJSON(links.get(key)).toJSONString());
+//        });
 
         // FIXME: DataFormat not really practical in our context -> Move from ClipboardContent to a simple HashMap
         /*
@@ -82,6 +82,7 @@ public class Main extends Application {
 
         primaryStage.setTitle("PoorMans Pipeline Editor");
         primaryStage.setScene(new Scene(root, 600, 600));
+
 
         primaryStage.show();
 

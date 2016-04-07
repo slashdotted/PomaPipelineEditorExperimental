@@ -61,10 +61,10 @@ public class EditorConfManager implements PersistenceManager {
             String imageURL = (String) object.get("imageURL");
 
             JSONArray jsonOptParams = (JSONArray) object.get("optParams");
-            getParameters(optParameters, jsonOptParams);
+            getParameters(optParameters, jsonOptParams, false);
 
             JSONArray jsonMndParams = (JSONArray) object.get("mandatoryParams");
-            getParameters(mandatoryParameters, jsonMndParams);
+            getParameters(mandatoryParameters, jsonMndParams, true);
 
             moduleTemplate.setMandatoryParameters(mandatoryParameters);
             moduleTemplate.setOptParameters(optParameters);
@@ -80,7 +80,7 @@ public class EditorConfManager implements PersistenceManager {
 
     }
 
-    private void getParameters(Map<String, Value> map, JSONArray params) {
+    private void getParameters(Map<String, Value> map, JSONArray params, boolean isMandatory) {
         // TODO add to conf.json description of parameters and parse them here
 
         for (int j = 0; j < params.size(); j++) {
@@ -88,6 +88,7 @@ public class EditorConfManager implements PersistenceManager {
             String paramName = (String) param.get("name");
             String paramType = (String) param.get("type");
             Value value;
+            boolean defaultValue = false;
 
             Object val = null;
 
@@ -107,10 +108,14 @@ public class EditorConfManager implements PersistenceManager {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-            value = new Value(paramName, val, false);
+            if (param.get("default") != null){
+                val = param.get("default");
 
-            if (param.get("default") != null)
-                value.setValue(param.get("default"));
+            }
+
+            value = new Value(paramName, val, false, isMandatory);
+
+
 
             map.put(paramName, value);
         }

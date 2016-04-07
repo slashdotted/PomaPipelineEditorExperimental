@@ -1,22 +1,30 @@
 package commands;
 
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
+import org.json.simple.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by felipe on 23/03/16.
  */
 public class Copy implements Command {
 
-    ClipboardContent clipboard;
+    public Map<String, JSONObject> modulesClipboard = new HashMap<>();
+    public Map<String, JSONObject> linksClipboard = new HashMap<>();
 
-    public Copy(ClipboardContent clipboard) {
-        this.clipboard = clipboard;
+    public Copy() {
+
     }
 
     @Override
     public void execute() {
-        Clipboard systemClipBoard = Clipboard.getSystemClipboard();
-        systemClipBoard.setContent(clipboard);
+       // Clipboard systemClipBoard = Clipboard.getSystemClipboard();
+       // systemClipBoard.setContent(clipboard);
+    }
+
+    @Override
+    public void revert() {
+
     }
 }

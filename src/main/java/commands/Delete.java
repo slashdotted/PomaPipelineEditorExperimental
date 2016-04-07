@@ -1,9 +1,9 @@
 package commands;
 
 /**
- * Created by felipe on 23/03/16.
+ * Created by felipe on 06/04/16.
  */
-public class Undo implements Command {
+public class Delete implements Command {
     @Override
     public void execute() {
 

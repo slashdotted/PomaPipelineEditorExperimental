@@ -1,5 +1,6 @@
 package utils;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -53,23 +54,69 @@ public class Converter {
         }
 
 
-
         return jsonObject;
     }
 
 
-    public static JSONObject linkToJSON(Link link) {
-        JSONObject jsonObject = new JSONObject();
+    //    public static JSONObject linkToJSON(Link link) {
+//        JSONObject jsonObject = new JSONObject();
+//
+//        jsonObject.put("from", link.getModuleA().getName());
+//        jsonObject.put("to", link.getModuleB().getName());
+//
+//        if (!link.getChannel().equals("default"))
+//            jsonObject.put("channel", link.getChannel());
+//
+//        return jsonObject;
+//    }
+    public static ArrayList<JSONObject> linkToJSON(Link link) {
+        ArrayList<JSONObject> jsonLinks = new ArrayList<>();
 
-        jsonObject.put("from", link.getFrom().getName());
-        jsonObject.put("to", link.getTo().getName());
-        if (!link.getChannel().equals("default"))
-            jsonObject.put("channel", link.getChannel());
+        link.getChannelsAToB().forEach(channel -> {
+            JSONObject jsonLink = new JSONObject();
+            jsonLink.put("from", link.getModuleA().getName());
+            jsonLink.put("to", link.getModuleB().getName());
+            if (!channel.equals("default"))
+                jsonLink.put("channel", channel);
+        });
 
-        return jsonObject;
+        link.getChannelsBToA().forEach(channel -> {
+            JSONObject jsonLink = new JSONObject();
+            jsonLink.put("from", link.getModuleB().getName());
+            jsonLink.put("to", link.getModuleA().getName());
+            if (!channel.equals("default"))
+                jsonLink.put("channel", channel);
+        });
+        return jsonLinks;
     }
+
 
     public static Link jsonToLink(JSONObject jsonLink) {
+        Link link = null;
+
+        Module from = Main.modules.get(jsonLink.get("from"));
+        Module to = Main.modules.get(jsonLink.get("to"));
+
+        String channel = (String) jsonLink.get("channel");
+        if (channel == null)
+            channel = "default";
+
+        if ((link = Main.links.get(from.getName() + "-" + to.getName())) != null) {
+            link.addChannel(from, to, channel);
+            return link;
+        }
+
+        if ((link = Main.links.get(to.getName() + "-" + from.getName())) != null) {
+            link.addChannel(from, to, channel);
+            return link;
+        }
+
+        link = new Link(from, to, channel);
+        return link;
+    }
+
+
+    public static Link jsonToLinkOLD(JSONObject jsonLink) {
         Link link = null;
 
         Module from = Main.modules.get(jsonLink.get("from"));

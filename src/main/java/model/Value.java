@@ -8,15 +8,18 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Value<T> {
 
-    boolean defaultValue;
-    String name;
+    private boolean isMandatory;
+    private boolean defaultValue;
+    private String name;
+
 
     T value;
 
-    public Value(String name, T val, boolean defaultValue) {
+    public Value(String name, T val, boolean defaultValue, boolean isMandatory) {
         this.name = name;
         this.value = val;
         this.defaultValue = defaultValue;
+        this.isMandatory = isMandatory;
     }
 
     public Value(String name, T val) {
@@ -28,6 +31,7 @@ public class Value<T> {
     public Value(Value value) {
         this.name = value.getName();
         this.defaultValue = value.isDefaultValue();
+        this.isMandatory = value.isMandatory();
         Object val = null;
         Constructor ctor = null;
         try {
@@ -70,5 +74,8 @@ public class Value<T> {
         return value.getClass().getName();
     }
 
+    public boolean isMandatory() {
+        return isMandatory;
+    }
 
 }
