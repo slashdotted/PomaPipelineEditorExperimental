@@ -5,12 +5,14 @@ package commands;
  */
 public class Delete implements Command {
     @Override
-    public void execute() {
+    public boolean execute() {
 
+        return false;
     }
 
     @Override
-    public void revert() {
-
+    public boolean reverse() {
+        return false;
     }
+
 }

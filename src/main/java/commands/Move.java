@@ -2,7 +2,6 @@ package commands;
 
 import controller.DraggableModule;
 import javafx.geometry.Point2D;
-import model.Module;
 
 /**
  * Created by felipe on 06/04/16.
@@ -19,14 +18,17 @@ public class Move implements Command {
         this.newCoords = newCoords;
     }
 
+
     @Override
-    public void execute() {
+    public boolean execute() {
         // TODO implement this
+        return false;
     }
 
     @Override
-    public void revert() {
+    public boolean reverse() {
         Command reversMove = new Move(draggableModule, newCoords, oldCoords);
         reversMove.execute();
+        return true;
     }
 }

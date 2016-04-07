@@ -1,6 +1,11 @@
 package commands;
 
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import main.Main;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import utils.Converter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,21 +15,51 @@ import java.util.Map;
  */
 public class Copy implements Command {
 
-    public Map<String, JSONObject> modulesClipboard = new HashMap<>();
-    public Map<String, JSONObject> linksClipboard = new HashMap<>();
+    public Map<String, JSONObject> modules = new HashMap<>();
+    public Map<String, JSONObject> links = new HashMap<>();
 
+
+    /**
+     * Constructor for all items
+     */
     public Copy() {
+        this.modules = Main.modulesClipboard;
+        this.links = Main.linksClipboard;
+    }
 
+    /**
+     * Constructor for selected items
+     *
+     * @param modules
+     * @param links
+     */
+    public Copy(Map<String, JSONObject> modules, Map<String, JSONObject> links) {
+        this.modules = modules;
+        this.links = links;
     }
 
     @Override
-    public void execute() {
-       // Clipboard systemClipBoard = Clipboard.getSystemClipboard();
-       // systemClipBoard.setContent(clipboard);
+    public boolean execute() {
+        ClipboardContent clipboardContent = new ClipboardContent();
+
+        JSONObject modulesObject = new JSONObject();
+        modulesObject.putAll(modules);
+
+        JSONArray linksArray = new JSONArray();
+        linksArray.addAll(links.values());
+
+        clipboardContent.putString(Converter.getPipelineString(modulesObject, linksArray));
+
+        Clipboard systemClipboard = Clipboard.getSystemClipboard();
+
+        // systemClipBoard.setContent(clipboard);
+
+        return false;
     }
 
     @Override
-    public void revert() {
-
+    public boolean reverse() {
+        return false;
     }
+
 }
