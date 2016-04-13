@@ -50,6 +50,7 @@ public class Link {
         this.channelsAToB.add(channel);
     }
 
+
     public boolean addChannel(Module from, Module to, String channel) {
         if (from.equals(moduleA)) {
             if (to.equals(moduleB)) {
