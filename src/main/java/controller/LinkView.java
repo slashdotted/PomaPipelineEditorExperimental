@@ -7,7 +7,6 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
@@ -15,24 +14,17 @@ import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import main.Main;
 import model.Link;
-import model.Module;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by Marco on 18/03/2016.
  */
 public class LinkView extends Group{
 
-    private static String channelOutImageDefault="ChannelOut.png";
-    private static String channelOutImageEntries="ChannelOut.png";
-    private static String channelInImage="ChannelIn.png";
-
+    private static String channelOutImage="ChannelOut.png";
     Point3D centerOut =new Point3D(0,0,0);
-
+    private static String channelInImage="ChannelIn.png";
     private DoubleProperty channelInX=new SimpleDoubleProperty();
-    private DoubleProperty channelInY=new SimpleDoubleProperty();
+    private DoubleProperty channelinY=new SimpleDoubleProperty();
     private DoubleProperty channelOutX=new SimpleDoubleProperty();
     private DoubleProperty channelOutY=new SimpleDoubleProperty();
 
@@ -54,22 +46,24 @@ public class LinkView extends Group{
     private ImageView imageChannelOut;
     private AnchorPane paneChannel;
 
+    private double arrowHeight = 9;
+    private double halfArrowWidth = 5;
 
     private Line line=new Line();
+    private Line line1Arrow = new Line();
+    private Line line2Arrow = new Line();
 
+    private Circle circle=new Circle();
 
     public LinkView(boolean isShadow) {
-        this.getChildren().add(0,line);
+        getChildren().add(line);
     }
     public LinkView(DraggableModule from,DraggableModule to, String channel){
 
-            imageChannelIn=new ImageView("ChannelInDefault.png");
-            imageChannelOut=new ImageView("ChannelOutDefault.png");
+            imageChannelIn=new ImageView("ChannelIn.png");
+            imageChannelOut=new ImageView("ChannelOut.png");
             imageChannelOut.setFitWidth(30);
             imageChannelOut.setFitHeight(30);
-            imageChannelIn.setFitHeight(30);
-            imageChannelIn.setFitWidth(30);
-
 
             /*TODO add to Map of Main
             * update model
@@ -81,9 +75,9 @@ public class LinkView extends Group{
 
 
             this.id=from.getName()+to.getName()+channel;
-            link=new Link(Main.modules.get(from.getName()),Main.modules.get(to.getName()),"default");
+            link=new Link(Main.modules.get(from.getName()),Main.modules.get(to.getName()),"");
             Main.links.put(link.getID(),link);
-            this.getChildren().add(0,line);
+            this.getChildren().add(line);
             MainWindow.allLinkView.put(link.getID(),this);
 
 
@@ -147,56 +141,53 @@ public class LinkView extends Group{
 
 
     }
-    public void bindBottonChannels(String orientation){
+    public void bindBottonChannels(){
+
+        //ScrollPane mainScrollpane = (ScrollPane) Main.mScene.lookup("mainScrollPane");
 
 
         channelOutX.bind((line.endXProperty().add(line.startXProperty()).divide(2.0)));
         channelOutY.bind((line.endYProperty().add(line.startYProperty()).divide(2.0)));
 
-        channelInX.bind(line.startXProperty().add(line.endXProperty()).divide(2.0));
-        channelInY.bind(line.startYProperty().add(line.endYProperty()).divide(2.0));
 
-        switch(orientation){
-            case "toFrom":
-                toFrom=true;
-                this.getChildren().add(imageChannelIn);
-                 break;
-            case "fromTo":
-
-                this.getChildren().add(imageChannelOut);
-                break;
-        }
-
+        circle.setOpacity(1);
+        circle.setStyle("-fx-background-color:black;");
+        imageChannelOut.setStyle("-fx-border-color: black;");
+        circle.setRadius(5);
+      //  imageChannelOut.xProperty().bind((line.endXProperty().add(line.startXProperty()).divide(2.0)));
+      //  imageChannelOut.yProperty().bind((line.endYProperty().add(line.startYProperty()).divide(2.0)));
+      //  imageChannelOut.setX((line.getEndX()+line.getStartX())/2);
+       // imageChannelOut.setY((line.getEndY()+line.getStartY())/2);
+        this.getChildren().add(circle);
+        this.getChildren().add(imageChannelOut);
         updateBottonChannels();
 
     }
 
     public void updateBottonChannels(){
+        // double angle=calcAngleLine();
+      //  Math.rad
 
+        centerOut.add(imageChannelOut.getX()-imageChannelOut.getFitHeight()/2,imageChannelOut.getY()-imageChannelOut.getFitWidth()/2,0);
         System.out.println("*--*-*-*-*-*-*"+calcAngleLine());
+
+        circle.setCenterX(channelOutX.doubleValue()+Math.cos(calcAngleLine())*30);
+        circle.setCenterY(channelOutY.doubleValue()+Math.sin(calcAngleLine())*30);
 
 
         System.out.println("COS angle"+Math.cos(calcAngleLine()));
         System.out.println("SIN angle"+Math.sin(calcAngleLine()));
+      //  imageChannelOut.setX(channelOutX.intValue());
+      //  imageChannelOut.setY(channelOutY.intValue());
 
-        if(fromTo) {
-            imageChannelOut.setX(channelOutX.intValue()+ Math.cos(calcAngleLine()) * 30 - imageChannelOut.getFitHeight() / 2);
-            imageChannelOut.setY(channelOutY.intValue()+ Math.sin(calcAngleLine()) * 30 - imageChannelOut.getFitWidth() / 2);
-            //imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
+        imageChannelOut.setX(channelOutX.intValue()+Math.cos(calcAngleLine())*30/*-Math.sin(calcAngleLine())*imageChannelOut.getFitWidth()/2*/);
+        imageChannelOut.setY(channelOutY.intValue()+Math.sin(calcAngleLine())*30/*-Math.cos(calcAngleLine())*imageChannelOut.getFitHeight()/2*/);
+        //imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
 
-            imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
-            imageChannelOut.setRotate(Math.toDegrees(calcAngleLine()));
-        }
-        if(toFrom){
-            imageChannelIn.setX(channelInX.intValue() - Math.cos(calcAngleLine())*30  - imageChannelIn.getFitHeight() / 2);
-            imageChannelIn.setY(channelInY.intValue() - Math.sin(calcAngleLine()) *30 - imageChannelIn.getFitWidth() / 2);
-            //imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
-
-            imageChannelIn.setRotationAxis(Rotate.Z_AXIS);
-            imageChannelIn.setRotate(Math.toDegrees(calcAngleLine()));
-
-        }
-
+        imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
+        imageChannelOut.setRotate(Math.toDegrees(calcAngleLine()));
+        circle.setRotationAxis(Rotate.Z_AXIS);
+        circle.setRotate(Math.toDegrees(calcAngleLine()));
 
     }
     private double calcAngleLine() {
@@ -207,20 +198,57 @@ public class LinkView extends Group{
         return angle;
 
     }
+/*
+    private void calcolateArrow(Point2D from, Point2D to) {
+
+        double angle = calcAngleLine(from, to);
+        //calc vertex
+
+        Point2D aroBase = new Point2D(
+                (float) (to.getX() - arrowHeight * Math.cos(angle)),
+                (float) (to.getY() - arrowHeight * Math.sin(angle))
 
 
-    public String getName() {
-        return link.getID();
-    }
+        );
+        //determine the location of middle of
+        //the base of the arrow - basically move arrowHeight
+        //distance back towards the starting point
 
-    public void addChannel(DraggableModule from, DraggableModule to,String channel) {
-       Module modFrom =Main.modules.get(from.getName());
-        Module modTo =Main.modules.get(to.getName());
 
-        link.addChannel(modFrom,modTo,channel);
-    }
+        Point2D end1 = new Point2D(
 
-    public Link getLink() {
-        return link;
-    }
+                (float) (aroBase.getX() - halfArrowWidth * Math.cos(angle - Math.PI / 2)),
+                (float) (aroBase.getY() - halfArrowWidth * Math.sin(angle - Math.PI / 2)));
+        //locate one of the points, use angle-pi/2 to get the
+        //angle perpendicular to the original line(which was 'angle')
+
+
+        Point2D end2 = new Point2D(
+                (float) (aroBase.getX() - halfArrowWidth * Math.cos(angle + Math.PI / 2)),
+                (float) (aroBase.getY() - halfArrowWidth * Math.sin(angle + Math.PI / 2)));
+
+        //same thing but with other side
+
+        if (associationType == AssociationModel.AssociationType.Inherit) {
+
+            arrowInherit.getPoints().setAll(to.getX(), to.getY(),
+                    end1.getX(), end1.getY(),
+                    end2.getX(), end2.getY());
+            arrowInherit.setFill(Color.BLACK);
+
+        } else {
+
+            line1Arrow.setStartX(to.getX());
+            line1Arrow.setStartY(to.getY());
+            line1Arrow.setEndX(end1.getX());
+            line1Arrow.setEndY(end1.getY());
+
+            line2Arrow.setStartX(to.getX());
+            line2Arrow.setStartY(to.getY());
+            line2Arrow.setEndX(end2.getX());
+            line2Arrow.setEndY(end2.getY());
+        }
+
+    }*/
+
 }
