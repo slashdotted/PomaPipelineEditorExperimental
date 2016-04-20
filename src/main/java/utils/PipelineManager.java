@@ -1,6 +1,7 @@
 package utils;
 
 import javafx.scene.input.ClipboardContent;
+import main.Main;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -31,6 +32,7 @@ public class PipelineManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         return true;
     }

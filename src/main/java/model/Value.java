@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Value<T> {
 
+    private boolean isDirty;
     private boolean isMandatory;
     private boolean defaultValue;
     private String name;
@@ -20,18 +21,22 @@ public class Value<T> {
         this.value = val;
         this.defaultValue = defaultValue;
         this.isMandatory = isMandatory;
+        this.isDirty = !defaultValue;
     }
 
-    public Value(String name, T val) {
-        this.name = name;
-        this.value = val;
-        this.defaultValue = false;
-    }
+//    public Value(String name, T val) {
+//        this.name = name;
+//        this.value = val;
+//        this.defaultValue = false;
+//
+//    }
 
     public Value(Value value) {
         this.name = value.getName();
         this.defaultValue = value.isDefaultValue();
         this.isMandatory = value.isMandatory();
+        this.isDirty = value.isDirty();
+
         Object val = null;
         Constructor ctor = null;
         try {
@@ -52,6 +57,14 @@ public class Value<T> {
         }
         this.value = (T) val;
 
+    }
+
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        isDirty = dirty;
     }
 
     public T getValue() {

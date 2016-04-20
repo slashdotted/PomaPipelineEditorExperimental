@@ -66,11 +66,10 @@ public class DraggableModule extends Pane {
 
 
     //handlers and vars to create links through drag and drop
-    public static LinkView mShadowLink  =new LinkView(true);
+    private LinkView mShadowLink = null;
     private ScrollPane mainScrollPane=null;
 
     private EventHandler <MouseEvent> mLinkHandleDragDetected;
-    private EventHandler <MouseEvent> mLinkHandleDropOut;
     private EventHandler <DragEvent> mLinkHandleDragDropped;
     private EventHandler <DragEvent> mContextLinkDragOver;
     private EventHandler <DragEvent> mContextLinkDragDropped;
@@ -120,7 +119,7 @@ public class DraggableModule extends Pane {
         paneItemImage.setOnDragDropped(mLinkHandleDragDropped);
 
         boolean isShadow=true;
-
+        mShadowLink =new LinkView(isShadow);
         mShadowLink.setVisible(false);
 
     }
@@ -182,7 +181,8 @@ public class DraggableModule extends Pane {
 
                     mShadowLink.setVisible(false);
 
-
+                    Group group = (Group) mainScrollPane.getContent();
+                    group.getChildren().remove(0);
 
                     ClipboardContent content=new ClipboardContent();
                     //information about where finish the link
@@ -193,8 +193,6 @@ public class DraggableModule extends Pane {
                     event.consume();
 
                 }
-                Group group = (Group) mainScrollPane.getContent();
-                group.getChildren().remove(mShadowLink);
 
             }
 
@@ -224,9 +222,7 @@ public class DraggableModule extends Pane {
                 //remove shodow
                 mShadowLink.setVisible(false);
                 Group group= (Group) mainScrollPane.getContent();
-                group.getChildren().remove(mShadowLink);
-
-                group.getChildren().remove(mShadowLink);
+                group.getChildren().remove(0);
 
 
                 event.setDropCompleted(true);
@@ -337,7 +333,4 @@ public class DraggableModule extends Pane {
         links.add(MainWindow.allLinkView.get(id));
     }
 
-    public LinkView getShadow() {
-        return mShadowLink;
-    }
 }
