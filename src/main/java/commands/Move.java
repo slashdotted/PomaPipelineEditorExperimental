@@ -22,7 +22,10 @@ public class Move implements Command {
     @Override
     public boolean execute() {
 
-        draggableModule.relocate((int) newCoords.getX(), (int) newCoords.getY());
+        draggableModule.relocate (
+                (int) newCoords.getX(), (int) newCoords.getY()
+
+        );
         draggableModule.getModule().setPosition(newCoords);
         return true;
     }

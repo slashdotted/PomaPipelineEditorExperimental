@@ -1,7 +1,6 @@
 package utils;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
-import javafx.geometry.Point2D;
 import javafx.scene.input.DataFormat;
 import main.Main;
 import model.Link;
@@ -29,22 +28,11 @@ public class Converter {
         Module module = null;
         String type = (String) jsonObject.get("type");
 
-        Point2D position = null;
-
-        Double x = (Double) jsonObject.get("#x");
-        Double y = (Double) jsonObject.get("#y");
-
-
-        if (x != null && y != null)
-            position = new Point2D(x, y);
-
         //System.out.println(type); // TODO remove this
         ModuleTemplate template = Main.templates.get(type);
 
         module = Module.getInstance(template);
         module.setName(name);
-        if (position != null)
-            module.setPosition(position);
 
         module.setParameters(extractParams(template, jsonObject));
 
@@ -61,9 +49,6 @@ public class Converter {
         jsonObject.put("type", module.getType());
         module.getParameters().keySet().parallelStream().forEach(key ->
                 jsonObject.put(key, module.getParameters().get(key).getValue()));
-
-        jsonObject.put("#x", module.getPosition().getX());
-        jsonObject.put("#y", module.getPosition().getY());
 
         if (module.getCparams() != null) {
             JSONArray jsonArray = new JSONArray();
@@ -175,12 +160,11 @@ public class Converter {
     /**
      * Method for generate a pipeline string from modules
      * Better checkMatching before calling this method.
-     *
      * @param pipelineModules
      * @param pipelineLinks
      * @return
      */
-    public static String getPipelineString(JSONObject pipelineModules, JSONArray pipelineLinks) {
+    public static String getPipelineString(JSONObject pipelineModules, JSONArray pipelineLinks){
         StringBuffer pipelineStringBuffer = new StringBuffer();
 
         pipelineStringBuffer.append("{\n\t\"modules\" : ");
@@ -193,16 +177,18 @@ public class Converter {
     }
 
 
-    public static boolean checkMatching(JSONObject pipelineModules, JSONArray pipelineLinks) {
+    public static boolean checkMatching(JSONObject pipelineModules, JSONArray pipelineLinks){
 
         for (Object pipelineLink : pipelineLinks) {
             JSONObject link = (JSONObject) pipelineLink;
-            if (!(pipelineModules.containsKey(link.get("from")) && pipelineModules.containsKey(link.get("to")))) ;
+            if(!(pipelineModules.containsKey(link.get("from")) && pipelineModules.containsKey(link.get("to"))));
             return false;
         }
 
         return true;
     }
+
+
 
 
 }

@@ -74,6 +74,7 @@ public class ChannelsManager extends BorderPane {
 
                            // hbox.setPrefWidth(300);
                              Label channelName=new Label(t.getName());
+
                              channelName.setAlignment(Pos.CENTER_LEFT);
                              channelName.setMaxWidth(Double.MAX_VALUE);
                              hbox.setHgrow(channelName, Priority.ALWAYS);
@@ -104,10 +105,11 @@ public class ChannelsManager extends BorderPane {
                              @Override
                              public void handle(MouseEvent event) {
                                  //TODO let modify name of channel
+
                                  System.out.println("Click on label");
                              }
                          });
-
+                         
                      }
 
                      private void addListenerHandler(ImageView removeChanne) {

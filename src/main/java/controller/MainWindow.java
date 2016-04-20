@@ -141,6 +141,7 @@ public class MainWindow extends BorderPane {
         newButton.setTooltip(new Tooltip("New Pipeline"));
         newButton.setOnAction(event -> {
             if (!Main.modules.isEmpty()) {
+
             }
         });
 
@@ -387,24 +388,66 @@ public class MainWindow extends BorderPane {
 */
 
                         if (from != null && to != null) {
-                            LinkView linkV = new LinkView(from, to, "");
-                            Group group = (Group) mainScrollPane.getContent();
-                            Group group1 = new Group();
+                            String orientationLink=existLink(from,to);
 
-                            group1.getChildren().addAll(linkV, new ImageView("ChannelIn.png"));
+                            //didn't exist
+                            if(orientationLink==null) {
+                                LinkView linkV = new LinkView(from, to, "");
+                                Group group = (Group) mainScrollPane.getContent();
+                                group.getChildren().add(0, linkV);
+                                allLinkView.put(linkV.getName(), linkV);
+                                linkV.bindLink(from, to);
+                                linkV.bindBottonChannels("fromTo");
+                            }else{
+                                //link exists can I add default channel?
 
-                            group.getChildren().add(0, linkV);
-                            // group.getChildren().add(0,group1);
-                            allLinkView.put(linkV.getId(), linkV);
-                            System.out.println("sfdafasf-------------");
-                            linkV.bindLink(from, to);
-                            linkV.bindBottonChannels();
+                                System.out.println(orientationLink);
+                                String idLink;
+                                switch (orientationLink){
+                                    case "fromTo":
+
+                                        idLink=fromId+"-"+toId;
+                                        if(!((Main.links.get(idLink).getChannelsAToB()).contains("default"))){
+                                            LinkView linkV=allLinkView.get(idLink);
+                                            linkV.addChannel(from,to,"default");
+                                        }
+                                        break;
+                                    case "toFrom":
+
+                                        idLink=toId+"-"+fromId;
+                                        if(!((Main.links.get(idLink).getChannelsBToA()).contains("default"))){
+                                            LinkView linkV=allLinkView.get(idLink);
+                                            linkV.addChannel(from,to,"default");
+                                            linkV.bindBottonChannels("toFrom");
+                                            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                                        }
+                                        break;
+                                }
+
+
+
+
+                            }
                         }
                     }
                 }
             }
         });
 
+    }
+
+    private String existLink(DraggableModule from, DraggableModule to) {
+
+        String idLink=from.getName()+"-"+to.getName();
+        String idLink2=to.getName()+"-"+from.getName();
+
+        if(Main.links.containsKey(idLink)){
+            return "fromTo";
+        }
+        if(Main.links.containsKey(idLink2)){
+            return "toFrom";
+        }
+        return null;
     }
 
 }

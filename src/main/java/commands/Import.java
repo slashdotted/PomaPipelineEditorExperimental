@@ -41,9 +41,9 @@ public class Import implements Command {
 
         jsonModules.keySet().forEach(key -> {
             Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
-            Main.modules.put(String.valueOf(key), module);
 
-            Main.modulesClipboard.put(String.valueOf(key), Converter.moduleToJSON(module));
+            Main.modules.put(String.valueOf(key), module);
+            Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
         });
 
         jsonArray.forEach(obj -> {

@@ -24,7 +24,6 @@ import java.util.TreeMap;
 
 public class Main extends Application {
 
-    public static boolean dirtyPipeline = false;
     public static Map<String, ModuleTemplate> templates = new TreeMap<>();
 
     public static Map<String, Module> modules = new HashMap<>();
@@ -33,7 +32,7 @@ public class Main extends Application {
     public static Map<String, JSONObject> modulesClipboard = new HashMap<>();
     public static Map<String, JSONObject> linksClipboard = new HashMap<>();
     public static Scene mScene;
-    public static  BorderPane root;
+    public static BorderPane root;
 
     //public static String currentJSON = "";
 
@@ -51,32 +50,36 @@ public class Main extends Application {
         Command importCommand = new Import(conf);
         importCommand.execute();
 
-//
-//        File saveFile = new File("pipeline_saved_test.json");
-//
-//        Command save = new Save(saveFile, modulesClipboard, linksClipboard);
-//        save.execute();
-//
-//
-//        clearData();
+
+        File saveFile = new File("pipeline_saved_test.json");
+
+        Command save = new Save(saveFile, modulesClipboard, linksClipboard);
+        save.execute();
+
+        importCommand = new Import(saveFile);
+        importCommand.execute();
+
+        System.out.println("Imported modules:" + modules.size());
+        modules.keySet().forEach(key -> {
+            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
+        });
 
 
-//        System.out.println("\nImported links:" + links.size());
-//        System.out.println("ClipBoarded links:" + linksClipboard.size());
-//        linksClipboard.keySet().forEach(key -> {
-//            System.out.println(key + " : " + linksClipboard.get(key));
-//        });
+        System.out.println("\nImported links:" + links.size());
+        System.out.println("ClipBoarded links:" + linksClipboard.size());
+        linksClipboard.keySet().forEach(key -> {
+            System.out.println(key + " : " + linksClipboard.get(key));
+        });
 
 
         // long startTime = System.currentTimeMillis();
-       root = new MainWindow();
+        root = new MainWindow();
         // System.out.println(System.currentTimeMillis()-startTime);
 
         primaryStage.setTitle("PoorMans Pipeline Editor");
         mScene=new Scene(root, 600, 600);
         primaryStage.setScene(mScene);
-        primaryStage.setMinHeight(500);
-        primaryStage.setMinWidth(500);
+
 
         primaryStage.show();
 
