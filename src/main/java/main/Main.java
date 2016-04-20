@@ -30,6 +30,7 @@ public class Main extends Application {
     public static Map<String, JSONObject> modulesClipboard = new HashMap<>();
     public static Map<String, JSONObject> linksClipboard = new HashMap<>();
     public static Scene mScene;
+    public static BorderPane root;
 
     //public static String currentJSON = "";
 
@@ -70,7 +71,7 @@ public class Main extends Application {
 
 
         // long startTime = System.currentTimeMillis();
-        BorderPane root = new MainWindow();
+        root = new MainWindow();
         // System.out.println(System.currentTimeMillis()-startTime);
 
         primaryStage.setTitle("PoorMans Pipeline Editor");

@@ -7,3 +7,16 @@
 .draggable-module{
 	-fx-border-color:rgba(119,85,51,255);
 }
+
+.channel-view  {
+	-fx-padding: 0 1 0 1;
+	-fx-background-color: transparent;
+	-fx-background-insets: 0;
+	-fx-shape: " ";
+}
+.split-pane-channel {
+	-fx-border-color:  transparent;
+	-fx-background-color: transparent;
+	-fx-background-insets: 0;
+	-fx-box-border: transparent;
+}

@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,8 +13,8 @@ public class Link {
     private final Module moduleA;
     private final Module moduleB;
 
-    private Set<String> channelsAToB;
-    private Set<String> channelsBToA;
+    private List<String> channelsAToB;
+    private List<String> channelsBToA;
 
     //private String channel = "default";
 
@@ -44,8 +45,8 @@ public class Link {
         this.moduleB = moduleB;
         this.moduleA = moduleA;
 
-        this.channelsAToB = new HashSet<>();
-        this.channelsBToA = new HashSet<>();
+        this.channelsAToB = new ArrayList<>();
+        this.channelsBToA = new ArrayList<>();
 
         this.channelsAToB.add(channel);
     }
@@ -53,14 +54,15 @@ public class Link {
 
     public boolean addChannel(Module from, Module to, String channel) {
         if (from.equals(moduleA)) {
-            if (to.equals(moduleB)) {
+            if ((to.equals(moduleB))&&(!channelsAToB.contains(channel))) {
+
                 channelsAToB.add(channel);
                 return true;
             }
         }
 
         if (from.equals(moduleB)) {
-            if (to.equals(moduleA)) {
+            if ((to.equals(moduleA))&&(!channelsBToA.contains(channel))) {
                 channelsBToA.add(channel);
                 return true;
             }
@@ -71,34 +73,34 @@ public class Link {
     public boolean removeChannel(Module from, Module to, String channel) {
         if (from.equals(moduleA)) {
             if (to.equals(moduleB)) {
-                channelsAToB.remove(channel);
-                return true;
+               return channelsAToB.remove(channel);
+
             }
         }
 
         if (from.equals(moduleB)) {
             if (to.equals(moduleA)) {
-                channelsBToA.remove(channel);
-                return true;
+                return channelsBToA.remove(channel);
+
             }
         }
 
         return false;
     }
 
-    public Set<String> getChannelsAToB() {
+    public List<String> getChannelsAToB() {
         return channelsAToB;
     }
 
-    public void setChannelsAToB(Set<String> channelsAToB) {
+    public void setChannelsAToB(List<String> channelsAToB) {
         this.channelsAToB = channelsAToB;
     }
 
-    public Set<String> getChannelsBToA() {
+    public List<String> getChannelsBToA() {
         return channelsBToA;
     }
 
-    public void setChannelsBToA(Set<String> channelsBToA) {
+    public void setChannelsBToA(List<String> channelsBToA) {
         this.channelsBToA = channelsBToA;
     }
 

@@ -3,19 +3,25 @@ package controller;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import main.Main;
 import model.Link;
 import model.Module;
+import utils.ChannelsManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -64,6 +70,7 @@ public class LinkView extends Group{
     public LinkView(DraggableModule from,DraggableModule to, String channel){
 
             imageChannelIn=new ImageView("ChannelInDefault.png");
+
             imageChannelOut=new ImageView("ChannelOutDefault.png");
             imageChannelOut.setFitWidth(30);
             imageChannelOut.setFitHeight(30);
@@ -90,9 +97,29 @@ public class LinkView extends Group{
             //first time will be FromTo always
             fromTo=true;
 
+            addHandlerChannels(imageChannelIn,link,"toFrom");
+            addHandlerChannels(imageChannelOut,link,"fromTo");
+
 
     }
 
+    private void addHandlerChannels(ImageView image,Link link,String orientation) {
+        image.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ChannelsManager root=new ChannelsManager(link,orientation);
+                Stage stage=new Stage();
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(Main.mScene.getWindow());
+                stage.setTitle("Channels Manager");
+                stage.setScene(new Scene(root,300,300));
+                stage.setResizable(false);
+
+                stage.show();
+
+            }
+        });
+    }
 
 
     public DraggableModule getFrom() {
@@ -223,4 +250,6 @@ public class LinkView extends Group{
     public Link getLink() {
         return link;
     }
+
+
 }
