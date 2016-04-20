@@ -48,7 +48,7 @@ public class GraphicsElementsFactory {
         VBox box = new VBox(10);
         box.setFillWidth(true);
         box.setStyle("-fx-background-color: cornsilk");
-        box.setStyle("-fx-padding: 10;");
+        box.setSpacing(5);
         Label label = new Label(name);
         TextField textField = new TextField();
         textField.setPromptText("insert here " + name + "...");
@@ -59,39 +59,68 @@ public class GraphicsElementsFactory {
         return box;
     }
 
-    public static VBox moduleConfBox(Module module) {
-        VBox mainBox = new VBox();
-        mainBox.getChildren().add(new Label("Template test"));
-        Map<String, Value> params = module.getParameters();
-        ArrayList<String> cParams = module.getCparams();
-
-        ModuleTemplate template = module.getTemplate();
-
-        template.getMandatoryParameters().keySet().forEach(key -> {
-            VBox current = getFormBox(key);
-            mainBox.getChildren().add(current);
-            mainBox.getChildren().add(getSeparator());
-        });
-
-        template.getOptParameters().keySet().forEach(key -> {
-            VBox current = getFormBox(key);
-            mainBox.getChildren().add(current);
-            mainBox.getChildren().add(getSeparator());
-        });
 
 
-        mainBox.getChildren().add(getOkCancelBox());
+//    public static VBox moduleConfBox(Module module) {
+//        VBox mainBox = new VBox();
+//        mainBox.getChildren().add(new Label("Template test"));
+//        Map<String, Value> params = module.getParameters();
+//        ArrayList<String> cParams = module.getCparams();
+//
+//        ModuleTemplate template = module.getTemplate();
+//
+//        template.getMandatoryParameters().keySet().forEach(key -> {
+//            VBox current = getFormBox(key);
+//            mainBox.getChildren().add(current);
+//            mainBox.getChildren().add(getSeparator());
+//        });
+//
+//        template.getOptParameters().keySet().forEach(key -> {
+//            VBox current = getFormBox(key);
+//            mainBox.getChildren().add(current);
+//            mainBox.getChildren().add(getSeparator());
+//        });
+//
+//
+//        mainBox.getChildren().add(getOkCancelBox());
+//
+//        return mainBox;
+//    }
 
-        return mainBox;
-    }
 
-    public static Separator getSeparator(){
-        Insets insets = new Insets(5,15,5,15);
+
+//    public static VBox moduleConfBox(Module module) {
+//        VBox mainBox = new VBox();
+//        mainBox.getChildren().add(new Label("Template test"));
+//        Map<String, Value> params = module.getParameters();
+//        ArrayList<String> cParams = module.getCparams();
+//
+//        ModuleTemplate template = module.getTemplate();
+//
+//        template.getMandatoryParameters().keySet().forEach(key -> {
+//            VBox current = getFormBox(key);
+//            mainBox.getChildren().add(current);
+//            mainBox.getChildren().add(getSeparator());
+//        });
+//
+//        template.getOptParameters().keySet().forEach(key -> {
+//            VBox current = getFormBox(key);
+//            mainBox.getChildren().add(current);
+//            mainBox.getChildren().add(getSeparator());
+//        });
+//
+//
+//        mainBox.getChildren().add(getOkCancelBox());
+//
+//        return mainBox;
+//    }
+
+    public static Separator getSeparator() {
+        Insets insets = new Insets(5, 15, 5, 15);
         Separator separator = new Separator();
         separator.setPadding(insets);
         return separator;
     }
-
 
 
 }
