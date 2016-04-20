@@ -141,7 +141,6 @@ public class MainWindow extends BorderPane {
         newButton.setTooltip(new Tooltip("New Pipeline"));
         newButton.setOnAction(event -> {
             if (!Main.modules.isEmpty()) {
-
             }
         });
 
