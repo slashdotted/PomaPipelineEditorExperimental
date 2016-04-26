@@ -65,7 +65,7 @@ public class GraphicsElementsFactory {
 //        VBox mainBox = new VBox();
 //        mainBox.getChildren().add(new Label("Template test"));
 //        Map<String, Value> params = module.getParameters();
-//        ArrayList<String> cParams = module.getCparams();
+//        ArrayList<String> cParams = module.getCParams();
 //
 //        ModuleTemplate template = module.getTemplate();
 //
@@ -93,7 +93,7 @@ public class GraphicsElementsFactory {
 //        VBox mainBox = new VBox();
 //        mainBox.getChildren().add(new Label("Template test"));
 //        Map<String, Value> params = module.getParameters();
-//        ArrayList<String> cParams = module.getCparams();
+//        ArrayList<String> cParams = module.getCParams();
 //
 //        ModuleTemplate template = module.getTemplate();
 //

@@ -47,14 +47,11 @@ public class FormBox extends VBox{
         this.setSpacing(5);
         //System.out.println("\n\n" + value + "\n");
         formLabel.setText(value.getName());
-        ListChangeListener<? super Pane> listener = new ListChangeListener<Pane>() {
-            @Override
-            public void onChanged(Change<? extends Pane> c) {
 
-            }
-        };
         formTextField.setPromptText("Insert here " + value.getName());
         if(value.isDefaultValue())
             formTextField.setText(value.getValue().toString());
+
+
     }
 }

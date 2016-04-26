@@ -1,18 +1,27 @@
 package controller;
 
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import model.Module;
 import model.ModuleTemplate;
 import model.Value;
-import utils.GraphicsElementsFactory;
 import utils.ParamBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by felipe on 13/04/16.
@@ -31,10 +40,17 @@ public class SideBar extends ScrollPane {
     @FXML
     private VBox cparamsBox;
 
+    @FXML
+    private Button addCParamButton;
 
 
+    private List<ParamBox> paramBoxes;
+    private ObservableList<SimpleStringProperty> cparams;
+    //private ArrayList<String> cparams;
     private Module module;
     private ModuleTemplate template;
+    private VBox mandatoryBox;
+    private VBox optionalBox;
 
 
     public SideBar(Module module) {
@@ -50,44 +66,87 @@ public class SideBar extends ScrollPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
         this.module = module;
 
     }
 
-
-
-
     @FXML
     public void initialize() {
         this.template = module.getTemplate();
-        templateLabel.setText("New " +template.getType() + " Module");
+        //this.cparams = FXCollections.observableList(module.getCParams());
+        this.cparams = module.getcParams();
+        templateLabel.setText("New " + template.getType() + " Module");
+        paramBoxes = new ArrayList<>();
 
-        VBox mandatoryBox = new VBox();
-        VBox optionalBox = new VBox();
+        setParametersArea();
+        this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
+        this.cparamsBox.setFillWidth(true);
+
+
+        addCParamButton.setGraphic(new ImageView("images/plus.png"));
+        addCParamButton.setOnAction(event -> addNewCParam(new SimpleStringProperty()));
+
+        //TODO initialize here all existent params
+        if (!cparams.isEmpty()) {
+            System.out.println("cparams size: " + cparams.size());
+            for (int i = 0; i < cparams.size(); i++) {
+                addNewCParam(cparams.get(i));
+                System.out.println("Added: " + cparams.get(i));
+            }
+            System.out.println("After add for");
+
+        }
+    }
+
+    private void setParametersArea() {
+
+        //TODO initialize present fields
+        mandatoryBox = new VBox();
+        optionalBox = new VBox();
 
         mandatoryParamsPane.setContent(mandatoryBox);
         optionalParamsPane.setContent(optionalBox);
 
         template.getMandatoryParameters().keySet().forEach(key -> {
-            Value value= template.getMandatoryParameters().get(key);
-            VBox current =  new FormBox(value);
+            Value value = template.getMandatoryParameters().get(key);
+            VBox current = new FormBox(value);
             mandatoryBox.getChildren().add(current);
-           // mandatoryBox.getChildren().add(GraphicsElementsFactory.getSeparator());
+            // mandatoryBox.getChildren().add(GraphicsElementsFactory.getSeparator());
         });
 
         template.getOptParameters().keySet().forEach(key -> {
-            Value value= template.getOptParameters().get(key);
-            VBox current =  new FormBox(value);
-
-
+            Value value = template.getOptParameters().get(key);
+            VBox current = new FormBox(value);
             optionalBox.getChildren().add(current);
-           // optionalBox.getChildren().add( GraphicsElementsFactory.getSeparator());
+            // optionalBox.getChildren().add( GraphicsElementsFactory.getSeparator());
         });
 
-        this.cparamsBox.getChildren().add(new ParamBox());
-
-
     }
+
+    private void addNewCParam(SimpleStringProperty newString) {
+        //SimpleStringProperty newString = new SimpleStringProperty(stringProperty);
+
+        ParamBox box = new ParamBox(newString);
+        this.cparamsBox.getChildren().add(1, box);
+
+        paramBoxes.add(box);
+        this.cparamsBox.setVgrow(box, Priority.ALWAYS);
+
+
+        box.getActionButton().setOnAction(event -> {
+            cparams.remove(box.paramProperty());
+            paramBoxes.remove(box);
+
+            Platform.runLater(() -> cparamsBox.getChildren().remove(box));
+        });
+
+//
+//        box.getTextField().setOnAction(event -> {
+//            // TODO remove this
+//            //System.out.println();
+//            module.getCParams().forEach(s -> System.out.println(s));
+//        });
+    }
+
+
 }

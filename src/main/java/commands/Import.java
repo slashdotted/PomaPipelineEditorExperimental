@@ -1,6 +1,8 @@
 package commands;
 
+import javafx.event.EventHandler;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseEvent;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -57,10 +59,11 @@ public class Import implements Command {
 
         });
 
-
         // Main.modules.putAll(clipboard);
         return true;
     }
+
+
 
     @Override
     public boolean reverse() {

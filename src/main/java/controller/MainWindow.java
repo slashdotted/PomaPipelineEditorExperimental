@@ -179,7 +179,7 @@ public class MainWindow extends BorderPane {
         redoButton.setGraphic(new ImageView("images/redo.png"));
         redoButton.setTooltip(new Tooltip("Redo"));
         redoButton.setOnAction(event -> {
-
+            //TODO remove this test
             Module module = Main.modules.get("blob_tracker");
             //System.out.println(module);
             Main.testPane(new SideBar(module));

@@ -1,11 +1,14 @@
 package model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
+import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by felipe on 03/03/16.
@@ -19,22 +22,23 @@ public class Module {
     //private String description;
   //  private String type;
     private ModuleTemplate template;
-    private ArrayList<String> cparams;
+   // private ArrayList<String> cParams;
+   private ObservableList<SimpleStringProperty> cParams;
+
     private Map<String, Value> parameters;
     private Point2D position=new Point2D (0.0, 0.0);;
 
 
     private Module(ModuleTemplate template){
-        this.template =template;
+        this.template = template;
         //this.name=template.getNameInstance();
-        //TODO init cparams and parameters
-
+        //this.cParams = new ArrayList<>();
+        this.cParams = FXCollections.observableArrayList();
+        this.parameters = new HashMap<>();
     }
     public static Module getInstance(ModuleTemplate template){
         Module module = new Module(template);
 
-
-        
         return module;
     }
 
@@ -68,14 +72,21 @@ public class Module {
         this.name = name;
     }
 
-
-    public ArrayList<String> getCparams() {
-        return cparams;
+    public ObservableList<SimpleStringProperty> getcParams() {
+        return cParams;
     }
 
-    public void setCparams(ArrayList<String> cparams) {
-        this.cparams = cparams;
+    public void setcParams(ObservableList<SimpleStringProperty> cParams) {
+        this.cParams = cParams;
     }
+
+    //    public ArrayList<String> getCParams() {
+//        return cParams;
+//    }
+//
+//    public void setCParams(ArrayList<String> cParams) {
+//        this.cParams = cParams;
+//    }
 
     public Map<String, Value> getParameters() {
         return parameters;
@@ -100,4 +111,7 @@ public class Module {
         this.position = position;
     }
 
+    public void addCParams(ArrayList<String> cparams) {
+        cparams.forEach(s -> this.cParams.add(new SimpleStringProperty(s)));
+    }
 }
