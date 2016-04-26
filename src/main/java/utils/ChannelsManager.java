@@ -1,6 +1,7 @@
 package utils;
 
 import controller.ChannelView;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -34,6 +35,7 @@ public class ChannelsManager extends BorderPane {
     private ListView<SimpleStringProperty> listV=new ListView<>();
     private String orientation;
     private  ObservableList<SimpleStringProperty> channelsObs =null;
+    String oldValue="";
         public ChannelsManager(Link link, String orientation){
             vBox=new VBox();
             buttons=new HBox();
@@ -63,7 +65,7 @@ public class ChannelsManager extends BorderPane {
             }
 
             listV.setItems(channelsObs);
-         listV.setCellFactory(new Callback<ListView<SimpleStringProperty>, ListCell<SimpleStringProperty>>() {
+            listV.setCellFactory(new Callback<ListView<SimpleStringProperty>, ListCell<SimpleStringProperty>>() {
              @Override
              public ListCell<SimpleStringProperty> call(ListView<SimpleStringProperty> param) {
 
@@ -79,13 +81,17 @@ public class ChannelsManager extends BorderPane {
 
 
                              ImageView removeChannel=new ImageView("/images/Delete.png");
+                             ImageView acceptChannel=new ImageView("/images/accept.png");
                              removeChannel.setFitHeight(15);
                              removeChannel.setFitWidth(15);
+                             acceptChannel.setFitHeight(15);
+                             acceptChannel.setFitWidth(15);
+                             acceptChannel.setVisible(false);
 
 
                              TextField channelName=new TextField();
                              channelName.setText(t.getValue());
-                             Bindings.bindBidirectional(channelName.textProperty(),t);
+                            // Bindings.bindBidirectional(channelName.textProperty(),t);
                                 channelName.setStyle("-fx-text-box-border: transparent;");
 
                              channelName.setAlignment(Pos.CENTER_LEFT);
@@ -94,13 +100,14 @@ public class ChannelsManager extends BorderPane {
 
 
 
-                             hboxImages.getChildren().add(removeChannel);
+                             hboxImages.getChildren().addAll(acceptChannel,removeChannel);
 
                              hbox.setAlignment(Pos.CENTER_LEFT);
                              hbox.getChildren().addAll(channelName,hboxImages);
 
-                             addListenerHandler(channelName);
+                             addListenerHandler(channelName,acceptChannel);
                              addListenerHandler(removeChannel);
+
 
                              setGraphic(hbox);
 
@@ -108,18 +115,41 @@ public class ChannelsManager extends BorderPane {
                          }
                      }
 
-                     private void addListenerHandler(TextField channelName) {
+                     private void addListenerHandler(TextField channelName,ImageView acceptImage) {
 
                          channelName.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
                              @Override
                              public void handle(MouseEvent event) {
                                  //TODO let modify name of channel
+                                 acceptImage.setVisible(true);
+                                 oldValue=channelName.getText();
                                  channelName.setEditable(true);
                                  System.out.println("Click on label");
                                  System.out.println(channelsObs.toString());
+
+
                              }
                          });
-                         
+
+                         channelName.focusedProperty().addListener((observable, oldValue1, newValue) ->
+                         {if( !newValue && oldValue1){
+                             Platform.runLater(() ->acceptImage.setVisible(false) );
+
+
+                         }
+
+                         });
+                         acceptImage.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+                             @Override
+                             public void handle(MouseEvent event) {
+                                 System.out.println(oldValue);
+                                 System.out.println(channelName.getText());
+                                 if(!oldValue.equals(channelName.getText())){
+                                     System.out.println("ha cambiato");
+                                 }
+                             }
+                         });
+
                      }
 
                      private void addListenerHandler(ImageView removeChanne) {
@@ -127,7 +157,7 @@ public class ChannelsManager extends BorderPane {
                          removeChanne.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
                              @Override
                              public void handle(MouseEvent event) {
-                                 //TODO update ListView e Model
+
                                  System.out.println("Click on remove");
                              }
                          });
@@ -146,6 +176,8 @@ public class ChannelsManager extends BorderPane {
 
 
             vBox.getChildren().add(listV);
+
+
         }
 
 

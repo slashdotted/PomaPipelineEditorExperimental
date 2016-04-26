@@ -18,6 +18,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -31,8 +32,14 @@ import java.util.Set;
  */
 public class LinkView extends Group{
 
-    private static String channelOutImageDefault="ChannelOut.png";
-    private static String channelOutImageEntries="ChannelOut.png";
+    private static String channelOutImageDefault="ChannelOutDefault.png";
+    private static String channelOutImageEntries="ChannelOutEntries.png";
+    private static String channelInImageDefault="ChannelInDefault.png";
+    private static String channelInImageEntries="ChannelInEntries.png";
+    private static String channelOutImageDefaultSelected="ChannelOutDefaultSelected.png";
+    private static String channelOutImageEntriesSelected="ChannelOutEntriesSelected.png";
+    private static String channelInImageDefaultSelected="ChannelInDefaultSelected.png";
+    private static String channelInImageEntriesSelected="ChannelInEntriesSelected.png";
     private static String channelInImage="ChannelIn.png";
 
     Point3D centerOut =new Point3D(0,0,0);
@@ -107,18 +114,96 @@ public class LinkView extends Group{
         image.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                select(image,orientation);
                 ChannelsManager root=new ChannelsManager(link,orientation);
                 Stage stage=new Stage();
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.initOwner(Main.mScene.getWindow());
-                stage.setTitle("Channels Manager");
+                String tittle="";
+
+                switch(orientation){
+                    case "fromTo":
+                        tittle=from.getName()+"->"+to.getName();
+
+                        break;
+                    case "toFrom":
+                        tittle=to.getName()+"->"+from.getName();
+                        break;
+                }
+                stage.setTitle(tittle);
                 stage.setScene(new Scene(root,300,300));
                 stage.setResizable(false);
 
                 stage.show();
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+                        unselect(image,orientation);
+                        updateImageViews(image,orientation);
+                    }
+                });
 
             }
         });
+    }
+
+    private void updateImageViews(ImageView image,String orientation) {
+        switch (orientation){
+            case "fromTo":
+                int size=link.getChannelsAToB().size();
+                if(size>1){
+                    image.setImage(new Image(channelOutImageEntries));
+                }else if(size==1){
+                    image.setImage(new Image(channelOutImageDefault));
+                }
+                break;
+            case "toFrom":
+                int size2=link.getChannelsBToA().size();
+                if(size2>1){
+                    image.setImage(new Image(channelInImageEntries));
+                }else if(size2==1){
+                    image.setImage(new Image(channelInImageDefault));
+                }
+                break;
+        }
+    }
+
+    private void unselect(ImageView image, String orientation) {
+        switch(orientation){
+            case "fromTo":
+                if(link.getChannelsAToB().size()==1) {
+                    image.setImage(new Image(channelOutImageDefault));
+                }else{
+                    image.setImage(new Image(channelOutImageEntries));
+                }
+                break;
+            case "toFrom":
+                if(link.getChannelsAToB().size()==1) {
+                    image.setImage(new Image(channelInImageDefault));
+                }else{
+                    image.setImage(new Image(channelInImageEntries));
+                }
+                break;
+        }
+    }
+
+    private void select(ImageView image,String orientation) {
+        switch(orientation){
+            case "fromTo":
+                if(link.getChannelsAToB().size()==1) {
+                    image.setImage(new Image(channelOutImageDefaultSelected));
+                }else{
+                    image.setImage(new Image(channelOutImageEntriesSelected));
+                }
+                break;
+            case "toFrom":
+                if(link.getChannelsAToB().size()==1) {
+                    image.setImage(new Image(channelInImageDefaultSelected));
+                }else{
+                    image.setImage(new Image(channelInImageEntriesSelected));
+                }
+                break;
+        }
     }
 
 
