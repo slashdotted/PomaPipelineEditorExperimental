@@ -361,7 +361,7 @@ public class MainWindow extends BorderPane {
                     String toId = container.getValue("toId");
 
 
-                    if (fromId != null && toId != null) {
+                    if ((fromId != null && toId != null)&&(!fromId.equals(toId))) {
                         System.out.println("tengo from e to");
                         System.out.println(container.getData());
 
@@ -407,7 +407,7 @@ public class MainWindow extends BorderPane {
                                     case "fromTo":
 
                                         idLink=fromId+"-"+toId;
-                                        if(!((Main.links.get(idLink).getChannelsAToB()).contains("default"))){
+                                        if(!(((Main.links.get(idLink)).checkIfPresent("default",Main.links.get(idLink).getChannelsAToB())))){
                                             LinkView linkV=allLinkView.get(idLink);
                                             linkV.addChannel(from,to,"default");
                                         }
@@ -415,7 +415,7 @@ public class MainWindow extends BorderPane {
                                     case "toFrom":
 
                                         idLink=toId+"-"+fromId;
-                                        if(!((Main.links.get(idLink).getChannelsBToA()).contains("default"))){
+                                        if(!(((Main.links.get(idLink)).checkIfPresent("default",Main.links.get(idLink).getChannelsBToA())))){
                                             LinkView linkV=allLinkView.get(idLink);
                                             linkV.addChannel(from,to,"default");
                                             linkV.bindBottonChannels("toFrom");

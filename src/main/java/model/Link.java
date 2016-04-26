@@ -1,5 +1,8 @@
 package model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,12 +12,12 @@ import java.util.Set;
  * Created by Marco on 18/03/2016.
  */
 public class Link {
-
+//TODO control chanfes simplestringproperties
     private final Module moduleA;
     private final Module moduleB;
 
-    private List<String> channelsAToB;
-    private List<String> channelsBToA;
+    private List<SimpleStringProperty> channelsAToB;
+    private List<SimpleStringProperty> channelsBToA;
 
     //private String channel = "default";
 
@@ -25,7 +28,7 @@ public class Link {
 //    }
 
     public String getJsonId(String channel) {
-        if (channelsAToB.contains(channel) || channelsBToA.contains(channel))
+        if (checkIfPresent(channel,channelsAToB) ||  checkIfPresent(channel,channelsBToA))
             return getID() + channel;
         else
             return null;
@@ -48,39 +51,40 @@ public class Link {
         this.channelsAToB = new ArrayList<>();
         this.channelsBToA = new ArrayList<>();
 
-        this.channelsAToB.add(channel);
+        this.channelsAToB.add(new SimpleStringProperty(channel));
     }
 
 
     public boolean addChannel(Module from, Module to, String channel) {
         if (from.equals(moduleA)) {
-            if ((to.equals(moduleB))&&(!channelsAToB.contains(channel))) {
+            if ((to.equals(moduleB))&&(!checkIfPresent(channel,channelsAToB))) {
 
-                channelsAToB.add(channel);
+                channelsAToB.add(new SimpleStringProperty(channel));
                 return true;
             }
         }
 
         if (from.equals(moduleB)) {
-            if ((to.equals(moduleA))&&(!channelsBToA.contains(channel))) {
-                channelsBToA.add(channel);
+            if ((to.equals(moduleA))&&(!checkIfPresent(channel,channelsBToA))) {
+                channelsBToA.add(new SimpleStringProperty(channel));
                 return true;
             }
         }
         return false;
     }
 
+
     public boolean removeChannel(Module from, Module to, String channel) {
         if (from.equals(moduleA)) {
             if (to.equals(moduleB)) {
-               return channelsAToB.remove(channel);
+               return channelsAToB.remove(new SimpleStringProperty(channel));
 
             }
         }
 
         if (from.equals(moduleB)) {
             if (to.equals(moduleA)) {
-                return channelsBToA.remove(channel);
+                return channelsBToA.remove(new SimpleStringProperty(channel));
 
             }
         }
@@ -88,19 +92,27 @@ public class Link {
         return false;
     }
 
-    public List<String> getChannelsAToB() {
+
+    public static boolean checkIfPresent(String string, List<SimpleStringProperty> list){
+        long match = list.stream().filter(stringProperty -> stringProperty.getValue().equals(string)).count();
+        if(match>0)
+            return true;
+        return false;
+    }
+
+    public List<SimpleStringProperty> getChannelsAToB() {
         return channelsAToB;
     }
 
-    public void setChannelsAToB(List<String> channelsAToB) {
+    public void setChannelsAToB(List<SimpleStringProperty> channelsAToB) {
         this.channelsAToB = channelsAToB;
     }
 
-    public List<String> getChannelsBToA() {
+    public List<SimpleStringProperty> getChannelsBToA() {
         return channelsBToA;
     }
 
-    public void setChannelsBToA(List<String> channelsBToA) {
+    public void setChannelsBToA(List<SimpleStringProperty> channelsBToA) {
         this.channelsBToA = channelsBToA;
     }
 

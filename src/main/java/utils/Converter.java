@@ -94,16 +94,16 @@ public class Converter {
             JSONObject jsonLink = new JSONObject();
             jsonLink.put("from", link.getModuleA().getName());
             jsonLink.put("to", link.getModuleB().getName());
-            if (!channel.equals("default"))
-                jsonLink.put("channel", channel);
+            if (!channel.getValue().equals("default"))
+                jsonLink.put("channel", channel.getValue());
         });
 
         link.getChannelsBToA().forEach(channel -> {
             JSONObject jsonLink = new JSONObject();
             jsonLink.put("from", link.getModuleB().getName());
             jsonLink.put("to", link.getModuleA().getName());
-            if (!channel.equals("default"))
-                jsonLink.put("channel", channel);
+            if (!channel.getValue().equals("default"))
+                jsonLink.put("channel", channel.getValue());
         });
         return jsonLinks;
     }

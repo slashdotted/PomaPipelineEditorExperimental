@@ -1,16 +1,17 @@
 package utils;
 
 import controller.ChannelView;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -30,9 +31,9 @@ public class ChannelsManager extends BorderPane {
     private HBox buttons;
     private Button addChannel=new Button("ADD");
     private Button removeChannel=new Button("REMOVE");
-    private ListView<ChannelView> listV=new ListView<>();
+    private ListView<SimpleStringProperty> listV=new ListView<>();
     private String orientation;
-    private  ObservableList<ChannelView> channelsObs =null;
+    private  ObservableList<SimpleStringProperty> channelsObs =null;
         public ChannelsManager(Link link, String orientation){
             vBox=new VBox();
             buttons=new HBox();
@@ -47,51 +48,59 @@ public class ChannelsManager extends BorderPane {
             switch (orientation){
                 case "fromTo":
                     orientation="fromTo";
-                    channelsObs= FXCollections.observableList(popolateChannels(link.getChannelsAToB()));
+                    channelsObs= FXCollections.observableList(link.getChannelsAToB());
+                 //  Bindings.bindContent(link.getChannelsAToB(),channelsObs);
                   //  channelsObs= FXCollections.observableList();
                     break;
                 case "toFrom":
                     orientation="toFrom";
-                    channelsObs= FXCollections.observableList(popolateChannels(link.getChannelsBToA()));
+                    channelsObs= FXCollections.observableList(link.getChannelsBToA());
+
+                  //  Bindings.bindContent(link.getChannelsBToA(),channelsObs);
                     //channelsObs=FXCollections.observableList(link.getChannelsBToA());
                     break;
 
             }
 
             listV.setItems(channelsObs);
-         listV.setCellFactory(new Callback<ListView<ChannelView>, ListCell<ChannelView>>() {
+         listV.setCellFactory(new Callback<ListView<SimpleStringProperty>, ListCell<SimpleStringProperty>>() {
              @Override
-             public ListCell<ChannelView> call(ListView<ChannelView> param) {
+             public ListCell<SimpleStringProperty> call(ListView<SimpleStringProperty> param) {
 
-                 ListCell<ChannelView> cell = new ListCell<ChannelView>(){
+                 ListCell<SimpleStringProperty> cell = new ListCell<SimpleStringProperty>(){
 
                      @Override
-                     protected void updateItem(ChannelView t, boolean bln) {
+                     protected void updateItem(SimpleStringProperty t, boolean bln) {
                          super.updateItem(t, bln);
                          if (t != null) {
                              HBox hbox=new HBox();
                              HBox hboxImages=new HBox();
 
-                           // hbox.setPrefWidth(300);
-                             Label channelName=new Label(t.getName());
+
+
+                             ImageView removeChannel=new ImageView("/images/Delete.png");
+                             removeChannel.setFitHeight(15);
+                             removeChannel.setFitWidth(15);
+
+
+                             TextField channelName=new TextField();
+                             channelName.setText(t.getValue());
+                             Bindings.bindBidirectional(channelName.textProperty(),t);
+                                channelName.setStyle("-fx-text-box-border: transparent;");
 
                              channelName.setAlignment(Pos.CENTER_LEFT);
                              channelName.setMaxWidth(Double.MAX_VALUE);
                              hbox.setHgrow(channelName, Priority.ALWAYS);
 
 
-                             ImageView editChannel=t.getEditChannel();
-                             ImageView removeChannel=t.getRemoveChannel();
 
-                             addListenerHandler(channelName);
-                             addListenerHandler(removeChannel);
-
-
-
-                             hboxImages.getChildren().addAll(editChannel,removeChannel);
+                             hboxImages.getChildren().add(removeChannel);
 
                              hbox.setAlignment(Pos.CENTER_LEFT);
                              hbox.getChildren().addAll(channelName,hboxImages);
+
+                             addListenerHandler(channelName);
+                             addListenerHandler(removeChannel);
 
                              setGraphic(hbox);
 
@@ -99,14 +108,15 @@ public class ChannelsManager extends BorderPane {
                          }
                      }
 
-                     private void addListenerHandler(Label channelName) {
+                     private void addListenerHandler(TextField channelName) {
 
                          channelName.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
                              @Override
                              public void handle(MouseEvent event) {
                                  //TODO let modify name of channel
-
+                                 channelName.setEditable(true);
                                  System.out.println("Click on label");
+                                 System.out.println(channelsObs.toString());
                              }
                          });
                          
@@ -138,16 +148,6 @@ public class ChannelsManager extends BorderPane {
             vBox.getChildren().add(listV);
         }
 
-    private List<ChannelView> popolateChannels(List<String> channelsFromLink) {
-        List<ChannelView> allChannels=new ArrayList<>();
-        for (String channel  :channelsFromLink) {
-
-            ChannelView chanV=new ChannelView(channel);
-            allChannels.add(chanV);
-        }
-
-        return allChannels;
-    }
 
 }
 

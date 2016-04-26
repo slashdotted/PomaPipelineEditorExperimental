@@ -59,17 +59,17 @@ public class Main extends Application {
         importCommand = new Import(saveFile);
         importCommand.execute();
 
-//        System.out.println("Imported modules:" + modules.size());
-//        modules.keySet().forEach(key -> {
-//            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
-//        });
-//
-//
-//        System.out.println("\nImported links:" + links.size());
-//        System.out.println("ClipBoarded links:" + linksClipboard.size());
-//        linksClipboard.keySet().forEach(key -> {
-//            System.out.println(key + " : " + linksClipboard.get(key));
-//        });
+        System.out.println("Imported modules:" + modules.size());
+        modules.keySet().forEach(key -> {
+            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
+       });
+
+
+       System.out.println("\nImported links:" + links.size());
+       System.out.println("ClipBoarded links:" + linksClipboard.size());
+        linksClipboard.keySet().forEach(key -> {
+            System.out.println(key + " : " + linksClipboard.get(key));
+        });
 
 
         // long startTime = System.currentTimeMillis();

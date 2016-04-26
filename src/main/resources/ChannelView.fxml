@@ -6,28 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root fx:id="paneChannel" dividerPositions="0.7378640776699029" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" stylesheets="@application.css" type="SplitPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-  <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="23.0" prefWidth="122.0">
-         <children>
-            <Label text="Label">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-         </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-         <children>
-            <HBox layoutX="4.0" prefHeight="23.0" prefWidth="43.0">
-               <children>
-                  <ImageView fx:id="editChannel" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="removeChannel" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </HBox>
-         </children></AnchorPane>
-  </items>
-   <styleClass>
-      <String fx:value="channel-view" />
-      <String fx:value="split-pane-channel" />
-   </styleClass>
+<fx:root type="HBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="textChannel" styleClass="text-field-channelView" stylesheets="@application.css" />
+      <ImageView fx:id="removeChannel" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Delete.png" />
+         </image>
+      </ImageView>
+   </children>
 </fx:root>
