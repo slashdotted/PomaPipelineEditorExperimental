@@ -31,6 +31,7 @@ public class MainWindow extends BorderPane {
     public static Map<String, LinkView> allLinkView = new HashMap<>();
     private ModuleTemplate shadowModule = null;
     private ModuleItem draggableModuleItem = null;
+    public static SideBar currentSidebar; //TODO wire the visible sidebar to this static field
 
 
     @FXML
@@ -450,4 +451,7 @@ public class MainWindow extends BorderPane {
         return null;
     }
 
+    public static void update(String name, Module newValue) {
+            //TODO
+    }
 }

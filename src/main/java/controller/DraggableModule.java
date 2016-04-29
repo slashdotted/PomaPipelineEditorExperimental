@@ -75,7 +75,7 @@ public class DraggableModule extends Pane {
     private EventHandler <DragEvent> mContextLinkDragOver;
     private EventHandler <DragEvent> mContextLinkDragDropped;
 
-    public DraggableModule(String type ){
+    public DraggableModule(String type){
 
         this.type = type;
 
@@ -112,7 +112,9 @@ public class DraggableModule extends Pane {
 
     }
     @FXML
-    private void initialize(){
+    public void initialize(){
+
+
         buildNodeDragHandlers();
         buildLinkDragHandlers();
 
@@ -340,4 +342,5 @@ public class DraggableModule extends Pane {
     public LinkView getShadow() {
         return mShadowLink;
     }
+
 }

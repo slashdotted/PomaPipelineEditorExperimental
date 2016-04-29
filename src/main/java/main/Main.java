@@ -7,6 +7,7 @@ import controller.MainWindow;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -51,25 +52,25 @@ public class Main extends Application {
         importCommand.execute();
 
 
-        File saveFile = new File("pipeline_saved_test.json");
-
-        Command save = new Save(saveFile, modulesClipboard, linksClipboard);
-        save.execute();
-
-        importCommand = new Import(saveFile);
-        importCommand.execute();
-
-        System.out.println("Imported modules:" + modules.size());
-        modules.keySet().forEach(key -> {
-            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
-       });
-
-
-       System.out.println("\nImported links:" + links.size());
-       System.out.println("ClipBoarded links:" + linksClipboard.size());
-        linksClipboard.keySet().forEach(key -> {
-            System.out.println(key + " : " + linksClipboard.get(key));
-        });
+//        File saveFile = new File("pipeline_saved_test.json");
+//
+//        Command save = new Save(saveFile, modulesClipboard, linksClipboard);
+//        save.execute();
+//
+//        importCommand = new Import(saveFile);
+//        importCommand.execute();
+//
+//        System.out.println("Imported modules:" + modules.size());
+//        modules.keySet().forEach(key -> {
+//            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
+//        });
+//
+//
+//        System.out.println("\nImported links:" + links.size());
+//        System.out.println("ClipBoarded links:" + linksClipboard.size());
+//        linksClipboard.keySet().forEach(key -> {
+//            System.out.println(key + " : " + linksClipboard.get(key));
+//        });
 
 
         // long startTime = System.currentTimeMillis();

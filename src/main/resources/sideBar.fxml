@@ -38,7 +38,7 @@
                      </VBox.margin>
                      <children>
                         <Label maxWidth="1.7976931348623157E308" text="CParams" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="addCParamButton" mnemonicParsing="false" text="Add">
+                        <Button fx:id="addCParamButton" mnemonicParsing="false">
                            <HBox.margin>
                               <Insets right="10.0" />
                            </HBox.margin>

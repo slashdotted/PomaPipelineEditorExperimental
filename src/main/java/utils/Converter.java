@@ -37,7 +37,11 @@ public class Converter {
         if (x != null && y != null)
             position = new Point2D(x, y);
 
+
+
+
         //System.out.println(type); // TODO remove this
+
         ModuleTemplate template = Main.templates.get(type);
 
         module = Module.getInstance(template);
@@ -134,19 +138,6 @@ public class Converter {
     }
 
 
-    public static Link jsonToLinkOLD(JSONObject jsonLink) {
-        Link link = null;
-
-        Module from = Main.modules.get(jsonLink.get("from"));
-
-        Module to = Main.modules.get(jsonLink.get("to"));
-        String channel = (String) jsonLink.get("channel");
-
-        link = new Link(from, to, channel);
-
-        return link;
-    }
-
     private static Map<String, Value> extractParams(ModuleTemplate template, JSONObject jsonObject) {
         Map<String, Value> params = new HashMap<>();
         // Mandatory params extraction
@@ -162,7 +153,7 @@ public class Converter {
         // Optional params extraction
         if (!template.getOptParameters().isEmpty())
             // Skips parameters not present
-            template.getOptParameters().keySet().parallelStream().filter(key -> jsonObject.get(key) != null).forEach(key -> {
+            template.getOptParameters().keySet().parallelStream().forEach(key -> {
                 Value value = new Value(template.getOptParameters().get(key));
                 value.setValue(jsonObject.get(key));
                 params.put(key, value);

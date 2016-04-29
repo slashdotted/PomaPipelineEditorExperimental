@@ -37,16 +37,14 @@ public class ParamBox extends HBox {
         textField.setEditable(true);
 
         Bindings.bindBidirectional(textField.textProperty(), this.param);
-
         //textField.textProperty().bindBidirectional(this.param);
         //textField.textProperty().bind(this.param);
 
-          actionButton.setGraphic(new ImageView("images/minus.png"));
+        actionButton.setGraphic(new ImageView("images/minus.png"));
 
        // System.out.println("Created paramBox with:" + param);
 
     }
-
     public String getParam() {
         return param.get();
     }

@@ -37,6 +37,7 @@ public class Import implements Command {
 
         //TODO check duplicates before import
 
+
         JSONObject jsonModules = (JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
         JSONArray jsonArray = (JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
 

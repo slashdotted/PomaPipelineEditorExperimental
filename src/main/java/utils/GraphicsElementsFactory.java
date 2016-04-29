@@ -116,7 +116,7 @@ public class GraphicsElementsFactory {
 //    }
 
     public static Separator getSeparator() {
-        Insets insets = new Insets(5, 15, 5, 15);
+        Insets insets = new Insets(5, 5, 5, 5);
         Separator separator = new Separator();
         separator.setPadding(insets);
         return separator;

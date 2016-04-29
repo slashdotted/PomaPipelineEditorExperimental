@@ -25,8 +25,9 @@ public class Module {
    // private ArrayList<String> cParams;
    private ObservableList<SimpleStringProperty> cParams;
 
+
     private Map<String, Value> parameters;
-    private Point2D position=new Point2D (0.0, 0.0);;
+    private Point2D position=new Point2D (0.0, 0.0);
 
 
     private Module(ModuleTemplate template){

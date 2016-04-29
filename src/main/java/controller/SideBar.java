@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import model.Module;
 import model.ModuleTemplate;
 import model.Value;
+import utils.GraphicsElementsFactory;
 import utils.ParamBox;
 
 import java.io.IOException;
@@ -86,14 +87,10 @@ public class SideBar extends ScrollPane {
         addCParamButton.setGraphic(new ImageView("images/plus.png"));
         addCParamButton.setOnAction(event -> addNewCParam(new SimpleStringProperty()));
 
-        //TODO initialize here all existent params
         if (!cparams.isEmpty()) {
-            System.out.println("cparams size: " + cparams.size());
             for (int i = 0; i < cparams.size(); i++) {
                 addNewCParam(cparams.get(i));
-                System.out.println("Added: " + cparams.get(i));
             }
-            System.out.println("After add for");
 
         }
     }
@@ -101,6 +98,8 @@ public class SideBar extends ScrollPane {
     private void setParametersArea() {
 
         //TODO initialize present fields
+
+
         mandatoryBox = new VBox();
         optionalBox = new VBox();
 
@@ -108,14 +107,18 @@ public class SideBar extends ScrollPane {
         optionalParamsPane.setContent(optionalBox);
 
         template.getMandatoryParameters().keySet().forEach(key -> {
-            Value value = template.getMandatoryParameters().get(key);
+
+            //Value value = template.getMandatoryParameters().get(key);
+            Value value = module.getParameters().get(key);
             VBox current = new FormBox(value);
             mandatoryBox.getChildren().add(current);
-            // mandatoryBox.getChildren().add(GraphicsElementsFactory.getSeparator());
+            //Value value = module.getParameters().get(key);
+             mandatoryBox.getChildren().add(GraphicsElementsFactory.getSeparator());
         });
 
         template.getOptParameters().keySet().forEach(key -> {
-            Value value = template.getOptParameters().get(key);
+            //Value value = template.getOptParameters().get(key);
+            Value value = module.getParameters().get(key);
             VBox current = new FormBox(value);
             optionalBox.getChildren().add(current);
             // optionalBox.getChildren().add( GraphicsElementsFactory.getSeparator());
