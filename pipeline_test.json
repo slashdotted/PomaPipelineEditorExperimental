@@ -15,6 +15,7 @@
     },
     "stats2": {
       "type": "Stats"
+
     },
     "blob_tracker": {
       "type": "BlobTracker",
@@ -120,6 +121,10 @@
     }
   },
   "links": [
+    {
+      "from": "stats1",
+      "to": "stats2"
+    },
     {
       "from": "stream_capture",
       "to": "stats1"

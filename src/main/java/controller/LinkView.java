@@ -53,7 +53,6 @@ public class LinkView extends Group{
     private DraggableModule from;
     private DraggableModule to;
 
-    private String channel;
     private Label label;
     private String id;
 
@@ -68,46 +67,40 @@ public class LinkView extends Group{
     private AnchorPane paneChannel;
 
 
+    public Line getLine() {
+        return line;
+    }
+
     private Line line=new Line();
 
+    public LinkView(Link link){
+        initImages();
+        this.from=MainWindow.allDraggableModule.get(link.getModuleA().getName());
+        this.to=MainWindow.allDraggableModule.get(link.getModuleB().getName());
+
+        this.link=link;
+
+        addHandlerChannels(imageChannelIn,link,"toFrom");
+        addHandlerChannels(imageChannelOut,link,"fromTo");
+
+        this.getChildren().add(0,line);
+
+
+    }
 
     public LinkView(boolean isShadow) {
         this.getChildren().add(0,line);
     }
-    public LinkView(DraggableModule from,DraggableModule to, String channel){
-
-            imageChannelIn=new ImageView("ChannelInDefault.png");
-
-            imageChannelOut=new ImageView("ChannelOutDefault.png");
-            imageChannelOut.setFitWidth(30);
-            imageChannelOut.setFitHeight(30);
-            imageChannelIn.setFitHeight(30);
-            imageChannelIn.setFitWidth(30);
 
 
-            /*TODO add to Map of Main
-            * update model
-            * add controls (is already exist?)
-            * */
-            this.from=from;
-            this.to=to;
-            this.channel=channel;
+    private void initImages() {
+        imageChannelIn=new ImageView("ChannelInDefault.png");
 
-
-            this.id=from.getName()+to.getName()+channel;
-            link=new Link(Main.modules.get(from.getName()),Main.modules.get(to.getName()),"default");
-            Main.links.put(link.getID(),link);
-            this.getChildren().add(0,line);
-            MainWindow.allLinkView.put(link.getID(),this);
-
-
-            //first time will be FromTo always
-            fromTo=true;
-
-            addHandlerChannels(imageChannelIn,link,"toFrom");
-            addHandlerChannels(imageChannelOut,link,"fromTo");
-
-
+        imageChannelOut=new ImageView("ChannelOutDefault.png");
+        imageChannelOut.setFitWidth(30);
+        imageChannelOut.setFitHeight(30);
+        imageChannelIn.setFitHeight(30);
+        imageChannelIn.setFitWidth(30);
     }
 
     private void addHandlerChannels(ImageView image,Link link,String orientation) {
@@ -123,11 +116,11 @@ public class LinkView extends Group{
 
                 switch(orientation){
                     case "fromTo":
-                        tittle=from.getName()+"->"+to.getName();
+                        tittle="From: "+from.getName()+"->"+" to: "+to.getName();
 
                         break;
                     case "toFrom":
-                        tittle=to.getName()+"->"+from.getName();
+                        tittle="From: "+to.getName()+"->"+"to: "+from.getName();
                         break;
                 }
                 stage.setTitle(tittle);
@@ -139,7 +132,7 @@ public class LinkView extends Group{
                     @Override
                     public void handle(WindowEvent event) {
                         unselect(image,orientation);
-                        updateImageViews(image,orientation);
+                        updateImageViews(orientation);
                     }
                 });
 
@@ -147,22 +140,22 @@ public class LinkView extends Group{
         });
     }
 
-    private void updateImageViews(ImageView image,String orientation) {
+    public void updateImageViews(String orientation) {
         switch (orientation){
             case "fromTo":
                 int size=link.getChannelsAToB().size();
                 if(size>1){
-                    image.setImage(new Image(channelOutImageEntries));
+                    imageChannelOut.setImage(new Image(channelOutImageEntries));
                 }else if(size==1){
-                    image.setImage(new Image(channelOutImageDefault));
+                    imageChannelOut.setImage(new Image(channelOutImageDefault));
                 }
                 break;
             case "toFrom":
                 int size2=link.getChannelsBToA().size();
                 if(size2>1){
-                    image.setImage(new Image(channelInImageEntries));
+                    imageChannelIn.setImage(new Image(channelInImageEntries));
                 }else if(size2==1){
-                    image.setImage(new Image(channelInImageDefault));
+                    imageChannelIn.setImage(new Image(channelInImageDefault));
                 }
                 break;
         }
@@ -223,11 +216,6 @@ public class LinkView extends Group{
         this.to = to;
     }
 
-    public void setChannel(String channel) {
-        this.channel = channel;
-        this.label.setText(channel);
-    }
-
 
     public void setStart(Point2D start) {
         line.setStartX(start.getX());
@@ -254,6 +242,7 @@ public class LinkView extends Group{
 
         line.endYProperty().bind(to.layoutYProperty().add(to.getHeight()/2.0));
 
+
         from.addLink (link.getID());
         to.addLink (link.getID());
 
@@ -274,7 +263,7 @@ public class LinkView extends Group{
                 this.getChildren().add(imageChannelIn);
                  break;
             case "fromTo":
-
+                fromTo=true;
                 this.getChildren().add(imageChannelOut);
                 break;
         }
@@ -285,18 +274,12 @@ public class LinkView extends Group{
 
     public void updateBottonChannels(){
 
-        System.out.println("*--*-*-*-*-*-*"+calcAngleLine());
-
-
-        System.out.println("COS angle"+Math.cos(calcAngleLine()));
-        System.out.println("SIN angle"+Math.sin(calcAngleLine()));
 
         if(fromTo) {
             imageChannelOut.setX(channelOutX.intValue()+ Math.cos(calcAngleLine()) * 30 - imageChannelOut.getFitHeight() / 2);
             imageChannelOut.setY(channelOutY.intValue()+ Math.sin(calcAngleLine()) * 30 - imageChannelOut.getFitWidth() / 2);
-            //imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
-
             imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
+            System.out.println(Math.toDegrees(calcAngleLine())+"faslkjdfklajfdlkaklñfjda");
             imageChannelOut.setRotate(Math.toDegrees(calcAngleLine()));
         }
         if(toFrom){
@@ -308,7 +291,10 @@ public class LinkView extends Group{
             imageChannelIn.setRotate(Math.toDegrees(calcAngleLine()));
 
         }
-
+        System.out.println(imageChannelOut.getX()+"imageoutX");
+        System.out.println(imageChannelOut.getY()+"imageoutY");
+        System.out.println(imageChannelIn.getX()+"imageinX");
+        System.out.println(imageChannelIn.getY()+"imageinY");
 
     }
     private double calcAngleLine() {
@@ -326,7 +312,8 @@ public class LinkView extends Group{
     }
 
     public void addChannel(DraggableModule from, DraggableModule to,String channel) {
-       Module modFrom =Main.modules.get(from.getName());
+
+        Module modFrom =Main.modules.get(from.getName());
         Module modTo =Main.modules.get(to.getName());
 
         link.addChannel(modFrom,modTo,channel);

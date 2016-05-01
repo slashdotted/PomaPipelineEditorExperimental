@@ -104,8 +104,9 @@ public class EditorConfManager {
 
             }
 
-            value = new Value(paramName, val, false, isMandatory);
 
+
+            value = new Value(paramName, val, false, isMandatory);
 
             map.put(paramName, value);
         }

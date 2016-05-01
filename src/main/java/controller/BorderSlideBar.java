@@ -56,7 +56,7 @@ public class BorderSlideBar extends VBox {
 
         initPosition();
 
-        // Add nodes in the vbox
+        // AddModule nodes in the vbox
         getChildren().addAll(nodes);
 
         controlButton.setOnAction(new EventHandler<ActionEvent>() {

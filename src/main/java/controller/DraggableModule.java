@@ -41,7 +41,10 @@ public class DraggableModule extends Pane {
     private ArrayList <LinkView> links =new ArrayList<>();
 
     private final DraggableModule self;
+//TODO add Label to HOST and type
 
+
+    private String host;
 
 
     @FXML
@@ -75,9 +78,8 @@ public class DraggableModule extends Pane {
     private EventHandler <DragEvent> mContextLinkDragOver;
     private EventHandler <DragEvent> mContextLinkDragDropped;
 
-    public DraggableModule(String type){
+    public DraggableModule( Module module){
 
-        this.type = type;
 
         //TODO set default to create and show view
 
@@ -93,19 +95,21 @@ public class DraggableModule extends Pane {
             e.printStackTrace();
         }
 
-        ModuleTemplate temp=Main.templates.get(this.type);
-        this.module =Module.getInstance(temp);
-        module.setName(temp.getNameInstance());
+        this.module=module;
+        this.type=module.getType();
+    //
+    //    ModuleTemplate temp=Main.templates.get(module.getType());
+
 
         System.out.println("in draggableModule");
-        System.out.println(temp.getType());
+       // System.out.println(temp.getType());
 
-
-        this.modelItemLabel.setText(temp.getType());
+        ModuleTemplate temp=Main.templates.get(this.type);
+        this.host=module.getHost();
+        this.modelItemLabel.setText(module.getName());
         this.modelItemImage.setImage(new Image(temp.getImageURL()));
         position=new Point2D(0,0);
 
-        Main.modules.put(this.module.getName(),this.module);
 
         mainScrollPane= (ScrollPane) Main.mScene.lookup("#mainScrollPane");
 
@@ -126,6 +130,19 @@ public class DraggableModule extends Pane {
         mShadowLink.setVisible(false);
 
     }
+    public void updateName(){
+        this.modelItemLabel.setText(module.getName());
+    }
+    public void updateHost(){
+        this.host=module.getHost();
+    }
+    public void updateType(){
+        this.type=module.getType();
+    }
+    public String getHost() {
+        return host;
+    }
+
 
     private void buildLinkDragHandlers() {
 
@@ -300,25 +317,24 @@ public class DraggableModule extends Pane {
         //scene coordinates
         System.out.println("entro wui");
 
-
-      //  System.out.println("parent: " + getParent().getClass().getName());
-      //  Group theparent = (Group) getParent();
         Point2D localCoords;
         Point2D oldPosition;
+        oldPosition=position;
+        position=p;
         localCoords = getParent().sceneToLocal(p);
 
 
         System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
         System.out.println( (int) (localCoords.getY()) - mDragOffset.getY());
-        oldPosition=position;
-        position= new Point2D(localCoords.getX() -mDragOffset.getX(),localCoords.getY() - mDragOffset.getY());
 
-        Command move=new Move(this,oldPosition,position);
+
+
+        Command move=new Move(this,oldPosition,new Point2D(localCoords.getX() -mDragOffset.getX(),localCoords.getY() - mDragOffset.getY()));
         move.execute();
         //TODO implements adding to memento
 
 
-
+        System.out.println(links.size()+"-----------------");
         for(LinkView lv:links){
 
            lv.updateBottonChannels();
@@ -336,11 +352,40 @@ public class DraggableModule extends Pane {
     }
 
     public void addLink(String id) {
-        links.add(MainWindow.allLinkView.get(id));
+        if(!links.contains(MainWindow.allLinkView.get(id))) {
+
+            links.add(MainWindow.allLinkView.get(id));
+            System.out.println("ho inserito linkview************"+MainWindow.allLinkView.get(id).getName());
+        }
     }
 
     public LinkView getShadow() {
         return mShadowLink;
+    }
+
+    public ArrayList<LinkView> getLinks() {
+        return links;
+    }
+
+
+    public void removeLinkView(LinkView lv) {
+        int i=0;
+        boolean found=false;
+        for (LinkView iter:links) {
+            if(iter.getName().equals(lv.getName())){
+                found=true;
+                break;
+            }
+            i++;
+        }
+        if(found){
+            links.remove(i);
+        }
+
+    }
+
+    public void updateModule() {
+        this.module=Main.modules.get(module.getName());
     }
 
 }

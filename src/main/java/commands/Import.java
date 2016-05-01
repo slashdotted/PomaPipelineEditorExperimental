@@ -45,18 +45,24 @@ public class Import implements Command {
         jsonModules.keySet().forEach(key -> {
             Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
 
-            Main.modules.put(String.valueOf(key), module);
-            Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
+            Command addModule=new AddModule(module);
+           addModule.execute();
+            //TODO add memento
+           // Main.modules.put(String.valueOf(key), module);
+           // Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
         });
 
         jsonArray.forEach(obj -> {
             JSONObject jsonLink = (JSONObject) obj;
             Link link = Converter.jsonToLink(jsonLink);
-            Main.links.put(link.getID(), link);
-            String channel = (String)jsonLink.get("channel");
-            if(channel == null)
-                channel = "default";
-            Main.linksClipboard.put(link.getJsonId(channel),jsonLink);
+            Command addLink = new AddLink(link);
+            addLink.execute();
+
+            //Main.links.put(link.getID(), link);
+//            String channel = (String)jsonLink.get("channel");
+//            if(channel == null)
+//                channel = "default";
+           // Main.linksClipboard.put(link.getJsonId(channel),jsonLink);
 
         });
 

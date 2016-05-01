@@ -38,8 +38,6 @@ public class Converter {
             position = new Point2D(x, y);
 
 
-
-
         //System.out.println(type); // TODO remove this
 
         ModuleTemplate template = Main.templates.get(type);
@@ -49,12 +47,14 @@ public class Converter {
         if (position != null)
             module.setPosition(position);
 
+        System.out.println(template.getType());
+        Map<String, Value> temp = extractParams(template, jsonObject);
         module.setParameters(extractParams(template, jsonObject));
 
         JSONArray jsonArray = (JSONArray) jsonObject.get("cparams");
 
-        if(jsonArray!=null)
-        module.addCParams(jsonArray);
+        if (jsonArray != null)
+            module.addCParams(jsonArray);
 
         return module;
     }
@@ -144,18 +144,28 @@ public class Converter {
 
         //System.out.println("Converter: " + template.getType());  // TODO remove this
         if (!template.getMandatoryParameters().isEmpty())
-            template.getMandatoryParameters().keySet().parallelStream().forEach(key -> {
+            template.getMandatoryParameters().keySet().forEach(key -> {
+
                 Value value = new Value(template.getMandatoryParameters().get(key));
-                value.setValue(jsonObject.get(key));
+                Object val = jsonObject.get(key);
+                if(val!=null)
+                    value.setValue(val);
+
+
                 params.put(key, value);
             });
 
         // Optional params extraction
         if (!template.getOptParameters().isEmpty())
             // Skips parameters not present
-            template.getOptParameters().keySet().parallelStream().forEach(key -> {
+            template.getOptParameters().keySet().forEach(key -> {
+
                 Value value = new Value(template.getOptParameters().get(key));
-                value.setValue(jsonObject.get(key));
+
+                Object val = jsonObject.get(key);
+                if(val!=null)
+                    value.setValue(val);
+
                 params.put(key, value);
             });
 

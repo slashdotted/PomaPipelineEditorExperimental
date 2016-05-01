@@ -69,33 +69,36 @@ public class Value<T> {
         return defaultValue;
     }
 
-    public boolean updateValue(String newValue){
-        if(value instanceof String){
+    public boolean updateValue(String newValue) {
+        if (value instanceof String) {
             value = (T) newValue;
             return true;
         }
 
         try {
-            if(value instanceof Integer){
+            if (value instanceof Long) {
+                value = (T) Long.valueOf(newValue);
+                return true;
+            }
+            if (value instanceof Double) {
+                value = (T) Double.valueOf(newValue);
+                return true;
+            }
+            if (value instanceof Integer) {
                 value = (T) Integer.valueOf(newValue);
                 return true;
             }
-            if(value instanceof Double){
-                value = (T) Double.valueOf(newValue);
-                return  true;
-            }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return false;
         }
 
-        if(value instanceof Boolean){
-            if(newValue.equalsIgnoreCase("true") || newValue.equalsIgnoreCase("false")) {
+        if (value instanceof Boolean) {
+            if (newValue.equalsIgnoreCase("true") || newValue.equalsIgnoreCase("false")) {
                 value = (T) Boolean.valueOf(newValue);
                 return true;
             }
-            return false;
         }
-            return false;
+        return false;
     }
 
     public void setValue(T value) {
@@ -103,6 +106,7 @@ public class Value<T> {
     }
 
     public String getType() {
+        //System.out.println("thissssssssssssssssss" + this.getName());
         return value.getClass().getName();
     }
 

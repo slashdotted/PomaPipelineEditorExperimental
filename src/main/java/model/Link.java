@@ -74,6 +74,7 @@ public class Link {
     }
 
 
+
     public boolean removeChannel(Module from, Module to, String channel) {
         if (from.equals(moduleA)) {
             if (to.equals(moduleB)) {
@@ -122,6 +123,41 @@ public class Link {
 
     public Module getModuleB() {
         return moduleB;
+    }
+
+    public Link copy(){
+
+        Link link=new Link(this.moduleA,this.moduleB,"default");
+        link.setChannelsAToB(this.channelsAToB);
+        link.setChannelsBToA(this.channelsBToA);
+        return link;
+    }
+
+    public void updateChannel (String orientation, String oldValue,String newValue) {
+        List<SimpleStringProperty> listChannel=getChannelList(orientation);
+        SimpleStringProperty channel=new SimpleStringProperty();
+        channel.set(newValue);
+
+        for(int i=0;i<listChannel.size();i++){
+
+            if(listChannel.get(i).getValue().equals(oldValue)){
+                listChannel.get(i).set(newValue);
+                break;
+            }
+        }
+
+    }
+    public List<SimpleStringProperty> getChannelList(String orientation){
+
+        switch (orientation){
+            case "fromTo":
+                return this.channelsAToB;
+
+            case "toFrom":
+                return this.channelsBToA;
+
+        }
+        return null;
     }
 
 //    public String getChannel() {

@@ -20,31 +20,33 @@ public class Module {
     // Used as id
     private String name;
     //private String description;
-  //  private String type;
+    //  private String type;
     private ModuleTemplate template;
-   // private ArrayList<String> cParams;
-   private ObservableList<SimpleStringProperty> cParams;
-
+    // private ArrayList<String> cParams;
+    private ObservableList<SimpleStringProperty> cParams;
 
     private Map<String, Value> parameters;
-    private Point2D position=new Point2D (0.0, 0.0);
+    private Point2D position;
+
+    private String host = "localhost";
 
 
-    private Module(ModuleTemplate template){
+    private Module(ModuleTemplate template) {
         this.template = template;
         //this.name=template.getNameInstance();
         //this.cParams = new ArrayList<>();
         this.cParams = FXCollections.observableArrayList();
         this.parameters = new HashMap<>();
     }
-    public static Module getInstance(ModuleTemplate template){
+
+    public static Module getInstance(ModuleTemplate template) {
         Module module = new Module(template);
 
         return module;
     }
 
 
-    public String getType(){
+    public String getType() {
         return template.getType();
     }
 
@@ -64,6 +66,7 @@ public class Module {
 //    }
 
 //
+
 
     public String getName() {
         return name;
@@ -94,16 +97,28 @@ public class Module {
     }
 
     public void setParameters(Map<String, Value> parameters) {
-        this.parameters = parameters;
+        this.parameters.clear();
+        parameters.keySet().forEach(s -> {
+            Value mandatory = template.getMandatoryParameters().get(s);
+            Value optional =  template.getOptParameters().get(s);
+            Value current = parameters.get(s);
+
+
+            if ((mandatory != null && mandatory.getType().equals(current.getType())) ||
+                    optional !=null && optional.getType().equals(current.getType())) {
+                this.parameters.put(s, parameters.get(s));
+            }
+        });
     }
 
     @Override
     public String toString() {
         return "Module{" +
                 "name='" + name + '\'' +
-                ", template=" + template.getType()+
+                ", template=" + template.getType() +
                 '}';
     }
+
     public Point2D getPosition() {
         return position;
     }
@@ -114,5 +129,13 @@ public class Module {
 
     public void addCParams(ArrayList<String> cparams) {
         cparams.forEach(s -> this.cParams.add(new SimpleStringProperty(s)));
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 }

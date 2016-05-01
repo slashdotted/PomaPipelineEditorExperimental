@@ -28,19 +28,19 @@
   "optParams" : [
     {"name" : "color", "type" : "Boolean", "description" : "utilizza o meno il colore per il riconoscimento"},
     {"name" : "shadow", "type" : "Boolean", "description" : "attiva il riconoscimento delle ombre"},
-    {"name" : "minarea", "type" : "Integer", "description" : "area minima per gli oggetti in movimento"},
-    {"name" : "maxarea", "type" : "Integer", "description" : "area masssima per gli oggetti in movimento"},
-    {"name" : "distance", "type" : "Integer", "description" : "distanza massima tra due rilevamenti"},
-    {"name" : "frames", "type" : "Integer", "description" : "massimo numero di frame senza rilevamenti"},
-    {"name" : "saveinterval", "type" : "Integer", "description" : "intervallo (in frames) prima di inviare l'oggetto"},
-    {"name" : "saved", "type" : "Integer", "description" : "numero di salvataggi (invii al modulo successivo)"},
-    {"name" : "boundsize", "type" : "Integer", "description" : "dimensione bordo per i rilevamenti"},
-    {"name" : "history", "type" : "Integer", "description" : "numero di rilevamenti da memorizzare"},
-    {"name" : "resize", "type" : "Integer", "description" : "fattore di ridimensionamento del frame"},
-    {"name" : "maskthreshold", "type" : "Integer", "description" : "soglia per la maschera", "default" : 128},
-    {"name" : "structsize", "type" : "Integer", "description" : "dimensione dello 'structuring element'", "default" : 7},
-    {"name" : "structpoint", "type" : "Integer", "description" : "punti dello 'structuring element'", "default" : 3},
-    {"name" : "backsubthreshold", "type" : "Integer", "description" : "soglia per la background substraction", "default" : 32}
+    {"name" : "minarea", "type" : "Long", "description" : "area minima per gli oggetti in movimento"},
+    {"name" : "maxarea", "type" : "Long", "description" : "area masssima per gli oggetti in movimento"},
+    {"name" : "distance", "type" : "Long", "description" : "distanza massima tra due rilevamenti"},
+    {"name" : "frames", "type" : "Long", "description" : "massimo numero di frame senza rilevamenti"},
+    {"name" : "saveinterval", "type" : "Long", "description" : "intervallo (in frames) prima di inviare l'oggetto"},
+    {"name" : "saved", "type" : "Long", "description" : "numero di salvataggi (invii al modulo successivo)"},
+    {"name" : "boundsize", "type" : "Long", "description" : "dimensione bordo per i rilevamenti"},
+    {"name" : "history", "type" : "Long", "description" : "numero di rilevamenti da memorizzare"},
+    {"name" : "resize", "type" : "Long", "description" : "fattore di ridimensionamento del frame"},
+    {"name" : "maskthreshold", "type" : "Long", "description" : "soglia per la maschera", "default" : 128},
+    {"name" : "structsize", "type" : "Long", "description" : "dimensione dello 'structuring element'", "default" : 7},
+    {"name" : "structpoint", "type" : "Long", "description" : "punti dello 'structuring element'", "default" : 3},
+    {"name" : "backsubthreshold", "type" : "Long", "description" : "soglia per la background substraction", "default" : 32}
   ],
   "mandatoryParams" : [
     {"name" : "vector", "type" : "String", "description" : "punti che definiscono il margine per il rilevamento"},
@@ -54,19 +54,19 @@
     "optParams" : [
       {"name" : "color", "type" : "Boolean", "description" : "utilizza o meno il colore per il riconoscimento"},
       {"name" : "shadow", "type" : "Boolean", "description" : "attiva il riconoscimento delle ombre"},
-      {"name" : "minarea", "type" : "Integer", "description" : "area minima per gli oggetti in movimento"},
-      {"name" : "maxarea", "type" : "Integer", "description" : "area masssima per gli oggetti in movimento"},
-      {"name" : "distance", "type" : "Integer", "description" : "distanza massima tra due rilevamenti"},
-      {"name" : "frames", "type" : "Integer", "description" : "massimo numero di frame senza rilevamenti"},
-      {"name" : "saveinterval", "type" : "Integer", "description" : "intervallo (in frames) prima di inviare l'oggetto"},
-      {"name" : "saved", "type" : "Integer", "description" : "numero di salvataggi (invii al modulo successivo)"},
-      {"name" : "boundsize", "type" : "Integer", "description" : "dimensione bordo per i rilevamenti"},
-      {"name" : "history", "type" : "Integer", "description" : "numero di rilevamenti da memorizzare"},
-      {"name" : "resize", "type" : "Integer", "description" : "fattore di ridimensionamento del frame"},
-      {"name" : "maskthreshold", "type" : "Integer", "description" : "soglia per la maschera", "default" : 128},
-      {"name" : "structsize", "type" : "Integer", "description" : "dimensione dello 'structuring element'", "default" : 7},
-      {"name" : "structpoint", "type" : "Integer", "description" : "punti dello 'structuring element'", "default" : 3},
-      {"name" : "backsubthreshold", "type" : "Integer", "description" : "soglia per la background substraction", "default" : 32}
+      {"name" : "minarea", "type" : "Long", "description" : "area minima per gli oggetti in movimento"},
+      {"name" : "maxarea", "type" : "Long", "description" : "area masssima per gli oggetti in movimento"},
+      {"name" : "distance", "type" : "Long", "description" : "distanza massima tra due rilevamenti"},
+      {"name" : "frames", "type" : "Long", "description" : "massimo numero di frame senza rilevamenti"},
+      {"name" : "saveinterval", "type" : "Long", "description" : "intervallo (in frames) prima di inviare l'oggetto"},
+      {"name" : "saved", "type" : "Long", "description" : "numero di salvataggi (invii al modulo successivo)"},
+      {"name" : "boundsize", "type" : "Long", "description" : "dimensione bordo per i rilevamenti"},
+      {"name" : "history", "type" : "Long", "description" : "numero di rilevamenti da memorizzare"},
+      {"name" : "resize", "type" : "Long", "description" : "fattore di ridimensionamento del frame"},
+      {"name" : "maskthreshold", "type" : "Long", "description" : "soglia per la maschera", "default" : 128},
+      {"name" : "structsize", "type" : "Long", "description" : "dimensione dello 'structuring element'", "default" : 7},
+      {"name" : "structpoint", "type" : "Long", "description" : "punti dello 'structuring element'", "default" : 3},
+      {"name" : "backsubthreshold", "type" : "Long", "description" : "soglia per la background substraction", "default" : 32}
     ],
     "mandatoryParams" : [
       {"name" : "vector", "type" : "String", "description" : "punti che definiscono il margine per il rilevamento"},
@@ -95,8 +95,8 @@
     "imageURL" : "buffer.png",
     "optParams" : [
       {"name" : "dontcopy", "type" : "Boolean", "description" : "se vero non crea una copia dei blob quando sono messi in coda"},
-      {"name" : "warnsize", "type" : "Integer", "description" : "numero di blob in coda prima di visualizzare messaggio di avviso"},
-      {"name" : "frameskip", "type" : "Integer", "description" : "ogni quanti frame scartarne uno"}
+      {"name" : "warnsize", "type" : "Long", "description" : "numero di blob in coda prima di visualizzare messaggio di avviso"},
+      {"name" : "frameskip", "type" : "Long", "description" : "ogni quanti frame scartarne uno"}
     ],
     "mandatoryParams" : [
     ]
@@ -190,7 +190,7 @@
 
     ],
     "mandatoryParams" : [
-      {"name" : "skipinterval", "type" : "Integer"}
+      {"name" : "skipinterval", "type" : "Long"}
     ]
   },
   {
@@ -209,7 +209,7 @@
     "description" : "stampa a schermo delle statistiche della pipeline",
     "imageURL" : "stats.png",
     "optParams" : [
-      {"name" : "statsinterval", "type" : "Integer"}
+      {"name" : "statsinterval", "type" : "Long"}
     ],
     "mandatoryParams" : [
 
@@ -222,12 +222,12 @@
     "optParams" : [
       {"name" : "camdirection", "type" : "String", "description" : "direzione della telecamera"},
       {"name" : "retry", "type" : "Boolean", "description" : "riprova se lo stream viene chiuso"},
-      {"name" : "retryinterval", "type" : "Integer", "description" : "intervallo per ritentare"}
+      {"name" : "retryinterval", "type" : "Long", "description" : "intervallo per ritentare"}
     ],
     "mandatoryParams" : [
       {"name" : "path", "type" : "String", "description" : "percorso dello stream"},
       {"name" : "name", "type" : "String", "description" : "nome dello stream"},
-      {"name" : "fps", "type" : "Integer", "description" : "frame per secondo", "default" : -1}
+      {"name" : "fps", "type" : "Long", "description" : "frame per secondo", "default" : -1}
     ]
   },
   {
