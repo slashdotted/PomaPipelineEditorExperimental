@@ -120,23 +120,17 @@ public class MainWindow extends BorderPane {
             ModuleItem item = new ModuleItem(template.getType(), isShadow);
             moduleVBox.getChildren().add(item);
             addDragDetection(item);
-            //System.out.println("ModuleItem created with drag detection associated");
         }
         //Create a new group to manage all nodes in mainScrollPane
         Group group = new Group();
 
-        // mainScrollPane.setContent(group);
         mainScrollPane.setContent(group);
 
         //TODO create true size
         group.getChildren().add(new Pane());
 
-        //mainScrollPane.setFitToHeight(true);
-        //mainScrollPane.setFitToWidth(true);
 
         buildDragHandlers();
-
-
         setButtons();
     }
 
@@ -295,7 +289,7 @@ public class MainWindow extends BorderPane {
         }
         DraggableModule node = new DraggableModule(mod);
 
-
+        //node.addToolTips();
         allDraggableModule.put(node.getName(), node);
         Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
 
@@ -303,6 +297,7 @@ public class MainWindow extends BorderPane {
 
 
         node.relocateToPoint(new Point2D(position.getX() - 50, position.getY() - 50));
+
     }
 
 
@@ -480,12 +475,7 @@ public class MainWindow extends BorderPane {
                                 Command addLink=new AddLink(link);
                                 addLink.execute();
                                 //TODO add memento
-                             /*   LinkView linkV = new LinkView(from, to, "");
-                                Group group = (Group) mainScrollPane.getContent();
-                                group.getChildren().add(0, linkV);
-                                allLinkView.put(linkV.getName(), linkV);
-                                linkV.bindLink(from, to);
-                                linkV.bindBottonChannels("fromTo");*/
+
                             } else {
                                 //link exists can I add default channel?
 

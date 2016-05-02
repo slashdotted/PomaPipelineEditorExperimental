@@ -1,7 +1,8 @@
-package utils;
+package controller;
 
 import commands.Command;
 import commands.EditStringProperty;
+import commands.RemoveStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 import model.Link;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Marco on 13/04/2016.
@@ -31,7 +35,7 @@ public class ChannelsManager extends BorderPane {
 
     public ChannelsManager(Link link, String orientation) {
         this.link = link;
-        this.orientation = orientation;
+        ChannelsManager.orientation = orientation;
         vBox = new VBox();
         buttons = new HBox();
 
@@ -40,19 +44,7 @@ public class ChannelsManager extends BorderPane {
         vBox.getChildren().add(buttons);
         setCenter(vBox);
 
-        switch (orientation) {
-            case "fromTo":
-                orientation = "fromTo";
-                channelsObs = FXCollections.observableList(link.getChannelsAToB());
-
-                break;
-            case "toFrom":
-                orientation = "toFrom";
-                channelsObs = FXCollections.observableList(link.getChannelsBToA());
-
-                break;
-
-        }
+        channelsObs=link.getChannelList(orientation);
 
         listV.setItems(channelsObs);
         listV.setCellFactory(new Callback<ListView<SimpleStringProperty>, ListCell<SimpleStringProperty>>() {
@@ -71,11 +63,11 @@ public class ChannelsManager extends BorderPane {
 
                             currentChannel = t;
                             ImageView removeChannel = new ImageView("/images/Delete.png");
-                            ImageView acceptChannel = new ImageView("/images/accept.png");
+                            //     ImageView acceptChannel = new ImageView("/images/accept.png");
                             removeChannel.setFitHeight(15);
                             removeChannel.setFitWidth(15);
-                            acceptChannel.setFitHeight(15);
-                            acceptChannel.setFitWidth(15);
+                            //         acceptChannel.setFitHeight(15);
+                            //       acceptChannel.setFitWidth(15);
 
 
                             TextField channelName = new TextField();
@@ -89,13 +81,13 @@ public class ChannelsManager extends BorderPane {
                             hbox.setHgrow(channelName, Priority.ALWAYS);
 
 
-                            hboxImages.getChildren().addAll(acceptChannel, removeChannel);
+                            hboxImages.getChildren().addAll(removeChannel);
 
                             hbox.setAlignment(Pos.CENTER_LEFT);
                             hbox.getChildren().addAll(channelName, hboxImages);
 
-                            addListenerHandler(channelName, acceptChannel, t);
-                            addListenerHandler(removeChannel);
+                            addListenerHandler(channelName, t);
+                            addListenerHandler(removeChannel,channelName);
 
                             setGraphic(hbox);
 
@@ -103,51 +95,52 @@ public class ChannelsManager extends BorderPane {
                         }
                     }
 
-                    private void addListenerHandler(TextField channelName, ImageView acceptImage, SimpleStringProperty t) {
+                    private void addListenerHandler(TextField channelName, SimpleStringProperty t) {
 
                         channelName.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
                             @Override
                             public void handle(MouseEvent event) {
-                                //TODO let modify name of channel
 
                                 oldValue = channelName.getText();
                                 channelName.setEditable(true);
-                                System.out.println("Click on label");
-                                System.out.println(channelsObs.toString());
-
 
                             }
                         });
 
-
-                        acceptImage.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-                            @Override
-                            public void handle(MouseEvent event) {
+                       channelName.focusedProperty().addListener((observable, oldValue1, newValue) -> {
+                            if (oldValue1 && !newValue) {
                                 System.out.println(oldValue);
 
-                                String newValue = channelName.getText();
+                                String newText = channelName.getText();
                                 System.out.println(newValue);
 
                                 //TODO aded to memento
-                                if (!oldValue.equals(newValue) && channelName.isEditable()) {
-
-
-                                    Command edit = new EditStringProperty( t,newValue);
+                                if (!oldValue.equals(newText) && channelName.isEditable()) {
+                                    Command edit = new EditStringProperty(t, newText);
                                     edit.execute();
                                 }
                                 channelName.setEditable(false);
+
                             }
                         });
 
                     }
 
-                    private void addListenerHandler(ImageView removeChanne) {
+                    private void addListenerHandler(ImageView removeChanne,TextField channelName) {
 
                         removeChanne.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
                             @Override
                             public void handle(MouseEvent event) {
+                                System.out.println("Elimino channel");
 
-                                System.out.println("Click on remove");
+                                List<SimpleStringProperty> channels=link.getChannelList(ChannelsManager.orientation);
+                                SimpleStringProperty channelToRemove=link.getChannel(channelName.getText(),ChannelsManager.orientation);
+                                System.out.println(channelToRemove.getValue());
+                                Command removeChannel=new RemoveStringProperty(channelToRemove,channels);
+                                removeChannel.execute();
+                                listV.getParent().layout();
+                                //TODO add to memento
+
                             }
                         });
 

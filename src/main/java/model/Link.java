@@ -2,11 +2,10 @@ package model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Marco on 18/03/2016.
@@ -16,8 +15,8 @@ public class Link {
     private final Module moduleA;
     private final Module moduleB;
 
-    private List<SimpleStringProperty> channelsAToB;
-    private List<SimpleStringProperty> channelsBToA;
+    private ObservableList<SimpleStringProperty> channelsAToB;
+    private ObservableList<SimpleStringProperty> channelsBToA;
 
     //private String channel = "default";
 
@@ -48,8 +47,8 @@ public class Link {
         this.moduleB = moduleB;
         this.moduleA = moduleA;
 
-        this.channelsAToB = new ArrayList<>();
-        this.channelsBToA = new ArrayList<>();
+        this.channelsAToB = FXCollections.observableArrayList();
+        this.channelsBToA = FXCollections.observableArrayList();
 
         this.channelsAToB.add(new SimpleStringProperty(channel));
     }
@@ -94,26 +93,26 @@ public class Link {
     }
 
 
-    public static boolean checkIfPresent(String string, List<SimpleStringProperty> list){
+    public static boolean checkIfPresent(String string, ObservableList<SimpleStringProperty> list){
         long match = list.stream().filter(stringProperty -> stringProperty.getValue().equals(string)).count();
         if(match>0)
             return true;
         return false;
     }
 
-    public List<SimpleStringProperty> getChannelsAToB() {
+    public ObservableList<SimpleStringProperty> getChannelsAToB() {
         return channelsAToB;
     }
 
-    public void setChannelsAToB(List<SimpleStringProperty> channelsAToB) {
+    public void setChannelsAToB(ObservableList<SimpleStringProperty> channelsAToB) {
         this.channelsAToB = channelsAToB;
     }
 
-    public List<SimpleStringProperty> getChannelsBToA() {
+    public  ObservableList<SimpleStringProperty> getChannelsBToA() {
         return channelsBToA;
     }
 
-    public void setChannelsBToA(List<SimpleStringProperty> channelsBToA) {
+    public void setChannelsBToA(ObservableList<SimpleStringProperty> channelsBToA) {
         this.channelsBToA = channelsBToA;
     }
 
@@ -147,7 +146,17 @@ public class Link {
         }
 
     }
-    public List<SimpleStringProperty> getChannelList(String orientation){
+    public SimpleStringProperty getChannel(String name,String orientation){
+        List<SimpleStringProperty> channels=getChannelList(orientation);
+        for (SimpleStringProperty channel:channels ) {
+            if (channel.getValue().equals(name)){
+                return channel;
+            }
+        }
+        return null;
+
+    }
+    public ObservableList<SimpleStringProperty> getChannelList(String orientation){
 
         switch (orientation){
             case "fromTo":

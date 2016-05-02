@@ -9,6 +9,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -37,11 +38,10 @@ public class DraggableModule extends Pane {
     private Point2D position;
     private Point2D mDragOffset = new Point2D (0.0, 0.0);
     private Module module;
-
     private ArrayList <LinkView> links =new ArrayList<>();
 
-    private final DraggableModule self;
-//TODO add Label to HOST and type
+    public static ArrayList<DraggableModule> selected=new ArrayList<>();
+
 
 
     private String host;
@@ -55,6 +55,10 @@ public class DraggableModule extends Pane {
 
     @FXML
     private Label modelItemLabel;
+    @FXML
+    private Label labelHost;
+    @FXML
+    private Label labelTemplate;
 
     @FXML
     private Pane paneItemImage;
@@ -88,7 +92,7 @@ public class DraggableModule extends Pane {
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
-        self=this;
+
         try {
             fxmlLoader.load();
         } catch (IOException e) {
@@ -112,9 +116,16 @@ public class DraggableModule extends Pane {
 
 
         mainScrollPane= (ScrollPane) Main.mScene.lookup("#mainScrollPane");
-
+        addToolTips();
 
     }
+
+    private void addToolTips() {
+        modelItemLabel.setTooltip(new Tooltip ("Name :"+module.getName()));
+        labelHost.setTooltip(new Tooltip("Host :"+module.getHost()));
+        labelTemplate.setTooltip(new Tooltip("Template :"+this.type));
+    }
+
     @FXML
     public void initialize(){
 

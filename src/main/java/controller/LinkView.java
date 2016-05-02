@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
@@ -22,10 +21,6 @@ import javafx.stage.WindowEvent;
 import main.Main;
 import model.Link;
 import model.Module;
-import utils.ChannelsManager;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by Marco on 18/03/2016.
