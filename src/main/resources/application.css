@@ -7,6 +7,9 @@
 .draggable-module{
 	-fx-border-color:rgba(119,85,51,255);
 }
+.draggable-moduleText{
+	-fx-background-color: darkkhaki;
+}
 
 .channel-view  {
 	-fx-padding: 0 1 0 1;

@@ -1,8 +1,6 @@
 package controller;
 
-import commands.Command;
-import commands.EditStringProperty;
-import commands.RemoveStringProperty;
+import commands.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -66,9 +64,6 @@ public class ChannelsManager extends BorderPane {
                             //     ImageView acceptChannel = new ImageView("/images/accept.png");
                             removeChannel.setFitHeight(15);
                             removeChannel.setFitWidth(15);
-                            //         acceptChannel.setFitHeight(15);
-                            //       acceptChannel.setFitWidth(15);
-
 
                             TextField channelName = new TextField();
                             channelName.setText(t.getValue());
@@ -136,9 +131,12 @@ public class ChannelsManager extends BorderPane {
                                 List<SimpleStringProperty> channels=link.getChannelList(ChannelsManager.orientation);
                                 SimpleStringProperty channelToRemove=link.getChannel(channelName.getText(),ChannelsManager.orientation);
                                 System.out.println(channelToRemove.getValue());
-                                Command removeChannel=new RemoveStringProperty(channelToRemove,channels);
+                                Command removeChannel=new RemoveChannel(channelToRemove,channels,link,ChannelsManager.orientation);
                                 removeChannel.execute();
-                                listV.getParent().layout();
+
+
+
+
                                 //TODO add to memento
 
                             }

@@ -18,13 +18,7 @@ public class Link {
     private ObservableList<SimpleStringProperty> channelsAToB;
     private ObservableList<SimpleStringProperty> channelsBToA;
 
-    //private String channel = "default";
 
-
-//    public Link() {
-//        moduleA = null;
-//        moduleB = null;
-//    }
 
     public String getJsonId(String channel) {
         if (checkIfPresent(channel,channelsAToB) ||  checkIfPresent(channel,channelsBToA))
@@ -156,6 +150,9 @@ public class Link {
         return null;
 
     }
+    public int getNumberOfChannels(){
+        return channelsAToB.size()+channelsBToA.size();
+    }
     public ObservableList<SimpleStringProperty> getChannelList(String orientation){
 
         switch (orientation){
@@ -169,11 +166,6 @@ public class Link {
         return null;
     }
 
-//    public String getChannel() {
-//        return channel;
-//    }
 
-//    public void setChannel(String channel) {
-//        this.channel = channel;
-//    }
+
 }
