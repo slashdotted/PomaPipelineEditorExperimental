@@ -104,18 +104,25 @@ public class DraggableModule extends Pane {
         //    ModuleTemplate temp=Main.templates.get(module.getType());
 
 
-        System.out.println("in draggableModule");
+        //System.out.println("in draggableModule");
         // System.out.println(temp.getType());
 
         ModuleTemplate temp = Main.templates.get(this.type);
         this.host = module.getHost();
-        this.modelItemLabel.setText(module.getName());
         this.modelItemImage.setImage(new Image(temp.getImageURL()));
         position = new Point2D(0, 0);
 
 
         mainScrollPane = (ScrollPane) Main.mScene.lookup("#mainScrollPane");
         addToolTips();
+
+    }
+
+
+    private void setLabels(){
+        labelHost.setText(module.getHost());
+        labelTemplate.setText(module.getType());
+        modelItemLabel.setText(module.getName());
 
     }
 
@@ -161,6 +168,12 @@ public class DraggableModule extends Pane {
 
     private void buildLinkDragHandlers() {
 
+        titleBar.setOnMouseClicked(event -> {
+            if(event.getClickCount() == 2){
+                MainWindow.openSideBar(module);
+            }
+        });
+
         mLinkHandleDragDetected = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -172,14 +185,14 @@ public class DraggableModule extends Pane {
                 mainScrollPane.setOnDragDropped(mContextLinkDragDropped);
 
                 //Set up user-draggable link
-                System.out.println("parent: " + getParent().getParent().getClass().getName());
+               // System.out.println("parent: " + getParent().getParent().getClass().getName());
 
                 Group group = (Group) mainScrollPane.getContent();
                 group.getChildren().add(0, mShadowLink);
                 //   right_pane.getChildren().add(0,mDragLink);
 
                 mShadowLink.setVisible(false);
-                System.out.println(getWidth() + "***********************");
+                //System.out.println(getWidth() + "***********************");
                 Point2D p = new Point2D(
                         getLayoutX() + (getWidth() / 2),
                         getLayoutY() + (getHeight() / 2)
@@ -189,7 +202,7 @@ public class DraggableModule extends Pane {
                 ClipboardContent content = new ClipboardContent();
                 DragContainer container = new DragContainer();
 
-                System.out.println(module.getName() + "***********");
+                //System.out.println(module.getName() + "***********");
                 container.addData("fromId", module.getName());
                 content.put(DragContainer.AddLink, container);
 
@@ -249,7 +262,7 @@ public class DraggableModule extends Pane {
         mContextLinkDragDropped = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                System.out.println("link drag dropped");
+               // System.out.println("link drag dropped");
 
                 mainScrollPane.setOnDragOver(null);
                 mainScrollPane.setOnDragDropped(null);
@@ -301,7 +314,7 @@ public class DraggableModule extends Pane {
             @Override
             public void handle(MouseEvent event) {
 
-                System.out.println("parent: " + getParent().getParent().getClass().getName());
+               // System.out.println("parent: " + getParent().getParent().getClass().getName());
 
                 mainScrollPane.setOnDragOver(null);
                 mainScrollPane.setOnDragDropped(null);
@@ -332,7 +345,6 @@ public class DraggableModule extends Pane {
 
         //relocates the object to a point that has been converted to
         //scene coordinates
-        System.out.println("entro wui");
 
         Point2D localCoords;
         Point2D oldPosition;
@@ -341,8 +353,8 @@ public class DraggableModule extends Pane {
         localCoords = getParent().sceneToLocal(p);
 
 
-        System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
-        System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
+       // System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
+       // System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
 
 
         Command move = new Move(this, oldPosition, new Point2D(localCoords.getX() - mDragOffset.getX(), localCoords.getY() - mDragOffset.getY()));
@@ -350,7 +362,7 @@ public class DraggableModule extends Pane {
         //TODO implements adding to memento
 
 
-        System.out.println(links.size() + "-----------------");
+      //  System.out.println(links.size() + "-----------------");
         for (LinkView lv : links) {
 
             lv.updateBottonChannels();

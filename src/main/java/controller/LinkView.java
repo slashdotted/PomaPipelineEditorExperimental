@@ -130,13 +130,13 @@ public class LinkView extends Group {
                         unselect(image, orientation);
                         updateImageViews(orientation);
                         if (link.getNumberOfChannels() == 0) {
-                            System.out.println(MainWindow.allLinkView.size() + "allLV");
-                            System.out.println(Main.links.size() + "allLinks");
+                            //System.out.println(MainWindow.allLinkView.size() + "allLV");
+                            //System.out.println(Main.links.size() + "allLinks");
 
                             Command removeLink = new RemoveLink(link);
                             removeLink.execute();
-                            System.out.println(MainWindow.allLinkView.size() + "allLV");
-                            System.out.println(Main.links.size() + "allLinks");
+                            //System.out.println(MainWindow.allLinkView.size() + "allLV");
+                            //System.out.println(Main.links.size() + "allLinks");
                             //TODO add to memento
                         }
 

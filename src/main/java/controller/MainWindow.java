@@ -1,6 +1,9 @@
 package controller;
 
 import commands.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +22,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -280,7 +286,7 @@ public class MainWindow extends BorderPane {
         if (position == null) {
 
             position = new Point2D(posXAssign, posYAssign);
-            System.out.println("pos =null");
+            //System.out.println("pos =null");
             posXAssign+=200;
             if(posXAssign>1400){
                 posXAssign=300;
@@ -399,7 +405,7 @@ public class MainWindow extends BorderPane {
             @Override
             public void handle(DragEvent event) {
                 DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
-                System.out.println(event.getSceneX() + "--" + event.getSceneY());
+              //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
                 container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
                 ClipboardContent content = new ClipboardContent();
@@ -440,9 +446,7 @@ public class MainWindow extends BorderPane {
                         //Main.modules.put(module.getName(), module);
 
 
-
-
-
+                        openSideBar(module);
                     }
                 }
                 //AddLink drag operation
@@ -475,7 +479,7 @@ public class MainWindow extends BorderPane {
                             } else {
                                 //link exists can I add default channel?
 
-                                System.out.println(orientationLink);
+                               // System.out.println(orientationLink);
                                 String idLink;
                                 Command addChannel;
                                 SimpleStringProperty channel = new SimpleStringProperty("default");
@@ -516,6 +520,48 @@ public class MainWindow extends BorderPane {
 
     }
 
+    public static void openSideBar(Module module) {
+        //Service
+        Task<SideBar> builder = buildSideBar(module, toggleSidebar);
+        //currentSidebar =
+        toggleSidebar.cancelButtonProperty().setValue(false);
+        builder.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> {
+            currentSidebar = builder.getValue();
+            Main.root.setRight(currentSidebar);
+            toggleSidebar.fire();
+        });
+        new Thread(builder).start();
+
+//        Thread launch = new Thread(new Task<SideBar>() {
+//            @Override
+//            protected SideBar call() throws Exception {
+//                Main.root.setRight(currentSidebar);
+//                toggleSidebar.fire();
+//                return currentSidebar;
+//            }
+//        });
+//        launch.start();
+
+    }
+
+    private static Task<SideBar> buildSideBar(Module module, Button toggleSidebar) {
+        return new Task<SideBar>() {
+            @Override
+            protected SideBar call() throws Exception {
+                if (currentSidebar != null)
+                    closeSidebar();
+                return new SideBar(module, toggleSidebar, 400);
+            }
+        };
+    }
+
+
+    public static void closeSidebar() {
+        if (currentSidebar.isVisible())
+            toggleSidebar.fire();
+        currentSidebar = null;
+    }
+
     private String existLink(DraggableModule from, DraggableModule to) {
 
         String idLink = from.getName() + "-" + to.getName();
@@ -538,7 +584,7 @@ public class MainWindow extends BorderPane {
 
         LinkView lv = allLinkView.get(oldValue.getID());
 
-        System.out.println(lv.getLine().getEndX());
+        //System.out.println(lv.getLine().getEndX());
 
 
         lv = new LinkView(newValue);
@@ -580,12 +626,12 @@ public class MainWindow extends BorderPane {
 
         ArrayList<LinkView> links = dragModule.getLinks();
         for (LinkView lv : links) {
-            System.out.println("Sto controllando*************************");
+           // System.out.println("Sto controllando*************************");
             DraggableModule sibbling = lv.getFrom();
             if (!sibbling.getName().equals(dragModule.getName())) {
                 Point2D pos = lv.getFrom().getModule().getPosition();
                 double dist=position.distance(pos);
-                System.out.println(dist);
+               // System.out.println(dist);
                 if (position.distance(pos) < 100) {
                     return false;
                 }
