@@ -129,6 +129,7 @@ public class DraggableModule extends Pane {
     public void initialize() {
 
 
+
         buildNodeDragHandlers();
         buildLinkDragHandlers();
 
