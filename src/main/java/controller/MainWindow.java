@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
@@ -26,7 +25,6 @@ import main.Main;
 import model.Link;
 import model.Module;
 import model.ModuleTemplate;
-import utils.GraphicsElementsFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -99,7 +97,7 @@ public class MainWindow extends BorderPane {
         }
         mainScrollPaneStat = mainScrollPane;
 
-        //select
+        //selectImage
 
 
     }
@@ -477,7 +475,7 @@ public class MainWindow extends BorderPane {
                                 String idLink;
                                 Command addChannel;
                                 SimpleStringProperty channel = new SimpleStringProperty("default");
-                                ;
+
                                 switch (orientationLink) {
                                     case "fromTo":
 
@@ -487,7 +485,11 @@ public class MainWindow extends BorderPane {
                                             addChannel.execute();
                                             //TODO elemento
 
+                                        }else{
+                                            openChannelsManager(idLink,orientationLink);
+
                                         }
+
                                         break;
                                     case "toFrom":
 
@@ -498,6 +500,9 @@ public class MainWindow extends BorderPane {
                                             addChannel = new AddChannel(channel, Main.links.get(idLink).getChannelList(orientationLink), Main.links.get(idLink), orientationLink);
                                             addChannel.execute();
                                             //TODO memento
+
+                                        }else{
+                                            openChannelsManager(idLink,orientationLink);
 
                                         }
 
@@ -512,6 +517,11 @@ public class MainWindow extends BorderPane {
             }
         });
 
+    }
+
+    private void openChannelsManager(String idLink, String orientationLink) {
+        ChannelsManager channelManager=new ChannelsManager(Main.links.get(idLink),orientationLink);
+        MainWindow.allLinkView.get(idLink).selectImage(orientationLink);
     }
 
     public static void openSideBar(Module module,boolean creation) {

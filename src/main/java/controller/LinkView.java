@@ -1,8 +1,6 @@
 package controller;
 
 
-import commands.Command;
-import commands.RemoveLink;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,7 +9,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -20,9 +17,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -48,7 +42,9 @@ public class LinkView extends Group {
     private DoubleProperty channelInY = new SimpleDoubleProperty();
     private DoubleProperty channelOutX = new SimpleDoubleProperty();
     private DoubleProperty channelOutY = new SimpleDoubleProperty();
-
+    private boolean selectedOut;
+    private boolean selectedIn;
+    private boolean selectedLink;
     private Link link;
     private DraggableModule from;
     private DraggableModule to;
@@ -82,6 +78,10 @@ public class LinkView extends Group {
         addHandlerChannels(imageChannelIn, link, "toFrom");
         addHandlerChannels(imageChannelOut, link, "fromTo");
 
+        selectedIn=false;
+        selectedOut=false;
+        selectedLink=false;
+
         this.getChildren().add(0, line);
 
 
@@ -107,42 +107,11 @@ public class LinkView extends Group {
         image.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                select(image, orientation);
-                ChannelsManager root = new ChannelsManager(link, orientation);
-                Stage stage = new Stage();
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.initOwner(Main.mScene.getWindow());
-                String tittle = "";
+                selectImage( orientation);
 
-                switch (orientation) {
-                    case "fromTo":
-                        tittle = "From: " + from.getName() + "->" + " to: " + to.getName();
+                ChannelsManager channelsManager = new ChannelsManager(link, orientation);
 
-                        break;
-                    case "toFrom":
-                        tittle = "From: " + to.getName() + "->" + "to: " + from.getName();
-                        break;
-                }
-                stage.setTitle(tittle);
-                stage.setScene(new Scene(root, 300, 300));
-                stage.setResizable(false);
-
-                stage.show();
-                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                    @Override
-                    public void handle(WindowEvent event) {
-                        unselect(image, orientation);
-                        updateImageViews(orientation);
-                        if (link.getNumberOfChannels() == 0) {
-                            Command removeLink = new RemoveLink(link);
-                            removeLink.execute();
-                            //TODO add to memento
-                        }
-
-                    }
-                });
-
-            }
+        }
         });
     }
 
@@ -150,24 +119,47 @@ public class LinkView extends Group {
         switch (orientation) {
             case "fromTo":
                 int size = link.getChannelsAToB().size();
-
-                if (size > 1) {
-                    imageChannelOut.setImage(new Image(channelOutImageEntries));
-                } else if (size == 1) {
-                    imageChannelOut.setImage(new Image(channelOutImageDefault));
-                } else {
-                    this.getChildren().remove(imageChannelOut);
+                if(!selectedOut) {
+                    if (size > 1) {
+                        imageChannelOut.setImage(new Image(channelOutImageEntries));
+                    } else if (size == 1) {
+                        imageChannelOut.setImage(new Image(channelOutImageDefault));
+                    } else {
+                        this.getChildren().remove(imageChannelOut);
+                    }
                 }
+                if(selectedOut) {
+                    if (size > 1) {
+                        imageChannelOut.setImage(new Image(channelOutImageEntriesSelected));
+                    } else if (size == 1) {
+                        imageChannelOut.setImage(new Image(channelOutImageDefaultSelected));
+                    } else {
+                        this.getChildren().remove(imageChannelOut);
+                    }
+                }
+
                 setTooltipImmage(imageChannelOut, link.getChannelsAToB());
                 break;
             case "toFrom":
                 int size2 = link.getChannelsBToA().size();
-                if (size2 > 1) {
-                    imageChannelIn.setImage(new Image(channelInImageEntries));
-                } else if (size2 == 1) {
-                    imageChannelIn.setImage(new Image(channelInImageDefault));
-                } else {
-                    this.getChildren().remove(imageChannelIn);
+                if(selectedIn) {
+                    if (size2 > 1) {
+                        imageChannelIn.setImage(new Image(channelInImageEntriesSelected));
+                    } else if (size2 == 1) {
+                        imageChannelIn.setImage(new Image(channelInImageDefaultSelected));
+                    } else {
+                        this.getChildren().remove(imageChannelIn);
+                    }
+
+                }else{
+                    if (size2 > 1) {
+                        imageChannelIn.setImage(new Image(channelInImageEntries));
+                    } else if (size2 == 1) {
+                        imageChannelIn.setImage(new Image(channelInImageDefault));
+                    } else {
+                        this.getChildren().remove(imageChannelIn);
+                    }
+
                 }
                 setTooltipImmage(imageChannelIn, link.getChannelsBToA());
         }
@@ -190,7 +182,8 @@ public class LinkView extends Group {
         return;
     }
 
-    private void unselect(ImageView image, String orientation) {
+    public void unselectImage(String orientation) {
+        ImageView image= getImmage(orientation);
         switch (orientation) {
             case "fromTo":
                 if (link.getChannelsAToB().size() == 1) {
@@ -198,6 +191,7 @@ public class LinkView extends Group {
                 } else {
                     image.setImage(new Image(channelOutImageEntries));
                 }
+                selectedOut=false;
                 break;
             case "toFrom":
                 if (link.getChannelsAToB().size() == 1) {
@@ -205,11 +199,28 @@ public class LinkView extends Group {
                 } else {
                     image.setImage(new Image(channelInImageEntries));
                 }
+                selectedIn=false;
                 break;
         }
     }
 
-    private void select(ImageView image, String orientation) {
+    private ImageView getImmage(String orientation) {
+
+            switch (orientation){
+                case "fromTo":
+                    return imageChannelOut;
+
+                case"toFrom":
+                    return imageChannelIn;
+
+                default:
+                    return null;
+            }
+
+    }
+
+    public void selectImage(String orientation) {
+        ImageView image= getImmage(orientation);
         switch (orientation) {
             case "fromTo":
                 if (link.getChannelsAToB().size() == 1) {
@@ -217,13 +228,15 @@ public class LinkView extends Group {
                 } else {
                     image.setImage(new Image(channelOutImageEntriesSelected));
                 }
+                selectedOut=true;
                 break;
             case "toFrom":
-                if (link.getChannelsAToB().size() == 1) {
+                if (link.getChannelsBToA().size() == 1) {
                     image.setImage(new Image(channelInImageDefaultSelected));
                 } else {
                     image.setImage(new Image(channelInImageEntriesSelected));
                 }
+                selectedIn=true;
                 break;
         }
     }

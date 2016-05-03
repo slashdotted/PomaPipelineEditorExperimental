@@ -2,7 +2,6 @@ package controller;
 
 import commands.*;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,22 +9,18 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import main.Main;
 import model.Link;
 import utils.GraphicsElementsFactory;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,6 +43,41 @@ public class ChannelsManager extends BorderPane {
     private int firstSelect=-1;
 
     public ChannelsManager(Link link, String orientation) {
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(Main.mScene.getWindow());
+        String tittle = "";
+
+        switch (orientation) {
+            case "fromTo":
+                tittle = "From: " + link.getModuleA().getName() + "->" + " to: " +link.getModuleB().getName();
+
+                break;
+            case "toFrom":
+                tittle = "From: " +link.getModuleB().getName() + "->" + "to: " + link.getModuleA().getName();
+                break;
+        }
+        stage.setTitle(tittle);
+        stage.setScene(new Scene(this, 300, 300));
+        stage.setResizable(false);
+
+        stage.show();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                (MainWindow.allLinkView.get(link.getID())).unselectImage( orientation);
+                (MainWindow.allLinkView.get(link.getID())).updateImageViews(orientation);
+                if (link.getNumberOfChannels() == 0) {
+                    Command removeLink = new RemoveLink(link);
+                    removeLink.execute();
+                    //TODO add to memento
+                }
+
+            }
+        });
+
+
+
         setButtons();
         this.link = link;
 
