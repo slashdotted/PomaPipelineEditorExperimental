@@ -1,5 +1,6 @@
 package model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -97,5 +98,20 @@ public class ModuleTemplate {
                 ", type='" + type + '\'' +
                 ", imageURL='" + imageURL + '\'' +
                 " }";
+    }
+
+    public Map<String, Value> getParamsCopy() {
+
+        Map<String, Value> paramsCopy = new HashMap<>();
+        mandatoryParameters.keySet().forEach(key ->{
+            paramsCopy.put(key, new Value(mandatoryParameters.get(key)));
+        });
+
+        optParameters.keySet().forEach(key ->{
+            paramsCopy.put(key, new Value(optParameters.get(key)));
+        });
+
+
+        return paramsCopy;
     }
 }

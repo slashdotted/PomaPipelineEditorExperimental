@@ -68,7 +68,8 @@ public class ModuleItem extends Pane{
         ModuleTemplate template = Main.templates.get(type);
         modelItemLabel.setText(template.getType());
         modelItemImage.setImage(new Image(template.getImageURL()));
-        modelItemLabel.setTooltip(new Tooltip(template.getDescription()));
+        modelItemLabel.setTooltip(new Tooltip(template.getType()));
+        Tooltip.install(modelItemImage, new Tooltip(template.getDescription()));
     }
 
     public String getTemplateType() {

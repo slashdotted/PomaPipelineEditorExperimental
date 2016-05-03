@@ -60,7 +60,6 @@ public class GraphicsElementsFactory {
     }
 
 
-
 //    public static VBox moduleConfBox(Module module) {
 //        VBox mainBox = new VBox();
 //        mainBox.getChildren().add(new Label("Template test"));
@@ -86,7 +85,6 @@ public class GraphicsElementsFactory {
 //
 //        return mainBox;
 //    }
-
 
 
 //    public static VBox moduleConfBox(Module module) {
@@ -116,11 +114,12 @@ public class GraphicsElementsFactory {
 //    }
 
     public static Separator getSeparator() {
-        Insets insets = new Insets(5, 5, 5, 5);
+        Insets insets = new Insets(2, 5, 2, 5);
         Separator separator = new Separator();
         separator.setPadding(insets);
         return separator;
     }
+
 
 
 }

@@ -10,23 +10,25 @@
 
 <fx:root alignment="CENTER_LEFT" minWidth="300.0" spacing="2.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="formLabel" text="FormLabel" VBox.vgrow="ALWAYS">
+      <HBox VBox.vgrow="ALWAYS">
          <VBox.margin>
-            <Insets left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
-      </Label>
-      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="10.0" />
+            <Insets left="5.0" right="5.0" top="2.0" />
          </VBox.margin>
          <children>
+            <Label fx:id="formLabel" text="FormLabel">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Label>
             <ImageView fx:id="statusIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="2.0" left="5.0" right="5.0" />
+         </VBox.margin>
+         <children>
             <TextField fx:id="formTextField" HBox.hgrow="ALWAYS" />
-            <ImageView fx:id="acceptIcon" accessibleRole="BUTTON" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@images/accept.png" />
-               </image>
-            </ImageView>
             <ImageView fx:id="clearIcon" accessibleRole="BUTTON" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@images/cancel.png" />

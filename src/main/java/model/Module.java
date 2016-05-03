@@ -7,6 +7,7 @@ import javafx.geometry.Point2D;
 import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +41,9 @@ public class Module {
     }
 
     public static Module getInstance(ModuleTemplate template) {
-        Module module = new Module(template);
 
+        Module module = new Module(template);
+        module.cloneParams();
         return module;
     }
 
@@ -137,5 +139,9 @@ public class Module {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public void cloneParams() {
+        this.parameters = template.getParamsCopy();
     }
 }

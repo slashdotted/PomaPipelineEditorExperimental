@@ -1,13 +1,14 @@
 package utils;
 
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
+import commands.Command;
+import commands.EditStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -17,34 +18,52 @@ import javafx.scene.layout.Priority;
  */
 public class ParamBox extends HBox {
 
-    private StringProperty param = new SimpleStringProperty();
+    private StringProperty param;
 
     private TextField textField = new TextField();
-    private Button actionButton = new Button();
+    //private Button actionButton = new Button();
+    //private ImageView accept = new ImageView("images/accept.png");
+    //private ImageView delete = new ImageView("images/minus.png");
+    private Button delete = new Button();
+    private String oldString = "";
 
     public ParamBox(SimpleStringProperty param) {
         this.param = param;
-        this.setSpacing(10);
-        this.setPadding(new Insets(10, 5, 5, 10));
+        this.setSpacing(5);
+        this.setPadding(new Insets(5, 15, 5, 10));
         this.setAlignment(Pos.CENTER);
         this.setMaxWidth(Double.MAX_VALUE);
-        this.setPadding(new Insets(0,10,0,10));
-        this.getChildren().addAll(textField, actionButton);
+        //this.setPadding(new Insets(0,15,0,10));
+        //this.getChildren().addAll(textField, accept, delete);
+        this.getChildren().addAll(textField, delete);
+        textField.setText(oldString);
 
         textField.setMaxWidth(Double.MAX_VALUE);
         this.setHgrow(textField, Priority.ALWAYS);
 
         textField.setEditable(true);
 
-        Bindings.bindBidirectional(textField.textProperty(), this.param);
-        //textField.textProperty().bindBidirectional(this.param);
-        //textField.textProperty().bind(this.param);
+        textField.setOnMouseClicked(event -> {
+            oldString = textField.getText();
+        });
 
-        actionButton.setGraphic(new ImageView("images/minus.png"));
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue && !newValue){
+                if(!textField.getText().equals(oldString)){
+                    Command edit = new EditStringProperty(param, textField.getText());
+                    edit.execute();
+                    //TODO add to memento
+                }
+            }
+        });
 
-       // System.out.println("Created paramBox with:" + param);
+        delete.setGraphic(new ImageView("images/minus.png"));
+        //delete.setTooltip(new Tooltip("Delete this cparam"));
+
 
     }
+
+
     public String getParam() {
         return param.get();
     }
@@ -65,13 +84,25 @@ public class ParamBox extends HBox {
         this.textField = textField;
     }
 
-    public Button getActionButton() {
-        return actionButton;
+//    public ImageView getAccept() {
+//        return accept;
+//    }
+//
+//    public void setAccept(ImageView accept) {
+//        this.accept = accept;
+//    }
+
+    public Button getDelete() {
+        return delete;
     }
 
-    public void setActionButton(Button actionButton) {
-        this.actionButton = actionButton;
-    }
+    //    public Button getActionButton() {
+//        return actionButton;
+//    }
+
+//    public void setActionButton(Button actionButton) {
+//        this.actionButton = actionButton;
+//    }
 
 
 

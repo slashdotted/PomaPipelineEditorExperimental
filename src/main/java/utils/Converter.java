@@ -47,8 +47,7 @@ public class Converter {
         if (position != null)
             module.setPosition(position);
 
-        System.out.println(template.getType());
-        Map<String, Value> temp = extractParams(template, jsonObject);
+
         module.setParameters(extractParams(template, jsonObject));
 
         JSONArray jsonArray = (JSONArray) jsonObject.get("cparams");
@@ -79,18 +78,6 @@ public class Converter {
         return jsonObject;
     }
 
-
-    //    public static JSONObject linkToJSON(Link link) {
-//        JSONObject jsonObject = new JSONObject();
-//
-//        jsonObject.put("from", link.getModuleA().getName());
-//        jsonObject.put("to", link.getModuleB().getName());
-//
-//        if (!link.getChannel().equals("default"))
-//            jsonObject.put("channel", link.getChannel());
-//
-//        return jsonObject;
-//    }
     public static ArrayList<JSONObject> linkToJSON(Link link) {
         ArrayList<JSONObject> jsonLinks = new ArrayList<>();
 
@@ -150,6 +137,7 @@ public class Converter {
                 Object val = jsonObject.get(key);
                 if(val!=null)
                     value.setValue(val);
+
 
 
                 params.put(key, value);

@@ -78,7 +78,10 @@ public class Main extends Application {
         // System.out.println(System.currentTimeMillis()-startTime);
 
         primaryStage.setTitle("PoorMans Pipeline Editor");
-        mScene=new Scene(root, 600, 600);
+        mScene=new Scene(root, 1000, 600);
+        primaryStage.setMaximized(true);
+        primaryStage.setMinHeight(500);
+        primaryStage.setMinWidth(800);
         primaryStage.setScene(mScene);
 
 

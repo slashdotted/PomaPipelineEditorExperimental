@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -11,35 +10,18 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<fx:root fx:id="mopdelPane" prefHeight="80.0" prefWidth="100.0" styleClass="draggable-module" stylesheets="@application.css" type="Pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="mopdelPane" prefHeight="100.0" prefWidth="100.0" styleClass="draggable-module" stylesheets="@application.css" type="Pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER">
          <children>
-            <Pane fx:id="titleBar" prefHeight="35.0" prefWidth="100.0" styleClass="pane-tittle" stylesheets="@application.css">
+            <Pane fx:id="titleBar" prefHeight="20.0" prefWidth="100.0" styleClass="pane-tittle" stylesheets="@application.css">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="100.0">
-                     <children>
-                        <ImageView fx:id="modelItemImage" fitHeight="35.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true" />
-                        <Label fx:id="modelItemLabel" alignment="CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets top="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="11.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
+                  <Label fx:id="modelItemLabel" alignment="CENTER" text="Label" textAlignment="CENTER" />
                </children>
             </Pane>
             <Pane fx:id="paneItemImage">
                <children>
-                  <VBox>
-                     <children>
-                        <Label fx:id="labelTemplate" text="Label" />
-                        <Label fx:id="labelHost" text="Label" />
-                     </children>
-                  </VBox>
+                  <ImageView fx:id="modelItemImage" fitHeight="77.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
          </children>

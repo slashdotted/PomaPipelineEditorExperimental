@@ -45,11 +45,11 @@ public class Import implements Command {
         jsonModules.keySet().forEach(key -> {
             Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
 
-            Command addModule=new AddModule(module);
-           addModule.execute();
+            Command addModule = new AddModule(module);
+            addModule.execute();
             //TODO add memento
-           // Main.modules.put(String.valueOf(key), module);
-           // Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
+            // Main.modules.put(String.valueOf(key), module);
+            // Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
         });
 
         jsonArray.forEach(obj -> {
@@ -62,14 +62,13 @@ public class Import implements Command {
 //            String channel = (String)jsonLink.get("channel");
 //            if(channel == null)
 //                channel = "default";
-           // Main.linksClipboard.put(link.getJsonId(channel),jsonLink);
+            // Main.linksClipboard.put(link.getJsonId(channel),jsonLink);
 
         });
 
         // Main.modules.putAll(clipboard);
         return true;
     }
-
 
 
     @Override

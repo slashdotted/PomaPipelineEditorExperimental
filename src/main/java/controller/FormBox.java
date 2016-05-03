@@ -27,8 +27,8 @@ public class FormBox<T> extends VBox {
     @FXML
     private ImageView statusIcon;
 
-    @FXML
-    private ImageView acceptIcon;
+//    @FXML
+//    private ImageView acceptIcon;
 
     @FXML
     private ImageView clearIcon;
@@ -58,8 +58,9 @@ public class FormBox<T> extends VBox {
     @FXML
     public void initialize() {
         formTextField.setText("");
-        acceptIcon.setImage(new Image("images/accept.png"));
+        //acceptIcon.setImage(new Image("images/accept.png"));
         clearIcon.setImage(new Image("images/cancel.png"));
+        Tooltip.install(clearIcon, new Tooltip("Clear this value"));
 
 
         if (value.isMandatory()) {
@@ -69,7 +70,6 @@ public class FormBox<T> extends VBox {
             } else {
 
             }
-
         }
 
         //Bindings.bindBidirectional(value.valueProperty(), formTextField.textProperty());

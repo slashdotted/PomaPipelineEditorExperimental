@@ -11,7 +11,7 @@ import java.util.*;
  * Created by Marco on 18/03/2016.
  */
 public class Link {
-//TODO control chanfes simplestringproperties
+//TODO control changes simplestringproperties
     private final Module moduleA;
     private final Module moduleB;
 
