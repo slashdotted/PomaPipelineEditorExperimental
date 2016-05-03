@@ -19,7 +19,7 @@ import javafx.scene.shape.Circle;
  */
 public class ParamBox extends HBox {
 
-    private StringProperty param;
+    private SimpleStringProperty param;
 
     private TextField textField = new TextField();
     //private Button actionButton = new Button();
@@ -70,7 +70,7 @@ public class ParamBox extends HBox {
         return param.get();
     }
 
-    public StringProperty paramProperty() {
+    public SimpleStringProperty paramProperty() {
         return param;
     }
 

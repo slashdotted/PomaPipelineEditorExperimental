@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
@@ -25,6 +26,7 @@ import main.Main;
 import model.Link;
 import model.Module;
 import model.ModuleTemplate;
+import utils.CareTaker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +41,11 @@ public class DraggableModule extends Pane {
 
     //private UUID draggableModuleID;
     private Point2D position;
+    private Point2D oldPosition;
+
     private Point2D mDragOffset = new Point2D(0.0, 0.0);
+    private Point2D mOldDragOffset = new Point2D(0.0, 0.0);
+
     private Module module;
     private ArrayList<LinkView> links = new ArrayList<>();
     private DraggableModule selfie;
@@ -98,7 +104,7 @@ public class DraggableModule extends Pane {
         }
 
         this.module = module;
-        this.selfie=this;
+        this.selfie = this;
         //
         //    ModuleTemplate temp=Main.templates.get(module.getType());
 
@@ -109,6 +115,7 @@ public class DraggableModule extends Pane {
         ModuleTemplate temp = Main.templates.get(module.getType());
         this.modelItemImage.setImage(new Image(temp.getImageURL()));
         position = new Point2D(0, 0);
+        oldPosition = null;
 
 
         mainScrollPane = (ScrollPane) Main.mScene.lookup("#mainScrollPane");
@@ -117,7 +124,7 @@ public class DraggableModule extends Pane {
     }
 
 
-    private void setLabels(){
+    private void setLabels() {
         labelHost.setText(module.getHost());
         labelTemplate.setText(module.getType());
         modelItemLabel.setText(module.getName());
@@ -141,7 +148,6 @@ public class DraggableModule extends Pane {
 
     @FXML
     public void initialize() {
-
 
 
         buildNodeDragHandlers();
@@ -172,15 +178,16 @@ public class DraggableModule extends Pane {
     public String getHost() {
         return module.getHost();
     }
-    public String getType(){
-        return  module.getType();
+
+    public String getType() {
+        return module.getType();
     }
 
 
     private void buildLinkDragHandlers() {
 
         titleBar.setOnMouseClicked(event -> {
-            if(event.getClickCount() == 2){
+            if (event.getClickCount() == 2) {
                 MainWindow.openSideBar(module, false);
             }
         });
@@ -196,7 +203,7 @@ public class DraggableModule extends Pane {
                 mainScrollPane.setOnDragDropped(mContextLinkDragDropped);
 
                 //Set up user-draggable link
-               // System.out.println("parent: " + getParent().getParent().getClass().getName());
+                // System.out.println("parent: " + getParent().getParent().getClass().getName());
 
                 Group group = (Group) mainScrollPane.getContent();
                 group.getChildren().add(0, mShadowLink);
@@ -273,7 +280,7 @@ public class DraggableModule extends Pane {
         mContextLinkDragDropped = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-               // System.out.println("link drag dropped");
+                // System.out.println("link drag dropped");
 
                 mainScrollPane.setOnDragOver(null);
                 mainScrollPane.setOnDragDropped(null);
@@ -287,6 +294,7 @@ public class DraggableModule extends Pane {
 
 
                 event.setDropCompleted(true);
+
                 event.consume();
             }
         };
@@ -297,8 +305,8 @@ public class DraggableModule extends Pane {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
-                Point2D position=new Point2D(event.getSceneX(), event.getSceneY());
-                 relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
+                //position = new Point2D(event.getSceneX(), event.getSceneY());
+                relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
 
                 event.consume();
             }
@@ -314,6 +322,10 @@ public class DraggableModule extends Pane {
 
                 event.setDropCompleted(true);
 
+                Command move = new Move(selfie, oldPosition, position, mOldDragOffset, mDragOffset);
+                move.execute();
+                CareTaker.addMemento(move);
+
                 event.consume();
 
             }
@@ -324,8 +336,10 @@ public class DraggableModule extends Pane {
         titleBar.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-
-               // System.out.println("parent: " + getParent().getParent().getClass().getName());
+                if(MainWindow.currentSidebar!=null)
+                    MainWindow.closeSidebar();
+                oldPosition = new Point2D(event.getSceneX(), event.getSceneY());
+                // System.out.println("parent: " + getParent().getParent().getClass().getName());
 
                 mainScrollPane.setOnDragOver(null);
                 mainScrollPane.setOnDragDropped(null);
@@ -335,6 +349,7 @@ public class DraggableModule extends Pane {
 
                 //set operations drag
                 mDragOffset = new Point2D(event.getX(), event.getY());
+                mOldDragOffset = new Point2D(event.getX(), event.getY());
 
                 relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
 
@@ -352,28 +367,55 @@ public class DraggableModule extends Pane {
 
     }
 
+    public void relocateToPoint(Point2D p, Point2D offset) {
+        //relocates the object to a point that has been converted to
+        //scene coordinates
+        Point2D localCoords;
+
+        position = p;
+        Group par=(Group) Main.mScene.lookup("#mainGroup");
+        System.out.println(par.getClass());
+
+        localCoords = par.sceneToLocal(p);
+
+        // System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
+        // System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
+        this.relocate(
+                (int) localCoords.getX() - offset.getX(), (int) localCoords.getY() - offset.getY()
+
+        );
+        //System.out.println("mdragoffset: " + offset.getX() + " " + offset.getY());
+
+        for (LinkView lv : links) {
+
+            lv.updateBottonChannels();
+        }
+    }
+
     public void relocateToPoint(Point2D p) {
 
         //relocates the object to a point that has been converted to
         //scene coordinates
-
         Point2D localCoords;
-        Point2D oldPosition;
-        oldPosition = position;
         position = p;
         localCoords = getParent().sceneToLocal(p);
 
 
-       // System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
-       // System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
+        // System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
+        // System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
+        this.relocate(
+                (int) localCoords.getX() - mDragOffset.getX(), (int) localCoords.getY() - mDragOffset.getY()
+
+        );
+        //System.out.println("mdragoffset: " + mDragOffset.getX() + " " + mDragOffset.getY());
 
 
-        Command move = new Move(this, oldPosition, new Point2D(localCoords.getX() - mDragOffset.getX(), localCoords.getY() - mDragOffset.getY()));
-        move.execute();
-        //TODO implements adding to memento
+        //   Command move = new Move(this, oldPosition, new Point2D(localCoords.getX() - mDragOffset.getX(), localCoords.getY() - mDragOffset.getY()));
+        //  move.execute();
+        //   CareTaker.addMemento(move);
 
 
-      //  System.out.println(links.size() + "-----------------");
+        //  System.out.println(links.size() + "-----------------");
         for (LinkView lv : links) {
 
             lv.updateBottonChannels();
@@ -409,9 +451,6 @@ public class DraggableModule extends Pane {
     public void removeLinkView(LinkView lvToDel) {
 
         links.remove(lvToDel);
-
-
-
     }
 
     public void updateModule() {

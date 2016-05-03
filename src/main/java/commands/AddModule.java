@@ -21,14 +21,14 @@ public class AddModule implements Command{
         Main.modules.put(module.getName(), module);
         Platform.runLater(() ->MainWindow.addDraggableModule(module) );
 
-
+        debug("module = " + module.getName());
         return false;
     }
 
     @Override
     public boolean reverse() {
-
-        return false;
+        Command reverse = new RemoveModule(module);
+        return reverse.execute();
     }
 
 }

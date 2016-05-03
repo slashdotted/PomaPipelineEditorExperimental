@@ -72,7 +72,7 @@ public class EditModule implements Command {
                 dm.updateHost();
                 break;
         }
-
+        debug("module = "+ module.getName()+ ", type = " + typeEdit);
         return false;
     }
 

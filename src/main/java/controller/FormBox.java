@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import model.Value;
+import utils.CareTaker;
 
 import java.io.IOException;
 
@@ -111,15 +112,15 @@ public class FormBox<T> extends VBox {
                     valid.setValue(editValue.execute());
 
                     if (valid.getValue() || value.getDefaultValue()!=null) {
-                        //TODO add to memento
+                        CareTaker.addMemento(editValue);
+
 
                         formTextField.setText(value.getValue().toString());
                     }
                 }
             }
         });
-
-                valid.addListener((observable, oldValue, newValue) -> {
+        valid.addListener((observable, oldValue, newValue) -> {
             if (oldValue && !newValue) {
                 // warning
                 statusIcon.setImage(new Image("images/warning.png"));

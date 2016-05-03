@@ -1,7 +1,6 @@
 package controller;
 
-import commands.Command;
-import commands.EditModule;
+import commands.*;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.application.Platform;
@@ -22,6 +21,7 @@ import javafx.util.Duration;
 import model.Module;
 import model.ModuleTemplate;
 import model.Value;
+import utils.CareTaker;
 import utils.GraphicsElementsFactory;
 import utils.ParamBox;
 
@@ -115,7 +115,7 @@ public class SideBar extends VBox {
         setParametersArea();
         this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
         this.cparamsBox.setFillWidth(true);
-        this.hostTextField.setText(module.getHost());
+        hostTextField.setText(module.getHost());
         setButtons();
 
 //        addCParam.setOnMousePressed(event -> {
@@ -185,7 +185,7 @@ public class SideBar extends VBox {
                 if(!hostTextField.getText().equals(module.getHost())){
                     Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
                     editHost.execute();
-                    //TODO add to memento
+                    CareTaker.addMemento(editHost);
                 }
             }
         });
@@ -193,7 +193,7 @@ public class SideBar extends VBox {
             if(!hostTextField.getText().equals(module.getHost())){
                 Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
                 editHost.execute();
-                //TODO add to memento
+                CareTaker.addMemento(editHost);
             }
         });
 
@@ -277,7 +277,8 @@ public class SideBar extends VBox {
             System.out.println("Text changed");
             Command editName = new EditModule(module, EditModule.Type.Name, temp.getText());
             editName.execute();
-            // TODO add to memento
+            CareTaker.addMemento(editName);
+
             nameLabel.setText(module.getName());
         }
 
@@ -335,14 +336,21 @@ public class SideBar extends VBox {
 
         ParamBox box = new ParamBox(cParam);
         this.cparamsBox.getChildren().add(1, box);
-        if (isNew)
-            this.cparams.add(cParam);
+        if (isNew){
+            Command addparam = new AddStringProperty(cParam, cparams);
+            addparam.execute();
+            CareTaker.addMemento(addparam);
+        }
+            //this.cparams.add(cParam);
         paramBoxes.add(box);
         this.cparamsBox.setVgrow(box, Priority.ALWAYS);
 
         box.getDelete().setOnMouseClicked(event -> {
 
-            cparams.remove(box.paramProperty());
+            Command removeparam = new RemoveStringProperty(box.paramProperty(), cparams);
+            removeparam.execute();
+            CareTaker.addMemento(removeparam);
+            //cparams.remove(box.paramProperty());
             paramBoxes.remove(box);
             //TODO call command
             Platform.runLater(() -> cparamsBox.getChildren().remove(box));

@@ -8,6 +8,7 @@ import model.Link;
 import model.Module;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import utils.CareTaker;
 import utils.Converter;
 import utils.PipelineManager;
 
@@ -47,6 +48,7 @@ public class Import implements Command {
 
             Command addModule = new AddModule(module);
             addModule.execute();
+            CareTaker.addMemento(addModule);
             //TODO add memento
             // Main.modules.put(String.valueOf(key), module);
             // Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
