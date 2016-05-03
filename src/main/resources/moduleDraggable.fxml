@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -31,8 +33,11 @@
                      </children>
                   </HBox>
                </children>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Pane>
-            <Pane fx:id="paneItemImage">
+            <Pane fx:id="paneItemImage" prefHeight="44.0" prefWidth="100.0" styleClass="draggable-moduleText">
                <children>
                   <VBox>
                      <children>
@@ -41,6 +46,9 @@
                      </children>
                   </VBox>
                </children>
+               <cursor>
+                  <Cursor fx:constant="CROSSHAIR" />
+               </cursor>
             </Pane>
          </children>
       </VBox>
