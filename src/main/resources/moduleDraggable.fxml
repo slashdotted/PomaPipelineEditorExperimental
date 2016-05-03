@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<fx:root fx:id="mopdelPane" prefHeight="80.0" prefWidth="100.0" styleClass="draggable-module" stylesheets="@application.css" type="Pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="mopdelPane" prefHeight="80.0" prefWidth="120.0" styleClass="draggable-module" stylesheets="@application.css" type="Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER">
+      <VBox alignment="CENTER" maxWidth="120.0" prefWidth="120.0">
          <children>
-            <Pane fx:id="titleBar" prefHeight="35.0" prefWidth="100.0" styleClass="pane-tittle" stylesheets="@application.css">
+            <Pane fx:id="titleBar" prefHeight="35.0" prefWidth="120.0" styleClass="pane-tittle" stylesheets="@application.css">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="100.0">
+                  <HBox maxWidth="120.0" prefHeight="80.0" prefWidth="120.0">
                      <children>
                         <ImageView fx:id="modelItemImage" fitHeight="35.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true" />
                         <Label fx:id="modelItemLabel" alignment="CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER">
@@ -37,13 +33,19 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Pane>
-            <Pane fx:id="paneItemImage" prefHeight="44.0" prefWidth="100.0" styleClass="draggable-moduleText">
+            <Pane fx:id="paneItemImage" maxWidth="120.0" prefHeight="44.0" prefWidth="120.0" styleClass="draggable-moduleText">
                <children>
-                  <VBox>
+                  <VBox prefWidth="120.0" spacing="5.0">
                      <children>
-                        <Label fx:id="labelTemplate" text="Label" />
-                        <Label fx:id="labelHost" text="Label" />
+                        <Label fx:id="labelTemplate" maxWidth="120.0" text="Label">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></Label>
+                        <Label fx:id="labelHost" maxWidth="120.0" text="Label" />
                      </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
                   </VBox>
                </children>
                <cursor>

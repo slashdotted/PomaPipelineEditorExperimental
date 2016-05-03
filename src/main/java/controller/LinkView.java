@@ -294,7 +294,7 @@ public class LinkView extends Group {
             imageChannelOut.setX(channelOutX.intValue() + Math.cos(calcAngleLine()) * 20 - imageChannelOut.getFitHeight() / 2);
             imageChannelOut.setY(channelOutY.intValue() + Math.sin(calcAngleLine()) * 20 - imageChannelOut.getFitWidth() / 2);
             imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
-            System.out.println(Math.toDegrees(calcAngleLine()) + "faslkjdfklajfdlkaklñfjda");
+           // System.out.println(Math.toDegrees(calcAngleLine()) + "faslkjdfklajfdlkaklñfjda");
             imageChannelOut.setRotate(Math.toDegrees(calcAngleLine()));
         }
         if (toFrom) {
@@ -306,10 +306,10 @@ public class LinkView extends Group {
             imageChannelIn.setRotate(Math.toDegrees(calcAngleLine()));
 
         }
-        System.out.println(imageChannelOut.getX() + "imageoutX");
-        System.out.println(imageChannelOut.getY() + "imageoutY");
-        System.out.println(imageChannelIn.getX() + "imageinX");
-        System.out.println(imageChannelIn.getY() + "imageinY");
+//        System.out.println(imageChannelOut.getX() + "imageoutX");
+//        System.out.println(imageChannelOut.getY() + "imageoutY");
+//        System.out.println(imageChannelIn.getX() + "imageinX");
+//        System.out.println(imageChannelIn.getY() + "imageinY");
 
     }
 

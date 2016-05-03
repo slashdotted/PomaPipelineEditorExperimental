@@ -34,17 +34,12 @@ import java.util.Map;
 public class DraggableModule extends Pane {
 
     //private UUID draggableModuleID;
-    private String type;
     private Point2D position;
     private Point2D mDragOffset = new Point2D(0.0, 0.0);
     private Module module;
     private ArrayList<LinkView> links = new ArrayList<>();
     private DraggableModule selfie;
     public static ArrayList<DraggableModule> selected = new ArrayList<>();
-
-
-    private String host;
-
 
     @FXML
     private Pane modelPane;
@@ -98,7 +93,6 @@ public class DraggableModule extends Pane {
         }
 
         this.module = module;
-        this.type = module.getType();
         this.selfie=this;
         //
         //    ModuleTemplate temp=Main.templates.get(module.getType());
@@ -107,15 +101,14 @@ public class DraggableModule extends Pane {
         //System.out.println("in draggableModule");
         // System.out.println(temp.getType());
 
-        ModuleTemplate temp = Main.templates.get(this.type);
-        this.host = module.getHost();
+        ModuleTemplate temp = Main.templates.get(module.getType());
         this.modelItemImage.setImage(new Image(temp.getImageURL()));
         position = new Point2D(0, 0);
 
 
         mainScrollPane = (ScrollPane) Main.mScene.lookup("#mainScrollPane");
         addToolTips();
-
+        setLabels();
     }
 
 
@@ -127,9 +120,9 @@ public class DraggableModule extends Pane {
     }
 
     private void addToolTips() {
-        modelItemLabel.setTooltip(new Tooltip("Name :" + module.getName()));
-        labelHost.setTooltip(new Tooltip("Host :" + module.getHost()));
-        labelTemplate.setTooltip(new Tooltip("Template :" + this.type));
+        modelItemLabel.setTooltip(new Tooltip( module.getName()));
+        labelHost.setTooltip(new Tooltip("Host: " + module.getHost()));
+        labelTemplate.setTooltip(new Tooltip("Template: " + module.getType()));
     }
 
     @FXML
@@ -151,18 +144,22 @@ public class DraggableModule extends Pane {
 
     public void updateName() {
         this.modelItemLabel.setText(module.getName());
+
     }
 
     public void updateHost() {
-        this.host = module.getHost();
+        this.labelHost.setText(module.getHost());
     }
 
     public void updateType() {
-        this.type = module.getType();
+        this.labelTemplate.setText(module.getType());
     }
 
     public String getHost() {
-        return host;
+        return module.getHost();
+    }
+    public String getType(){
+        return  module.getType();
     }
 
 
@@ -330,7 +327,7 @@ public class DraggableModule extends Pane {
                 ClipboardContent content = new ClipboardContent();
                 DragContainer container = new DragContainer();
 
-                container.addData("type", type);
+                container.addData("type", module.getType());
                 content.put(DragContainer.DragNode, container);
 
                 startDragAndDrop(TransferMode.ANY).setContent(content);
