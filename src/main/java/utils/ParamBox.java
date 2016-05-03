@@ -12,6 +12,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.shape.Circle;
 
 /**
  * Created by felipe on 14/04/16.
@@ -36,11 +37,12 @@ public class ParamBox extends HBox {
         //this.setPadding(new Insets(0,15,0,10));
         //this.getChildren().addAll(textField, accept, delete);
         this.getChildren().addAll(textField, delete);
-        textField.setText(oldString);
+        textField.setText(param.getValue());
 
         textField.setMaxWidth(Double.MAX_VALUE);
         this.setHgrow(textField, Priority.ALWAYS);
-
+        delete.setShape(new Circle(10));
+        delete.setPadding(Insets.EMPTY);
         textField.setEditable(true);
 
         textField.setOnMouseClicked(event -> {

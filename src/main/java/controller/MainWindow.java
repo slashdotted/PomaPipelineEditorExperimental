@@ -29,6 +29,7 @@ import main.Main;
 import model.Link;
 import model.Module;
 import model.ModuleTemplate;
+import model.Value;
 import utils.GraphicsElementsFactory;
 
 import java.io.IOException;
@@ -47,7 +48,6 @@ public class MainWindow extends BorderPane {
     public static Button toggleSidebar = new Button();
     //SELECTION
     private Rectangle rect= new Rectangle( 0,0,0,0);
-
 
     @FXML
     private VBox vBoxMenuAndTool;
@@ -446,7 +446,7 @@ public class MainWindow extends BorderPane {
                         //Main.modules.put(module.getName(), module);
 
 
-                        openSideBar(module);
+                        openSideBar(module, true);
                     }
                 }
                 //AddLink drag operation
@@ -520,9 +520,9 @@ public class MainWindow extends BorderPane {
 
     }
 
-    public static void openSideBar(Module module) {
+    public static void openSideBar(Module module, boolean creation) {
         //Service
-        Task<SideBar> builder = buildSideBar(module, toggleSidebar);
+        Task<SideBar> builder = buildSideBar(module, toggleSidebar, creation);
         //currentSidebar =
         toggleSidebar.cancelButtonProperty().setValue(false);
         builder.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> {
@@ -532,25 +532,15 @@ public class MainWindow extends BorderPane {
         });
         new Thread(builder).start();
 
-//        Thread launch = new Thread(new Task<SideBar>() {
-//            @Override
-//            protected SideBar call() throws Exception {
-//                Main.root.setRight(currentSidebar);
-//                toggleSidebar.fire();
-//                return currentSidebar;
-//            }
-//        });
-//        launch.start();
-
     }
 
-    private static Task<SideBar> buildSideBar(Module module, Button toggleSidebar) {
+    private static Task<SideBar> buildSideBar(Module module, Button toggleSidebar, boolean creation) {
         return new Task<SideBar>() {
             @Override
             protected SideBar call() throws Exception {
                 if (currentSidebar != null)
                     closeSidebar();
-                return new SideBar(module, toggleSidebar, 400);
+                return new SideBar(module, toggleSidebar, 400, creation);
             }
         };
     }

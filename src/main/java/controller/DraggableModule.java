@@ -2,6 +2,10 @@ package controller;
 
 import commands.Command;
 import commands.Move;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -59,6 +63,7 @@ public class DraggableModule extends Pane {
 
     @FXML
     private ImageView modelItemImage;
+
 
     //handlers to drag and drop of modules
     private EventHandler<DragEvent> mModuleHandlerDrag;
@@ -120,9 +125,18 @@ public class DraggableModule extends Pane {
     }
 
     private void addToolTips() {
-        modelItemLabel.setTooltip(new Tooltip( module.getName()));
-        labelHost.setTooltip(new Tooltip("Host: " + module.getHost()));
-        labelTemplate.setTooltip(new Tooltip("Template: " + module.getType()));
+        Tooltip nameTooltip = new Tooltip();
+        nameTooltip.textProperty().bind(modelItemLabel.textProperty());
+
+        Tooltip templateTooltip = new Tooltip();
+        templateTooltip.textProperty().bind(labelTemplate.textProperty());
+
+        Tooltip hostTooltip = new Tooltip();
+        hostTooltip.textProperty().bind(labelHost.textProperty());
+
+        modelItemLabel.setTooltip(nameTooltip);
+        labelHost.setTooltip(hostTooltip);
+        labelTemplate.setTooltip(templateTooltip);
     }
 
     @FXML
@@ -167,7 +181,7 @@ public class DraggableModule extends Pane {
 
         titleBar.setOnMouseClicked(event -> {
             if(event.getClickCount() == 2){
-                MainWindow.openSideBar(module);
+                MainWindow.openSideBar(module, false);
             }
         });
 

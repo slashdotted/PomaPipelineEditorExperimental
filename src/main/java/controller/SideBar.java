@@ -36,10 +36,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class SideBar extends VBox {
 
-    private static Image addImageNormal = new Image("images/plus2.png");
-    private static Image addImageShadow = new Image("images/plus2_shadow.png");
-
-
+    //private static Image addImageNormal = new Image("images/plus2.png");
+    //private static Image addImageShadow = new Image("images/plus2_shadow.png");
     @FXML
     private Label templateLabel;
 
@@ -47,7 +45,7 @@ public class SideBar extends VBox {
     private Label nameLabel;
 
     @FXML
-    private TextField textField;
+    private TextField hostTextField;
 
     @FXML
     private ImageView moduleImage;
@@ -78,9 +76,9 @@ public class SideBar extends VBox {
     private Button controlButton;
     private double expandedSize;
     private static AtomicBoolean closing = new AtomicBoolean(false);
+    private boolean creation;
 
-
-    public SideBar(Module module, Button controlButton, double expandedSize) {
+    public SideBar(Module module, Button controlButton, double expandedSize, boolean creation) {
         this.module = module;
         this.controlButton = controlButton;
         this.expandedSize = expandedSize;
@@ -88,7 +86,7 @@ public class SideBar extends VBox {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sideBar.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
-
+        this.creation = creation;
         try {
             fxmlLoader.load();
 
@@ -134,7 +132,7 @@ public class SideBar extends VBox {
 
         if (!cparams.isEmpty()) {
             for (int i = 0; i < cparams.size(); i++) {
-                addNewCParam(cparams.get(i));
+                addNewCParam(cparams.get(i), false);
             }
 
         }
@@ -172,12 +170,30 @@ public class SideBar extends VBox {
         });
 
         addCParam.setOnMouseClicked(event -> {
-            addNewCParam(new SimpleStringProperty(""));
+            addNewCParam(new SimpleStringProperty(""), true);
         });
 
         nameLabel.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 editName();
+            }
+        });
+
+
+        hostTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue){
+                if(!hostTextField.getText().equals(module.getHost())){
+                    Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
+                    editHost.execute();
+                    //TODO add to memento
+                }
+            }
+        });
+        hostTextField.setOnAction(event -> {
+            if(!hostTextField.getText().equals(module.getHost())){
+                Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
+                editHost.execute();
+                //TODO add to memento
             }
         });
 
@@ -219,7 +235,10 @@ public class SideBar extends VBox {
                 }
             };
 
-            showPanel.onFinishedProperty().set(actionEvent1 -> editName());
+            showPanel.onFinishedProperty().set(actionEvent1 -> {
+                if (creation)
+                    editName();
+            });
 
             if (showPanel.statusProperty().get() == Animation.Status.STOPPED
                     && hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
@@ -311,12 +330,13 @@ public class SideBar extends VBox {
 
     }
 
-    private void addNewCParam(SimpleStringProperty cParam) {
+    private void addNewCParam(SimpleStringProperty cParam, boolean isNew) {
         //SimpleStringProperty newString = new SimpleStringProperty(stringProperty);
 
         ParamBox box = new ParamBox(cParam);
         this.cparamsBox.getChildren().add(1, box);
-        this.cparams.add(cParam);
+        if (isNew)
+            this.cparams.add(cParam);
         paramBoxes.add(box);
         this.cparamsBox.setVgrow(box, Priority.ALWAYS);
 

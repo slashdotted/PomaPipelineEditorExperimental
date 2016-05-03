@@ -46,10 +46,10 @@ public class Main extends Application {
 
 
         // TODO remove this test
-        conf = new File("pipeline_test.json");
-
-        Command importCommand = new Import(conf);
-        importCommand.execute();
+//        conf = new File("pipeline_test.json");
+//
+//        Command importCommand = new Import(conf);
+//        importCommand.execute();
 
 
 //        File saveFile = new File("pipeline_saved_test.json");

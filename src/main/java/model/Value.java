@@ -1,40 +1,52 @@
 package model;
 
-import javafx.util.converter.NumberStringConverter;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.text.NumberFormat;
 
 /**
  * Created by Marco on 03/03/2016.
  */
 public class Value<T> {
 
-    private boolean isMandatory = false;
-    private boolean defaultValue;
+    private boolean mandatory = false;
+    private final T defaultValue;
+    private boolean valid = true;
     private String name;
 
 
     T value;
 
-    public Value(String name, T val, boolean defaultValue, boolean isMandatory) {
+    public Value(String name, T val, T defaultValue, boolean mandatory) {
         this.name = name;
-        this.value = val;
+        this.value = val;//(val.toString().equals("0")) ? val : updateValue("") ;
         this.defaultValue = defaultValue;
-        this.isMandatory = isMandatory;
+        this.mandatory = mandatory;
+        this.valid = (defaultValue!=null) ? true : false;
+        //initialize();
     }
 
-    public Value(String name, T val) {
-        this.name = name;
-        this.value = val;
-        this.defaultValue = false;
-    }
+//    private void initialize() {
+//        System.out.println("Value: " + name + ", Type: " + getType() + ", Default: " + defaultValue);
+//        System.out.println("Before initialize: " + value.toString());
+//        if(value.toString().equals("0")){
+//            System.out.println("\tCalling update!: "+ updateValue(""));
+//
+//        }
+//        System.out.println("After initialize: " + value.toString());
+//        System.out.println();
+//    }
+
+//    public Value(String name, T val) {
+//        this.name = name;
+//        this.value = val;
+//        this.defaultValue = null;
+//        //initialize();
+//
+//    }
 
     public Value(Value value) {
         this.name = value.getName();
-        this.defaultValue = value.isDefaultValue();
-        this.isMandatory = value.isMandatory();
+        this.mandatory = value.isMandatory();
         Object val = null;
         Constructor ctor = null;
         try {
@@ -54,7 +66,9 @@ public class Value<T> {
             e.printStackTrace();
         }
         this.value = (T) val;
-
+        this.defaultValue = (T) value.getDefaultValue();
+        this.valid = value.isValid();
+        //initialize();
     }
 
     public T getValue() {
@@ -65,42 +79,54 @@ public class Value<T> {
         return name;
     }
 
-    public boolean isDefaultValue() {
+    public T getDefaultValue() {
         return defaultValue;
     }
 
-    public boolean updateValue(String newValue){
-        if(value instanceof String){
+    public boolean updateValue(String newValue) {
+        System.out.println("Updating value of type: " + getType() + " with " + newValue);
+        boolean success = false;
+        if (value instanceof String) {
             value = (T) newValue;
-            return true;
+            success = true;
+            System.out.println("setting with string");
         }
-
         try {
-            if (value instanceof Long) {
+            if (!success && value instanceof Long) {
                 value = (T) Long.valueOf(newValue);
-                return true;
+                success = true;
             }
-            if(value instanceof Double){
+            if (!success && value instanceof Double) {
                 value = (T) Double.valueOf(newValue);
-                return  true;
+                success = true;
             }
-            if (value instanceof Integer) {
+            if (!success && value instanceof Integer) {
                 value = (T) Integer.valueOf(newValue);
-                return true;
+                success = true;
             }
         } catch (NumberFormatException e) {
-            return false;
+
+            success = false;
+        }
+        if (!success && value instanceof Boolean) {
+            if (newValue.equalsIgnoreCase("true") || newValue.equalsIgnoreCase("false")) {
+                value = (T) Boolean.valueOf(newValue);
+                success = true;
+            }else {
+                success = false;
+            }
         }
 
-        if(value instanceof Boolean){
-            if(newValue.equalsIgnoreCase("true") || newValue.equalsIgnoreCase("false")) {
-                value = (T) Boolean.valueOf(newValue);
-                return true;
-            }
-            return false;
+        if(!success && defaultValue!=null){
+            value = defaultValue;
+
         }
-            return false;
+
+        System.out.println("New value: " + value.toString() + ", success? " + success);
+        valid = success;
+        return success;
     }
+
 
     public void setValue(T value) {
         this.value = value;
@@ -111,7 +137,14 @@ public class Value<T> {
     }
 
     public boolean isMandatory() {
-        return isMandatory;
+        return mandatory;
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
 }

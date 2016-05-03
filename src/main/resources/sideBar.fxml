@@ -86,7 +86,10 @@
                            </VBox.margin>
                            <children>
                               <Label maxWidth="1.7976931348623157E308" text="CParams" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="addCParam" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" />
+                              <Button fx:id="addCParam" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false">
+                                 <HBox.margin>
+                                    <Insets right="3.0" />
+                                 </HBox.margin></Button>
                            </children>
                         </HBox>
                      </children>

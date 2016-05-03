@@ -132,14 +132,14 @@ public class Converter {
         //System.out.println("Converter: " + template.getType());  // TODO remove this
         if (!template.getMandatoryParameters().isEmpty())
             template.getMandatoryParameters().keySet().forEach(key -> {
-
+                boolean validValue = false;
                 Value value = new Value(template.getMandatoryParameters().get(key));
                 Object val = jsonObject.get(key);
-                if(val!=null)
+                if(val!=null){
                     value.setValue(val);
-
-
-
+                    validValue = true;
+                }
+                value.setValid(validValue);
                 params.put(key, value);
             });
 
@@ -147,13 +147,15 @@ public class Converter {
         if (!template.getOptParameters().isEmpty())
             // Skips parameters not present
             template.getOptParameters().keySet().forEach(key -> {
-
+                boolean validValue = false;
                 Value value = new Value(template.getOptParameters().get(key));
 
                 Object val = jsonObject.get(key);
-                if(val!=null)
+                if(val!=null){
                     value.setValue(val);
-
+                    validValue = true;
+                }
+                value.setValid(validValue);
                 params.put(key, value);
             });
 

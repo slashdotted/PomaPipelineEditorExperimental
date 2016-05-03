@@ -105,12 +105,12 @@ public class ModuleTemplate {
         Map<String, Value> paramsCopy = new HashMap<>();
         mandatoryParameters.keySet().forEach(key ->{
             paramsCopy.put(key, new Value(mandatoryParameters.get(key)));
+
         });
 
         optParameters.keySet().forEach(key ->{
             paramsCopy.put(key, new Value(optParameters.get(key)));
         });
-
 
         return paramsCopy;
     }
