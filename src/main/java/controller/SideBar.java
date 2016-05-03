@@ -115,7 +115,7 @@ public class SideBar extends VBox {
         setParametersArea();
         this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
         this.cparamsBox.setFillWidth(true);
-
+        this.hostTextField.setText(module.getHost());
         setButtons();
 
 //        addCParam.setOnMousePressed(event -> {

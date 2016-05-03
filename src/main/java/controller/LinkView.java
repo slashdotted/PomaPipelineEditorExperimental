@@ -5,12 +5,15 @@ import commands.Command;
 import commands.RemoveLink;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -97,6 +100,7 @@ public class LinkView extends Group {
         imageChannelOut.setFitHeight(30);
         imageChannelIn.setFitHeight(30);
         imageChannelIn.setFitWidth(30);
+
     }
 
     private void addHandlerChannels(ImageView image, Link link, String orientation) {
@@ -130,13 +134,8 @@ public class LinkView extends Group {
                         unselect(image, orientation);
                         updateImageViews(orientation);
                         if (link.getNumberOfChannels() == 0) {
-                            //System.out.println(MainWindow.allLinkView.size() + "allLV");
-                            //System.out.println(Main.links.size() + "allLinks");
-
                             Command removeLink = new RemoveLink(link);
                             removeLink.execute();
-                            //System.out.println(MainWindow.allLinkView.size() + "allLV");
-                            //System.out.println(Main.links.size() + "allLinks");
                             //TODO add to memento
                         }
 
@@ -159,6 +158,7 @@ public class LinkView extends Group {
                 } else {
                     this.getChildren().remove(imageChannelOut);
                 }
+                setTooltipImmage(imageChannelOut, link.getChannelsAToB());
                 break;
             case "toFrom":
                 int size2 = link.getChannelsBToA().size();
@@ -169,8 +169,25 @@ public class LinkView extends Group {
                 } else {
                     this.getChildren().remove(imageChannelIn);
                 }
-                break;
+                setTooltipImmage(imageChannelIn, link.getChannelsBToA());
         }
+
+    }
+
+    private void setTooltipImmage(ImageView immageChannel, ObservableList<SimpleStringProperty> channelsList) {
+        Tooltip tooltip = new Tooltip();
+        SimpleStringProperty channelsFromTo = new SimpleStringProperty();
+        String channels = "";
+        for (SimpleStringProperty strProp : channelsList) {
+            channels += strProp.getValue();
+            channels += "\n";
+            channelsFromTo.setValue(channels);
+
+        }
+
+        tooltip.textProperty().bind(channelsFromTo);
+        Tooltip.install(immageChannel, tooltip);
+        return;
     }
 
     private void unselect(ImageView image, String orientation) {
@@ -250,7 +267,7 @@ public class LinkView extends Group {
 
 
         line.startYProperty().bind(from.layoutYProperty().add(to.getHeight() / 2.0));
-        ;
+
 
         line.endXProperty().bind(to.layoutXProperty().add(from.getWidth() / 2.0));
 
@@ -275,11 +292,17 @@ public class LinkView extends Group {
         switch (orientation) {
             case "toFrom":
                 toFrom = true;
-                this.getChildren().add(imageChannelIn);
+                if (!this.getChildren().contains(imageChannelIn)) {
+                    this.getChildren().add(imageChannelIn);
+                }
+
                 break;
             case "fromTo":
                 fromTo = true;
-                this.getChildren().add(imageChannelOut);
+                if (!this.getChildren().contains(imageChannelOut)) {
+                    this.getChildren().add(imageChannelOut);
+                }
+
                 break;
         }
 
@@ -294,7 +317,7 @@ public class LinkView extends Group {
             imageChannelOut.setX(channelOutX.intValue() + Math.cos(calcAngleLine()) * 20 - imageChannelOut.getFitHeight() / 2);
             imageChannelOut.setY(channelOutY.intValue() + Math.sin(calcAngleLine()) * 20 - imageChannelOut.getFitWidth() / 2);
             imageChannelOut.setRotationAxis(Rotate.Z_AXIS);
-           // System.out.println(Math.toDegrees(calcAngleLine()) + "faslkjdfklajfdlkaklñfjda");
+            // System.out.println(Math.toDegrees(calcAngleLine()) + "faslkjdfklajfdlkaklñfjda");
             imageChannelOut.setRotate(Math.toDegrees(calcAngleLine()));
         }
         if (toFrom) {
@@ -306,10 +329,7 @@ public class LinkView extends Group {
             imageChannelIn.setRotate(Math.toDegrees(calcAngleLine()));
 
         }
-//        System.out.println(imageChannelOut.getX() + "imageoutX");
-//        System.out.println(imageChannelOut.getY() + "imageoutY");
-//        System.out.println(imageChannelIn.getX() + "imageinX");
-//        System.out.println(imageChannelIn.getY() + "imageinY");
+
 
     }
 

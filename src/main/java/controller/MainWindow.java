@@ -22,14 +22,10 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
 import main.Main;
 import model.Link;
 import model.Module;
 import model.ModuleTemplate;
-import model.Value;
 import utils.GraphicsElementsFactory;
 
 import java.io.IOException;
@@ -47,7 +43,8 @@ public class MainWindow extends BorderPane {
     public static double posYAssign = 100;
     public static Button toggleSidebar = new Button();
     //SELECTION
-    private Rectangle rect= new Rectangle( 0,0,0,0);
+    //private Rectangle rect= new Rectangle( 0,0,0,0);
+
 
     @FXML
     private VBox vBoxMenuAndTool;
@@ -103,10 +100,7 @@ public class MainWindow extends BorderPane {
         mainScrollPaneStat = mainScrollPane;
 
         //select
-        rect.setStroke(Color.BLUE);
-        rect.setStrokeWidth(1);
-        rect.setStrokeLineCap(StrokeLineCap.ROUND);
-        rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1.2, 1, 0.6));
+
 
     }
 
@@ -286,7 +280,7 @@ public class MainWindow extends BorderPane {
         if (position == null) {
 
             position = new Point2D(posXAssign, posYAssign);
-            //System.out.println("pos =null");
+            System.out.println("pos =null");
             posXAssign+=200;
             if(posXAssign>1400){
                 posXAssign=300;
@@ -446,7 +440,7 @@ public class MainWindow extends BorderPane {
                         //Main.modules.put(module.getName(), module);
 
 
-                        openSideBar(module, true);
+                        openSideBar(module,true);
                     }
                 }
                 //AddLink drag operation
@@ -520,9 +514,9 @@ public class MainWindow extends BorderPane {
 
     }
 
-    public static void openSideBar(Module module, boolean creation) {
+    public static void openSideBar(Module module,boolean creation) {
         //Service
-        Task<SideBar> builder = buildSideBar(module, toggleSidebar, creation);
+        Task<SideBar> builder = buildSideBar(module, toggleSidebar,creation);
         //currentSidebar =
         toggleSidebar.cancelButtonProperty().setValue(false);
         builder.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> {
@@ -532,9 +526,19 @@ public class MainWindow extends BorderPane {
         });
         new Thread(builder).start();
 
+//        Thread launch = new Thread(new Task<SideBar>() {
+//            @Override
+//            protected SideBar call() throws Exception {
+//                Main.root.setRight(currentSidebar);
+//                toggleSidebar.fire();
+//                return currentSidebar;
+//            }
+//        });
+//        launch.start();
+
     }
 
-    private static Task<SideBar> buildSideBar(Module module, Button toggleSidebar, boolean creation) {
+    private static Task<SideBar> buildSideBar(Module module, Button toggleSidebar,boolean creation) {
         return new Task<SideBar>() {
             @Override
             protected SideBar call() throws Exception {

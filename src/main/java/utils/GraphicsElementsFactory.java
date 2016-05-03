@@ -1,15 +1,27 @@
 package utils;
 
 import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Module;
 import model.ModuleTemplate;
 import model.Value;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by felipe on 05/04/16.
@@ -120,6 +132,16 @@ public class GraphicsElementsFactory {
         return separator;
     }
 
+    public static boolean showWarning(String title,String message) {
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        Optional<ButtonType> result = alert.showAndWait();
+
+
+        return (result.get()==ButtonType.OK);
+    }
 
 }
