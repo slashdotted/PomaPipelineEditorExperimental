@@ -41,6 +41,10 @@ public class MainWindow extends BorderPane {
 
     public static Map<String, DraggableModule> allDraggableModule = new HashMap<>();
     public static Map<String, LinkView> allLinkView = new HashMap<>();
+
+    public static Map<String,Link> selectedLinks=new HashMap<>();
+    public static Map<String,Module> selectedModules=new HashMap<>();
+
     private ModuleTemplate shadowModule = null;
     private ModuleItem draggableModuleItem = null;
     public static SideBar currentSidebar; //TODO wire the visible sidebar to this static field
@@ -525,7 +529,50 @@ public class MainWindow extends BorderPane {
                 }
             }
         });
+        mainScrollPane.setOnMouseClicked(event -> {
 
+            Point2D posClicked=new Point2D(event.getSceneX(),event.getSceneY());
+
+            Group group= (Group) mainScrollPane.getContent();
+            boolean resetSelection=false;
+            Point2D posLocal=group.sceneToLocal(posClicked);
+            for (Node node:group.getChildren()) {
+                System.out.println(node.getClass());
+                if(node instanceof DraggableModule ){
+                    if(!isContained(posLocal,node)){
+
+                        resetSelection=true;
+                        break;
+                    }
+
+                }
+            }
+            if(resetSelection) {
+                resetSelection();
+            }
+        });
+    }
+
+    private void resetSelection() {
+
+        for (String modId:MainWindow.selectedModules.keySet()) {
+            MainWindow.allDraggableModule.get(modId).unselect();
+        }
+    }
+
+    private boolean isContained(Point2D posLocal, Node node) {
+        DraggableModule dm=(DraggableModule)node;
+        System.out.println(node.getLayoutX()+"nodo"+((node.getLayoutX()+dm.getWidth())));
+        System.out.println(posLocal.getX()+"mouse"+posLocal.getY());
+        System.out.println();
+        if((node.getLayoutX()<posLocal.getX())&&((node.getLayoutX()+dm.getWidth())>posLocal.getX())){
+            if((node.getLayoutY()<posLocal.getY())&&((node.getLayoutY()+dm.getHeight())>posLocal.getX())){
+                System.out.println("sono dentrooooooooooooo");
+                return true;
+            }
+
+        }
+        return false;
     }
 
     public static void openSideBar(Module module, boolean creation) {
