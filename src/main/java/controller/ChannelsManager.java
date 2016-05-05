@@ -19,8 +19,10 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import main.Main;
 import model.Link;
+import utils.CareTaker;
 import utils.GraphicsElementsFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,7 +72,9 @@ public class ChannelsManager extends BorderPane {
                 if (link.getNumberOfChannels() == 0) {
                     Command removeLink = new RemoveLink(link);
                     removeLink.execute();
-                    //TODO add to memento
+
+                    CareTaker.addMemento(removeLink);
+
                 }
 
             }
@@ -111,6 +115,7 @@ public class ChannelsManager extends BorderPane {
 
                             currentChannel = t;
                             ImageView removeChannel = new ImageView("/images/Delete.png");
+
                             removeChannel.setFitHeight(15);
                             removeChannel.setFitWidth(15);
 
@@ -183,10 +188,11 @@ public class ChannelsManager extends BorderPane {
 
                                 String newText = channelName.getText();
 
-                                //TODO aded to memento
                                 if (!oldValue.equals(newText) && channelName.isEditable()) {
                                     Command edit = new EditStringProperty(t, newText);
                                     edit.execute();
+
+                                    CareTaker.addMemento(edit);
                                 }
 
 
@@ -212,10 +218,10 @@ public class ChannelsManager extends BorderPane {
                                 if(GraphicsElementsFactory.showWarning(title,msg)) {
                                     Command removeChannel = new RemoveChannel(channelToRemove, channels, link, ChannelsManager.orientation);
                                     removeChannel.execute();
-                                    //TODO add to memento
+
+                                    CareTaker.addMemento(removeChannel);
                                 }
-                                //listV.refresh();
-                                //System.out.println(listV.getItems().size());
+
 
 
                             }
@@ -252,14 +258,18 @@ public class ChannelsManager extends BorderPane {
                 String title="Remove channels";
                 String msg="Are you sure you wish remove the "+i+" selected channel?";
                 if(GraphicsElementsFactory.showWarning(title,msg)) {
-                    while (i > 0) {
-                        SimpleStringProperty selectedItem = listV.getItems().get(indices.get(0));
+                    ArrayList<Command> allAdds=new ArrayList<>();
+                    for(int j=0;j<i;j++){
+                        SimpleStringProperty selectedItem = listV.getItems().get(indices.get(j));
                         Command command = new RemoveChannel(selectedItem, link.getChannelList(orientation), link, orientation);
-                        command.execute();
-                        i--;
-                        //TODO add to memento
 
+
+
+                        allAdds.add(command);
                     }
+                    Command executeAll=new ExecuteAll(allAdds);
+                    executeAll.execute();
+                    CareTaker.addMemento(executeAll);
                 }
 
             }
@@ -271,7 +281,7 @@ public class ChannelsManager extends BorderPane {
                 newValue=new SimpleStringProperty(newString);
                 Command addChannel=new AddChannel(newValue,link.getChannelList(orientation),link,orientation);
                 addChannel.execute();
-                //TODO add to memento
+                CareTaker.addMemento(addChannel);
             }
             newChannelField.clear();
         });
@@ -279,7 +289,9 @@ public class ChannelsManager extends BorderPane {
 
     private void setButtons() {
         addChannel.setGraphic(new ImageView("/images/plus.png"));
+        addChannel.setBackground(Background.EMPTY);
         removeChannel.setGraphic(new ImageView("/images/minus.png"));
+        removeChannel.setBackground(Background.EMPTY);
         addChannel.setTooltip(new Tooltip("Add channel"));
         removeChannel.setTooltip(new Tooltip("Remove channel"));
     }

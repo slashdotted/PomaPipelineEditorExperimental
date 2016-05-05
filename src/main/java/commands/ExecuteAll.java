@@ -2,13 +2,14 @@ package commands;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 /**
  * Created by felipe on 05/05/16.
  */
 public class ExecuteAll implements Command {
-    private ArrayList<Command> commands = new ArrayList<>();
+    ArrayList<Command> commands = new ArrayList<>();
 
     public ExecuteAll(ArrayList<Command> commands) {
         this.commands = commands;
@@ -16,10 +17,9 @@ public class ExecuteAll implements Command {
 
     @Override
     public boolean execute() {
-        //debug("Executing all command");
-        for (Command command: commands) {
+        commands.forEach(command -> {
             command.execute();
-        }
+        });
         return true;
     }
 

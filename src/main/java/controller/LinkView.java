@@ -38,11 +38,9 @@ public class LinkView extends Group {
     private static String channelOutImageEntriesSelected = "ChannelOutEntriesSelected.png";
     private static String channelInImageDefaultSelected = "ChannelInDefaultSelected.png";
     private static String channelInImageEntriesSelected = "ChannelInEntriesSelected.png";
-    private static String channelInImage = "ChannelIn.png";
 
-    Point3D centerOut = new Point3D(0, 0, 0);
 
-    private DoubleProperty channelInX = new SimpleDoubleProperty();
+   private DoubleProperty channelInX = new SimpleDoubleProperty();
     private DoubleProperty channelInY = new SimpleDoubleProperty();
     private DoubleProperty channelOutX = new SimpleDoubleProperty();
     private DoubleProperty channelOutY = new SimpleDoubleProperty();
@@ -53,8 +51,7 @@ public class LinkView extends Group {
     private DraggableModule from;
     private DraggableModule to;
 
-    private Label label;
-    private String id;
+
 
     boolean fromTo = false;
     boolean toFrom = false;
@@ -67,10 +64,6 @@ public class LinkView extends Group {
     private boolean select;
     private String oldStyle;
 
-
-    public Line getLine() {
-        return line;
-    }
 
     private Line line = new Line();
 
@@ -149,9 +142,6 @@ public class LinkView extends Group {
         for (JSONObject jsObj:allJasonLinks) {
             Main.linksClipboard.put((String)jsObj.get("channel"), jsObj);
         }*/
-
-    }
-    private void unSelect(){
 
     }
 
@@ -290,9 +280,6 @@ public class LinkView extends Group {
         return to;
     }
 
-    public void setFrom(DraggableModule from) {
-        this.from = from;
-    }
 
     public void setTo(DraggableModule to) {
         this.to = to;
@@ -309,9 +296,6 @@ public class LinkView extends Group {
         line.setEndY(end.getY());
     }
 
-    public void bindLink() {
-        bindLink(this.from, this.to);
-    }
 
     public void bindLink(DraggableModule from, DraggableModule to) {
 
@@ -400,14 +384,6 @@ public class LinkView extends Group {
         return link.getID();
     }
 
-    public void addChannel(DraggableModule from, DraggableModule to, String channel) {
-
-        Module modFrom = Main.modules.get(from.getName());
-        Module modTo = Main.modules.get(to.getName());
-
-        link.addChannel(modFrom, modTo, channel);
-
-    }
 
     public Link getLink() {
         return link;
