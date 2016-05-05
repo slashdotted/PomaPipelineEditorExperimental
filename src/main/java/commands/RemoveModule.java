@@ -7,8 +7,7 @@ import model.Module;
 /**
  * Created by Marco on 01/05/2016.
  */
-public class RemoveModule implements Command
-{
+public class RemoveModule implements Command {
     private Module module;
 
     public RemoveModule(Module module) {
@@ -25,7 +24,7 @@ public class RemoveModule implements Command
 
     @Override
     public boolean reverse() {
-        Command addModule=new AddModule(module);
+        Command addModule = new AddModule(module);
         return addModule.execute();
     }
 }

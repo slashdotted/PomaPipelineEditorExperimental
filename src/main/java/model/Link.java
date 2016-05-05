@@ -48,6 +48,7 @@ public class Link {
     }
 
 
+
     public boolean addChannel(Module from, Module to, String channel) {
         if (from.equals(moduleA)) {
             if ((to.equals(moduleB))&&(!checkIfPresent(channel,channelsAToB))) {

@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.CacheHint;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -94,7 +95,8 @@ public class SideBar extends VBox {
             e.printStackTrace();
         }
         this.module = module;
-
+        this.setCache(true);
+        this.setCacheHint(CacheHint.SPEED);
     }
 
 
@@ -200,7 +202,7 @@ public class SideBar extends VBox {
             final Animation hidePanel = new Transition() {
 
                 {
-                    setCycleDuration(Duration.millis(250));
+                    setCycleDuration(Duration.millis(100));
                 }
 
                 @Override
@@ -216,7 +218,7 @@ public class SideBar extends VBox {
             // Create an animation to show the panel.
             final Animation showPanel = new Transition() {
                 {
-                    setCycleDuration(Duration.millis(250));
+                    setCycleDuration(Duration.millis(100));
                 }
 
                 @Override

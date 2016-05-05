@@ -101,11 +101,11 @@ public class Converter {
     }
 
 
-    public static Link jsonToLink(JSONObject jsonLink) {
+    public static Link jsonToLink(JSONObject jsonLink, String fromName, String toName) {
         Link link = null;
 
-        Module from = Main.modules.get(jsonLink.get("from"));
-        Module to = Main.modules.get(jsonLink.get("to"));
+        Module from = Main.modules.get(fromName);
+        Module to = Main.modules.get(toName);
 
         String channel = (String) jsonLink.get("channel");
         if (channel == null)

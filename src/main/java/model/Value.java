@@ -51,7 +51,7 @@ public class Value<T> {
         Constructor ctor = null;
         try {
             //System.out.println(value.getType()); //TODO remove this
-            ctor = Class.forName(value.getType()).getConstructor(String.class);
+            ctor = Class.forName(value.getClassName()).getConstructor(String.class);
             val = ctor.newInstance("0");
 
         } catch (NoSuchMethodException e) {
@@ -133,6 +133,9 @@ public class Value<T> {
     }
 
     public String getType() {
+        return value.getClass().getSimpleName();
+    }
+    public String getClassName() {
         return value.getClass().getName();
     }
 

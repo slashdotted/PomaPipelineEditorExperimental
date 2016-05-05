@@ -3,6 +3,7 @@ package controller;
 import commands.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,8 +43,12 @@ public class MainWindow extends BorderPane {
     private ModuleItem draggableModuleItem = null;
     public static SideBar currentSidebar; //TODO wire the visible sidebar to this static field
     public static ScrollPane mainScrollPaneStat;
+    public static Group mainGroup;
     public static double posXAssign = 300;
     public static double posYAssign = 100;
+    double originalScaleX = 0;
+    double originalScaleY = 0;
+
     public static Button toggleSidebar = new Button();
     //SELECTION
     private Rectangle rect = new Rectangle(0, 0, 0, 0);
@@ -84,6 +89,8 @@ public class MainWindow extends BorderPane {
     @FXML
     private Button pasteButton;
 
+
+
     private EventHandler<DragEvent> mModuleItemOverRoot = null;
     private EventHandler<DragEvent> mModuleItemDropped = null;
     private EventHandler<DragEvent> mModuleItemOverMainScrollPane = null;
@@ -100,7 +107,6 @@ public class MainWindow extends BorderPane {
             e.printStackTrace();
         }
         mainScrollPaneStat = mainScrollPane;
-
         //select
         rect.setStroke(Color.BLUE);
         rect.setStrokeWidth(1);
@@ -137,16 +143,16 @@ public class MainWindow extends BorderPane {
             addDragDetection(item);
         }
         //Create a new group to manage all nodes in mainScrollPane
-        Group group = new Group();
-        group.setId("mainGroup");
+        mainGroup = new Group();
+        mainGroup.setId("mainGroup");
 
-        mainScrollPane.setContent(group);
+        mainScrollPane.setContent(mainGroup);
 
-        setMouseAndKeys(group);
+        setMouseAndKeys();
 
 
         //TODO create true size
-        group.getChildren().add(new Pane());
+        mainGroup.getChildren().add(new Pane());
 
 
         buildDragHandlers();
@@ -213,6 +219,7 @@ public class MainWindow extends BorderPane {
         if (currentSidebar != null) {
             closeSidebar();
         }
+        resetZoom();
         if (Main.dirty.getValue()) {
             if (!GraphicsElementsFactory.saveDialog("create new"))
                 return;
@@ -225,6 +232,7 @@ public class MainWindow extends BorderPane {
         if (currentSidebar != null) {
             closeSidebar();
         }
+        resetZoom();
         if (Main.dirty.getValue()) {
 
             if (!GraphicsElementsFactory.saveDialog("open another"))
@@ -242,6 +250,7 @@ public class MainWindow extends BorderPane {
         if (currentSidebar != null) {
             closeSidebar();
         }
+        resetZoom();
         String windowTitle = "Import pipeline";
 
         if (CareTaker.size() == 0) {
@@ -257,12 +266,14 @@ public class MainWindow extends BorderPane {
             Command importPipeline = new Import(pipelineFile);
             importPipeline.execute();
             CareTaker.addMemento(importPipeline);
-            stackedLogBar.log("Imported " + ((Import) importPipeline).getImportedFiles() + " files");
+            stackedLogBar.log("Pipeline imported");
 //            Main.modules.keySet().forEach(s -> System.out.println(Main.modules.get(s)));
 //            Main.links.keySet().forEach(s -> System.out.println(Main.links.get(s)));
 //            MainWindow.allDraggableModule.keySet().forEach(s -> System.out.println(MainWindow.allDraggableModule.get(s)));
 //            MainWindow.allLinkView.keySet().forEach(s -> System.out.println(MainWindow.allLinkView.get(s)));
         }
+        posXAssign = 300;
+        posYAssign = 100;
     }
 
 
@@ -293,7 +304,7 @@ public class MainWindow extends BorderPane {
             Command save = new Save(destination);
             if (save.execute()) {
                 CareTaker.addMemento(save);
-                stackedLogBar.log("Pipeline saved");
+                stackedLogBar.logAndSuccess("Pipeline saved");
                 Main.dirty.setValue(false);
             } else {
 
@@ -341,13 +352,13 @@ public class MainWindow extends BorderPane {
     }
 
 
-    private void setMouseAndKeys(Group group) {
+    private void setMouseAndKeys() {
 
-        double originalScaleX = group.getScaleX();
-        double originalScaleY = group.getScaleY();
+        originalScaleX = mainGroup.getScaleX();
+        originalScaleY = mainGroup.getScaleY();
 
         mainScrollPane.setOnMouseClicked(event1 -> {
-            if (!group.contains(event1.getX(), event1.getY()) && !selectedModules.isEmpty()) {
+            if (!mainGroup.contains(event1.getX(), event1.getY()) && !selectedModules.isEmpty()) {
                 System.out.println("Unselect all from mainScrollPane");
                 unselectAll();
             }
@@ -366,8 +377,8 @@ public class MainWindow extends BorderPane {
                     zoomFactor = 2.0 - zoomFactor;
                 }
                 System.out.println(zoomFactor);
-                group.setScaleX(group.getScaleX() * zoomFactor);
-                group.setScaleY(group.getScaleY() * zoomFactor);
+                mainGroup.setScaleX(mainGroup.getScaleX() * zoomFactor);
+                mainGroup.setScaleY(mainGroup.getScaleY() * zoomFactor);
                 event.consume();
             }
         });
@@ -376,20 +387,18 @@ public class MainWindow extends BorderPane {
             System.out.println("key released " + event.getCode());
 
 
-            if(ProgramUtils.resetZoomCombination.match(event)){
-                System.out.println("reset zoom");
-                group.setScaleX(originalScaleX);
-                group.setScaleY(originalScaleY);
+            if (ProgramUtils.resetZoomCombination.match(event)) {
+                resetZoom();
             }
-            if(ProgramUtils.selectAllCombination.match(event)){
+            if (ProgramUtils.selectAllCombination.match(event)) {
                 System.out.println("select all");
                 selectAll();
             }
-            if(ProgramUtils.saveCombination.match(event)){
+            if (ProgramUtils.saveCombination.match(event)) {
                 System.out.println("saving....");
                 savePipeline();
             }
-            if(event.getCode() == KeyCode.DELETE){
+            if (event.getCode() == KeyCode.DELETE) {
                 System.out.println("Deleting all selected");
                 deleteSelected();
             }
@@ -398,10 +407,13 @@ public class MainWindow extends BorderPane {
         });
 
 
-
     }
 
-
+    public void resetZoom(){
+        System.out.println("reset zoom");
+        mainGroup.setScaleX(originalScaleX);
+        mainGroup.setScaleY(originalScaleY);
+    }
 
 
     public static void addLinkView(Link link) {
@@ -455,10 +467,10 @@ public class MainWindow extends BorderPane {
         Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
 
         group.getChildren().add(node);
-
-        node.relocateToPoint(new Point2D(position.getX() - 50, position.getY() - 50));
-        unselectAll();
-        node.select();
+        mod.setPosition(new Point2D(position.getX() - 50, position.getY() - 40));
+        node.relocateToPoint(new Point2D(position.getX() - 50, position.getY() - 40));
+//        unselectAll();
+//        node.select();
     }
 
 //    private static double getBiggerX(double biggerY) {
@@ -599,6 +611,8 @@ public class MainWindow extends BorderPane {
 
                         Command addModule = new AddModule(module);
                         addModule.execute();
+                        unselectAll();
+                        allDraggableModule.get(module.getName()).select();
                         CareTaker.addMemento(addModule);
                         stackedLogBar.log(module.getName() + " created");
 
@@ -725,19 +739,20 @@ public class MainWindow extends BorderPane {
 
     public static void openSideBar(Module module, boolean creation) {
         //Service
-        //      Task<SideBar> builder = buildSideBar(module, toggleSidebar, creation);
-        //currentSidebar =
-//        toggleSidebar.cancelButtonProperty().setValue(false);
-//        builder.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> {
-//            currentSidebar = builder.getValue();
-//            toggleSidebar.fire();
-//        });
-        //new Thread(builder).start();
-        if (currentSidebar != null)
-            closeSidebar();
-        currentSidebar = new SideBar(module, toggleSidebar, 400, creation);
-        Main.root.setRight(currentSidebar);
-        toggleSidebar.fire();
+        Task<SideBar> builder = buildSideBar(module, toggleSidebar, creation);
+        builder.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> {
+            currentSidebar = builder.getValue();
+            Main.root.setRight(currentSidebar);
+            toggleSidebar.fire();
+        });
+        new Thread(builder).start();
+
+
+//        if (currentSidebar != null)
+//            closeSidebar();
+//        currentSidebar = new SideBar(module, toggleSidebar, 400, creation);
+//        Main.root.setRight(currentSidebar);
+//        toggleSidebar.fire();
         allDraggableModule.get(module.getName()).select();
     }
 
@@ -748,8 +763,8 @@ public class MainWindow extends BorderPane {
                 if (currentSidebar != null)
                     closeSidebar();
                 currentSidebar = new SideBar(module, toggleSidebar, 400, creation);
-                Main.root.setRight(currentSidebar);
-                toggleSidebar.fire();
+                //Main.root.setRight(currentSidebar);
+                //toggleSidebar.fire();
                 return currentSidebar;
             }
         };
@@ -826,10 +841,9 @@ public class MainWindow extends BorderPane {
     }
 
 
-
     private void selectAll() {
         unselectAll();
-        allDraggableModule.keySet().forEach(key ->{
+        allDraggableModule.keySet().forEach(key -> {
             allDraggableModule.get(key).select();
         });
     }

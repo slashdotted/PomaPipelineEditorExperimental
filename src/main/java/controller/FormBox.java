@@ -75,7 +75,7 @@ public class FormBox<T> extends VBox {
         //System.out.println("\n\n" + value + "\n");
         formLabel.setText(value.getName());
 
-        formTextField.setPromptText("Insert here " + value.getName());
+        formTextField.setPromptText("Insert here a " + value.getType() + " value");
         if(value.isMandatory())
             valid.setValue(value.isValid());
 
@@ -113,9 +113,12 @@ public class FormBox<T> extends VBox {
 
                     if (valid.getValue() || value.getDefaultValue()!=null) {
                         CareTaker.addMemento(editValue);
-
-
                         formTextField.setText(value.getValue().toString());
+                    }
+
+                    if(!valid.getValue()){
+                        formTextField.clear();
+                        MainWindow.stackedLogBar.displayWarning("Operation not permitted! insert a correct value");
                     }
                 }
             }

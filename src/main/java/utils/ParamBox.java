@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.CacheHint;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -62,6 +63,8 @@ public class ParamBox extends HBox {
         delete.setGraphic(new ImageView("images/minus.png"));
         //delete.setTooltip(new Tooltip("Delete this cparam"));
 
+        this.setCache(true);
+        this.setCacheHint(CacheHint.SPEED);
 
     }
 

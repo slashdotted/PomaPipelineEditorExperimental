@@ -7,9 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -29,24 +31,24 @@ public class StackedLogBar extends VBox {
     public StackedLogBar() {
 
         this.setPrefHeight(150);
-        this.setMinHeight(25);
+        this.setMinHeight(30);
         this.setMaxHeight(150);
         this.setFillWidth(true);
 
 
         ImageView hideImg = new ImageView("images/hide_history.png");
-        hideImg.setFitWidth(20);
-        hideImg.setFitHeight(20);
+        hideImg.setFitWidth(25);
+        hideImg.setFitHeight(25);
         ImageView showImg = new ImageView("images/show_history.png");
-        showImg.setFitWidth(20);
-        showImg.setFitHeight(20);
+        showImg.setFitWidth(25);
+        showImg.setFitHeight(25);
         toggleVisibility.setGraphic(hideImg);
         toggleVisibility.setAlignment(Pos.BOTTOM_RIGHT);
-        toggleVisibility.setPadding(Insets.EMPTY);
+        toggleVisibility.setBackground(Background.EMPTY);
         toggleVisibility.setOnAction(ev -> {
             if (logBar.isVisible()) {
                 logBar.setVisible(false);
-                this.setMaxHeight(25);
+                this.setMaxHeight(30);
                 toggleVisibility.setGraphic(showImg);
             } else {
                 logBar.setVisible(true);
@@ -58,27 +60,51 @@ public class StackedLogBar extends VBox {
         ImageView clearImg = new ImageView("images/clear_history.png");
         clearImg.setFitWidth(20);
         clearImg.setFitHeight(20);
+
         clear.setGraphic(clearImg);
-        clear.setPadding(Insets.EMPTY);
+        clear.setBackground(Background.EMPTY);
         clear.setOnAction(event -> logBar.clearLogBar());
+
 
         HBox separator = new HBox();
         separator.setHgrow(separator, Priority.ALWAYS);
 
-        logToolbar.getItems().addAll(logBarText, separator, clear, toggleVisibility);
-        logToolbar.setMaxHeight(20);
+        logToolbar.getItems().addAll(toggleVisibility, clear, logBarText, separator);
+        logToolbar.setMaxHeight(25);
 
-        logBar = new LogBar(this.logBarText);
+        logBar = new LogBar();
         this.getChildren().addAll(logToolbar, logBar);
         toggleVisibility.fire();
     }
 
     public void log(String message) {
+        displayMessage(message);
         this.logBar.addMessage(message);
+    }
+
+    public void logAndWarning(String message) {
+        displayWarning(message);
+        this.logBar.addMessage(message);
+    }
+
+    public void logAndSuccess(String message) {
+        displaySuccess(message);
+        this.logBar.addMessage(message);
+    }
+
+    public void displayWarning(String message){
+        logBarText.setText(message);
+        logBarText.setFill(Color.RED);
+    }
+
+    public void displaySuccess(String message){
+        logBarText.setText(message);
+        logBarText.setFill(Color.GREEN);
     }
 
     public void displayMessage(String message){
         logBarText.setText(message);
+        logBarText.setFill(Color.BLACK);
     }
 
     public LogBar getLogBar() {
@@ -89,16 +115,16 @@ public class StackedLogBar extends VBox {
 
         private ArrayList<Text> messages = new ArrayList();
         //private Deque<Text> msg = new ArrayDeque<>();
-        private Text externalText;
+        //private Text externalText;
 
-        public LogBar(Text externalText) {
+        public LogBar() {
             this.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
             this.setVbarPolicy(ScrollBarPolicy.ALWAYS);
             this.setPrefHeight(150);
-            this.setMinHeight(30);
+            this.setMinHeight(25);
             this.setMaxHeight(150);
             Date date = new Date();
-            this.externalText = externalText;
+            //this.externalText = externalText;
 
             //messages.add(new Text(date.toString() + ": Begin session"));
             this.setStyle("-fx-background: rgb(255,255,255);");
@@ -118,7 +144,7 @@ public class StackedLogBar extends VBox {
         }
 
         public void addMessage(String msg) {
-            externalText.setText(msg);
+            //externalText.setText(msg);
             Date date = new Date();
             messages.add(new Text(date.toString() + ": " + msg));
             displayMessages();
