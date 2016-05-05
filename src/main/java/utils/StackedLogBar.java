@@ -37,18 +37,18 @@ public class StackedLogBar extends VBox {
 
 
         ImageView hideImg = new ImageView("images/hide_history.png");
-        hideImg.setFitWidth(25);
-        hideImg.setFitHeight(25);
+        hideImg.setFitWidth(20);
+        hideImg.setFitHeight(20);
         ImageView showImg = new ImageView("images/show_history.png");
-        showImg.setFitWidth(25);
-        showImg.setFitHeight(25);
+        showImg.setFitWidth(20);
+        showImg.setFitHeight(20);
         toggleVisibility.setGraphic(hideImg);
         toggleVisibility.setAlignment(Pos.BOTTOM_RIGHT);
         toggleVisibility.setBackground(Background.EMPTY);
         toggleVisibility.setOnAction(ev -> {
             if (logBar.isVisible()) {
                 logBar.setVisible(false);
-                this.setMaxHeight(30);
+                this.setMaxHeight(25);
                 toggleVisibility.setGraphic(showImg);
             } else {
                 logBar.setVisible(true);
@@ -70,7 +70,7 @@ public class StackedLogBar extends VBox {
         separator.setHgrow(separator, Priority.ALWAYS);
 
         logToolbar.getItems().addAll(toggleVisibility, clear, logBarText, separator);
-        logToolbar.setMaxHeight(25);
+        logToolbar.setMaxHeight(20);
 
         logBar = new LogBar();
         this.getChildren().addAll(logToolbar, logBar);
@@ -121,7 +121,7 @@ public class StackedLogBar extends VBox {
             this.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
             this.setVbarPolicy(ScrollBarPolicy.ALWAYS);
             this.setPrefHeight(150);
-            this.setMinHeight(25);
+            this.setMinHeight(30);
             this.setMaxHeight(150);
             Date date = new Date();
             //this.externalText = externalText;

@@ -89,6 +89,16 @@ public class MainWindow extends BorderPane {
     @FXML
     private Button pasteButton;
 
+    @FXML
+    private MenuItem newMenuItem;
+
+    @FXML
+    private MenuItem saveMenuItem;
+
+    @FXML
+    private MenuItem saveAsMenuItem;
+    @FXML
+    private MenuItem saveSelMenuItem;
 
 
     private EventHandler<DragEvent> mModuleItemOverRoot = null;
@@ -211,6 +221,10 @@ public class MainWindow extends BorderPane {
         pasteButton.setTooltip(new Tooltip("Paste"));
         pasteButton.setBackground(Background.EMPTY);
 
+        newMenuItem.disableProperty().bind(Main.dirty.not());
+        saveMenuItem.disableProperty().bind(Main.dirty.not());
+        saveAsMenuItem.disableProperty().bind(Main.dirty.not());
+        saveSelMenuItem.disableProperty().bind(Main.dirty.not());
     }
 
 
@@ -277,6 +291,7 @@ public class MainWindow extends BorderPane {
     }
 
 
+
     @FXML
     public void savePipeline() {
 
@@ -300,7 +315,8 @@ public class MainWindow extends BorderPane {
         }
 
         if (destination != null) {
-            Converter.populateClipBoards(Main.modules, Main.links);
+            if (Main.modulesClipboard.isEmpty() && Main.linksClipboard.isEmpty())
+                Converter.populateClipBoards(Main.modules, Main.links);
             Command save = new Save(destination);
             if (save.execute()) {
                 CareTaker.addMemento(save);
@@ -312,6 +328,18 @@ public class MainWindow extends BorderPane {
             }
 
         }
+    }
+
+    @FXML
+    private void saveSelected(){
+        if(selectedModules.isEmpty() && selectedLinks.isEmpty()){
+            stackedLogBar.displayWarning("No items selected!");
+            return;
+        }
+        String previousPath = PipelineManager.CURRENT_PIPELINE_PATH;
+        Converter.populateClipBoards(selectedModules, selectedLinks);
+        saveAs();
+        PipelineManager.CURRENT_PIPELINE_PATH = previousPath;
     }
 
     @FXML
@@ -347,8 +375,15 @@ public class MainWindow extends BorderPane {
     }
 
     @FXML
-    private void exitApplication() {
-        //TODO ask for saving if not saved
+    public void exitApplication() {
+        if (currentSidebar != null) {
+            closeSidebar();
+        }
+        if (Main.dirty.getValue()) {
+            if (!GraphicsElementsFactory.saveDialog("closing"))
+                return;
+        }
+        System.exit(0);
     }
 
 
@@ -409,7 +444,7 @@ public class MainWindow extends BorderPane {
 
     }
 
-    public void resetZoom(){
+    public void resetZoom() {
         System.out.println("reset zoom");
         mainGroup.setScaleX(originalScaleX);
         mainGroup.setScaleY(originalScaleY);

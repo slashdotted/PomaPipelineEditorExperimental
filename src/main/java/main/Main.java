@@ -45,35 +45,7 @@ public class Main extends Application {
         EditorConfManager confManager = new EditorConfManager();
         File conf = new File("conf.json");
         confManager.load(conf);
-
-
-//        // TODO remove this test
-//        conf = new File("pipeline_test.json");
-//
-//        Command importCommand = new Import(conf);
-//        importCommand.execute();
-//
-//
-//        File saveFile = new File("pipeline_saved_test.json");
-//
-//        Command save = new Save(saveFile, modulesClipboard, linksClipboard);
-//        save.execute();
-//
-//        importCommand = new Import(saveFile);
-//        importCommand.execute();
-//
-//        System.out.println("Imported modules:" + modules.size());
-//        modules.keySet().forEach(key -> {
-//            System.out.println(key + ":" + Converter.moduleToJSON(modules.get(key)).toJSONString());
-//        });
-//
-//
-//        System.out.println("\nImported links:" + links.size());
-//        System.out.println("ClipBoarded links:" + linksClipboard.size());
-//        linksClipboard.keySet().forEach(key -> {
-//            System.out.println(key + " : " + linksClipboard.get(key));
-//        });
-
+        
 
         // long startTime = System.currentTimeMillis();
         root = new MainWindow();

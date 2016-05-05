@@ -178,7 +178,7 @@ public class Converter {
             Link current = links.get(key);
             ArrayList<JSONObject> jsonLinks = linkToJSON(current);
             jsonLinks.forEach(jsonLink -> {
-                Main.linksClipboard.put(current.getID(), jsonLink);
+                Main.linksClipboard.put(current.getID() + jsonLink.get("channel"), jsonLink);
             });
         });
     }
