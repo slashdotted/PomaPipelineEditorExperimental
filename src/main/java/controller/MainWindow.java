@@ -714,7 +714,7 @@ public class MainWindow extends BorderPane {
         System.out.println();
         if ((node.getLayoutX() < posLocal.getX()) && ((node.getLayoutX() + dm.getWidth()) > posLocal.getX())) {
             if ((node.getLayoutY() < posLocal.getY()) && ((node.getLayoutY() + dm.getHeight()) > posLocal.getX())) {
-                //System.out.println("sono dentrooooooooooooo");
+
                 return true;
             }
 
@@ -813,6 +813,7 @@ public class MainWindow extends BorderPane {
         }
         for (Command comm : allCommands) {
             comm.execute();
+            CareTaker.addMemento(comm);
         }
         allDraggableModule.remove(dm.getName());
         Group group = (Group) mainScrollPaneStat.getContent();
@@ -824,26 +825,7 @@ public class MainWindow extends BorderPane {
         lv.bindBottonChannels(orientation);
     }
 
-    //TODO review
-    public static boolean isModuleNear(DraggableModule dragModule, Point2D position) {
 
-        ArrayList<LinkView> links = dragModule.getLinks();
-        for (LinkView lv : links) {
-            // System.out.println("Sto controllando*************************");
-            DraggableModule sibbling = lv.getFrom();
-            if (!sibbling.getName().equals(dragModule.getName())) {
-                Point2D pos = lv.getFrom().getModule().getPosition();
-                double dist = position.distance(pos);
-                // System.out.println(dist);
-                if (position.distance(pos) < 100) {
-                    return false;
-                }
-            }
-
-        }
-
-        return true;
-    }
 
     private void selectAll() {
         unselectAll();
@@ -876,9 +858,18 @@ public class MainWindow extends BorderPane {
             removeModule.execute();
             CareTaker.addMemento(removeModule);
         });
+        selected = new HashSet<>(selectedLinks.keySet());
+        selected.forEach(key -> {
+            allLinkView.get(key).unselectLinkView();
+            Command removeLink = new RemoveLink(Main.links.get(key));
+            removeLink.execute();
+            CareTaker.addMemento(removeLink);
+        });
 
         Main.modulesClipboard.clear();
         selectedModules.clear();
+        Main.linksClipboard.clear();
+        selectedLinks.clear();
     }
 
 }

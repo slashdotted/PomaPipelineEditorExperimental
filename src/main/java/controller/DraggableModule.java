@@ -198,16 +198,32 @@ public class DraggableModule extends Pane {
 
         titleBar.setOnMouseReleased(event -> {
             Map<String, Module> selectedModules = MainWindow.selectedModules;
-            if (!event.isControlDown() && !selectedModules.containsKey(this.getName())) {
 
-                MainWindow.unselectAll();
-                //select();
+            if (!event.isControlDown()) {
+
+                if (selectedModules.size()>1) {
+                    MainWindow.unselectAll();
+                    select();
+                }else{
+                    MainWindow.unselectAll();
+                    if(selected){
+                        unselect();
+                    }else{
+                        select();
+                    }
+
+                }
+            }else{
+                if(selected){
+                    unselect();
+                }else{
+
+                    select();
+                }
             }
-            if (selected)
-                unselect();
-            else
-                select();
 
+            System.out.println(selectedModules.size());
+            System.out.println(MainWindow.selectedLinks.size());
         });
 
 
@@ -336,19 +352,22 @@ public class DraggableModule extends Pane {
 
 
         selectLinks();
-//        }else{
-//            unselect();
-//
-//        }
+
 
     }
 
     private void selectLinks() {
 
+        for (LinkView lv:links ) {
+            lv.select(getName());
+        }
+
     }
 
     private void unselectLinks() {
-
+        for (LinkView lv:links ) {
+            lv.unselectLinkView();
+        }
     }
 
     public boolean isSelected() {

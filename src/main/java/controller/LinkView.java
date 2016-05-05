@@ -20,6 +20,10 @@ import javafx.scene.transform.Rotate;
 import main.Main;
 import model.Link;
 import model.Module;
+import org.json.simple.JSONObject;
+import utils.Converter;
+
+import java.util.ArrayList;
 
 /**
  * Created by Marco on 18/03/2016.
@@ -60,6 +64,8 @@ public class LinkView extends Group {
     private ImageView imageChannelIn;
     private ImageView imageChannelOut;
     private AnchorPane paneChannel;
+    private boolean select;
+    private String oldStyle;
 
 
     public Line getLine() {
@@ -78,10 +84,11 @@ public class LinkView extends Group {
         addHandlerChannels(imageChannelIn, link, "toFrom");
         addHandlerChannels(imageChannelOut, link, "fromTo");
 
-        selectedIn=false;
-        selectedOut=false;
-        selectedLink=false;
+        selectedIn = false;
+        selectedOut = false;
+        selectedLink = false;
 
+        oldStyle=this.getStyle();
         this.getChildren().add(0, line);
 
 
@@ -107,19 +114,52 @@ public class LinkView extends Group {
         image.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                selectImage( orientation);
+                if (!event.isControlDown()) {
 
-                ChannelsManager channelsManager = new ChannelsManager(link, orientation);
+                        selectImage(orientation);
+                        selectLinkView();
+                        ChannelsManager channelsManager = new ChannelsManager(link, orientation);
 
-        }
+                }else{
+                    if(!select) {
+                        selectLinkView();
+                    }else{
+                        unselectLinkView();
+                    }
+                }
+            }
         });
+    }
+
+    public void unselectLinkView() {
+        this.setStyle(oldStyle);
+        this.select=false;
+        MainWindow.selectedLinks.remove(getName());
+    }
+
+    private void selectLinkView() {
+        this.select=true;
+        this.setStyle("-fx-border-color: darkblue");
+        this.setStyle("-fx-effect: dropshadow(three-pass-box, darkblue, 10,0, 0, 0) ");
+        MainWindow.selectedLinks.put(getName(),Main.links.get(getName()));
+
+        System.out.println("Adding link" +MainWindow.selectedLinks.size());
+        /*
+        ArrayList<JSONObject> allJasonLinks=Converter.linkToJSON(link);
+        for (JSONObject jsObj:allJasonLinks) {
+            Main.linksClipboard.put((String)jsObj.get("channel"), jsObj);
+        }*/
+
+    }
+    private void unSelect(){
+
     }
 
     public void updateImageViews(String orientation) {
         switch (orientation) {
             case "fromTo":
                 int size = link.getChannelsAToB().size();
-                if(!selectedOut) {
+                if (!selectedOut) {
                     if (size > 1) {
                         imageChannelOut.setImage(new Image(channelOutImageEntries));
                     } else if (size == 1) {
@@ -128,7 +168,7 @@ public class LinkView extends Group {
                         this.getChildren().remove(imageChannelOut);
                     }
                 }
-                if(selectedOut) {
+                if (selectedOut) {
                     if (size > 1) {
                         imageChannelOut.setImage(new Image(channelOutImageEntriesSelected));
                     } else if (size == 1) {
@@ -142,7 +182,7 @@ public class LinkView extends Group {
                 break;
             case "toFrom":
                 int size2 = link.getChannelsBToA().size();
-                if(selectedIn) {
+                if (selectedIn) {
                     if (size2 > 1) {
                         imageChannelIn.setImage(new Image(channelInImageEntriesSelected));
                     } else if (size2 == 1) {
@@ -151,7 +191,7 @@ public class LinkView extends Group {
                         this.getChildren().remove(imageChannelIn);
                     }
 
-                }else{
+                } else {
                     if (size2 > 1) {
                         imageChannelIn.setImage(new Image(channelInImageEntries));
                     } else if (size2 == 1) {
@@ -183,7 +223,7 @@ public class LinkView extends Group {
     }
 
     public void unselectImage(String orientation) {
-        ImageView image= getImmage(orientation);
+        ImageView image = getImmage(orientation);
         switch (orientation) {
             case "fromTo":
                 if (link.getChannelsAToB().size() == 1) {
@@ -191,7 +231,7 @@ public class LinkView extends Group {
                 } else {
                     image.setImage(new Image(channelOutImageEntries));
                 }
-                selectedOut=false;
+                selectedOut = false;
                 break;
             case "toFrom":
                 if (link.getChannelsAToB().size() == 1) {
@@ -199,28 +239,28 @@ public class LinkView extends Group {
                 } else {
                     image.setImage(new Image(channelInImageEntries));
                 }
-                selectedIn=false;
+                selectedIn = false;
                 break;
         }
     }
 
     private ImageView getImmage(String orientation) {
 
-            switch (orientation){
-                case "fromTo":
-                    return imageChannelOut;
+        switch (orientation) {
+            case "fromTo":
+                return imageChannelOut;
 
-                case"toFrom":
-                    return imageChannelIn;
+            case "toFrom":
+                return imageChannelIn;
 
-                default:
-                    return null;
-            }
+            default:
+                return null;
+        }
 
     }
 
     public void selectImage(String orientation) {
-        ImageView image= getImmage(orientation);
+        ImageView image = getImmage(orientation);
         switch (orientation) {
             case "fromTo":
                 if (link.getChannelsAToB().size() == 1) {
@@ -228,7 +268,7 @@ public class LinkView extends Group {
                 } else {
                     image.setImage(new Image(channelOutImageEntriesSelected));
                 }
-                selectedOut=true;
+                selectedOut = true;
                 break;
             case "toFrom":
                 if (link.getChannelsBToA().size() == 1) {
@@ -236,7 +276,7 @@ public class LinkView extends Group {
                 } else {
                     image.setImage(new Image(channelInImageEntriesSelected));
                 }
-                selectedIn=true;
+                selectedIn = true;
                 break;
         }
     }
@@ -371,6 +411,20 @@ public class LinkView extends Group {
 
     public Link getLink() {
         return link;
+    }
+
+
+    public void select(String dragMod) {
+     if(dragMod.equals(from.getName())){
+        if(to.isSelected()){
+            selectLinkView();
+        }
+     }   else{
+         if(from.isSelected()){
+             selectLinkView();
+         }
+     }
+
     }
 
 
