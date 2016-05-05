@@ -20,7 +20,7 @@ public class AddLink implements Command {
     public boolean execute() {
         Main.links.put(link.getID(), link);
         Platform.runLater(() -> MainWindow.addLinkView(link));
-        debug("");
+        //debug("");
         return true;
     }
 

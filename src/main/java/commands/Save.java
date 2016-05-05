@@ -1,5 +1,6 @@
 package commands;
 
+import controller.MainWindow;
 import javafx.scene.input.ClipboardContent;
 import main.Main;
 import org.json.simple.JSONArray;
@@ -47,6 +48,7 @@ public class Save implements Command {
 
     @Override
     public boolean execute() {
+        PipelineManager.CURRENT_PIPELINE_PATH = output.getPath();
 
         JSONObject pipelineModules = new JSONObject();
         JSONArray pipelineLinks = new JSONArray();
@@ -55,12 +57,17 @@ public class Save implements Command {
         pipelineLinks.addAll(links.values());
 
         PipelineManager pipelineManager = new PipelineManager();
-
-        return  pipelineManager.save(output, pipelineModules, pipelineLinks);
+        if(pipelineManager.save(output, pipelineModules, pipelineLinks)) {
+            Main.dirty.setValue(false);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
     public boolean reverse() {
+        Main.dirty.setValue(false);
         return false;
     }
 

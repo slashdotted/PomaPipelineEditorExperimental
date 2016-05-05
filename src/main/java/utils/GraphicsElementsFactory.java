@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import main.Main;
 import model.Module;
 import model.ModuleTemplate;
 import model.Value;
@@ -27,6 +28,10 @@ import java.util.Optional;
  * Created by felipe on 05/04/16.
  */
 public class GraphicsElementsFactory {
+
+
+
+
 
 
     /**
@@ -136,12 +141,37 @@ public class GraphicsElementsFactory {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
-        alert.setHeaderText(null);
+        //alert.setHeaderText(null);
         alert.setContentText(message);
         Optional<ButtonType> result = alert.showAndWait();
 
 
         return (result.get()==ButtonType.OK);
     }
+
+    public static boolean saveDialog(String action) {
+        Alert saveAlert = new Alert(Alert.AlertType.WARNING);
+        saveAlert.setWidth(400);
+
+        saveAlert.setTitle("Pipeline not saved");
+        saveAlert.setHeaderText(null);
+        saveAlert.setContentText("Do you want to save before " + action + "?");
+        ButtonType buttonTypeSave = new ButtonType("Save");
+        ButtonType buttonTypeNotSave = new ButtonType("Don't save");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel");
+        saveAlert.getButtonTypes().setAll(buttonTypeSave, buttonTypeNotSave, buttonTypeCancel);
+        Optional<ButtonType> result = saveAlert.showAndWait();
+
+        if(result.get() == buttonTypeSave){
+            Main.root.savePipeline();
+            return true;
+        }else if(result.get() == buttonTypeNotSave){
+            return true;
+        }
+
+        return false;
+    }
+
+
 
 }

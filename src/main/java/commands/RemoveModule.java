@@ -17,6 +17,7 @@ public class RemoveModule implements Command
 
     @Override
     public boolean execute() {
+        debug(module.toString());
         MainWindow.removeDraggableModule(MainWindow.allDraggableModule.get(module.getName()));
         Main.modules.remove(module.getName());
         return false;

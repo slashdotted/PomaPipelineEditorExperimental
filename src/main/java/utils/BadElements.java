@@ -12,9 +12,7 @@ import java.util.Map;
  */
 public class BadElements {
 
-    public static String checkDuplicateModules(String newValue, int counter) {
-
-        String name= newValue;
+    public static String checkDuplicateModules(String name, int counter) {
 
         for (String nameMod: Main.modules.keySet() ) {
 

@@ -2,10 +2,7 @@ package controller;
 
 import commands.Command;
 import commands.Move;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringExpression;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,16 +19,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 import main.Main;
-import model.Link;
 import model.Module;
 import model.ModuleTemplate;
 import utils.CareTaker;
+import utils.Converter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Marco on 10/03/2016.
@@ -103,7 +99,7 @@ public class DraggableModule extends Pane {
         }
 
         this.module = module;
-        this.selfie=this;
+        this.selfie = this;
         //
         //    ModuleTemplate temp=Main.templates.get(module.getType());
 
@@ -114,7 +110,7 @@ public class DraggableModule extends Pane {
         ModuleTemplate temp = Main.templates.get(module.getType());
         this.modelItemImage.setImage(new Image(temp.getImageURL()));
         position = new Point2D(0, 0);
-        selected=false;
+        selected = false;
 
 
         mainScrollPane = (ScrollPane) Main.mScene.lookup("#mainScrollPane");
@@ -122,8 +118,15 @@ public class DraggableModule extends Pane {
         setLabels();
     }
 
+    public Point2D getPosition() {
+        return position;
+    }
 
-    private void setLabels(){
+    public void setPosition(Point2D position) {
+        this.relocateToPoint(position);
+    }
+
+    private void setLabels() {
         labelHost.setText(module.getHost());
         labelTemplate.setText(module.getType());
         modelItemLabel.setText(module.getName());
@@ -147,7 +150,6 @@ public class DraggableModule extends Pane {
 
     @FXML
     public void initialize() {
-
 
 
         buildNodeDragHandlers();
@@ -178,20 +180,36 @@ public class DraggableModule extends Pane {
     public String getHost() {
         return module.getHost();
     }
-    public String getType(){
-        return  module.getType();
+
+    public String getType() {
+        return module.getType();
     }
 
 
     private void buildLinkDragHandlers() {
 
         titleBar.setOnMouseClicked(event -> {
-            select();
-            System.out.println("SELEEEECTTTTTTTTTTTTTTTTTTTTTt");
-            if(event.getClickCount() == 2){
+
+            if (event.getClickCount() == 2) {
                 MainWindow.openSideBar(module, false);
             }
+
         });
+
+        titleBar.setOnMouseReleased(event -> {
+            Map<String, Module> selectedModules = MainWindow.selectedModules;
+            if (!event.isControlDown() && !selectedModules.containsKey(this.getName())) {
+
+                MainWindow.unselectAll();
+                //select();
+            }
+            if (selected)
+                unselect();
+            else
+                select();
+
+        });
+
 
         mLinkHandleDragDetected = new EventHandler<MouseEvent>() {
             @Override
@@ -204,7 +222,7 @@ public class DraggableModule extends Pane {
                 mainScrollPane.setOnDragDropped(mContextLinkDragDropped);
 
                 //Set up user-draggable link
-               // System.out.println("parent: " + getParent().getParent().getClass().getName());
+                // System.out.println("parent: " + getParent().getParent().getClass().getName());
 
                 Group group = (Group) mainScrollPane.getContent();
                 group.getChildren().add(0, mShadowLink);
@@ -281,7 +299,7 @@ public class DraggableModule extends Pane {
         mContextLinkDragDropped = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-               // System.out.println("link drag dropped");
+                // System.out.println("link drag dropped");
 
                 mainScrollPane.setOnDragOver(null);
                 mainScrollPane.setOnDragDropped(null);
@@ -300,30 +318,47 @@ public class DraggableModule extends Pane {
         };
     }
 
-    private void select() {
-        selected=!selected;
-        if(selected) {
-            System.out.println("SELEEEECTTTTTTTTTTTTTTTTTTTTTt");
-            MainWindow.selectedModules.put(module.getName(), module);
-            this.setStyle("-fx-border-color: darkblue");
-            this.setStyle("-fx-effect: dropshadow(three-pass-box, darkblue, 10,0, 0, 0) ");
-            selectLinks();
+//    private void unselectAll() {
+//        for (String dbNome:  ) {
+//            if(!getName().equals(dbNome)){
+//                unselect(MainWindow.allDraggableModule.get(dbNome));
+//            }
+//        }
+//    }
 
-        }else{
-            unselect();
-        }
+    public void select() {
+        selected = true;
+        //if(selected) {
+        MainWindow.selectedModules.put(module.getName(), module);
+        Main.modulesClipboard.put(module.getName(), Converter.moduleToJSON(module));
+        this.setStyle("-fx-border-color: darkblue");
+        this.setStyle("-fx-effect: dropshadow(three-pass-box, darkblue, 10,0, 0, 0) ");
+
+
+        selectLinks();
+//        }else{
+//            unselect();
+//
+//        }
 
     }
 
     private void selectLinks() {
 
     }
+
     private void unselectLinks() {
 
     }
 
-    public void unselect(){
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void unselect() {
         MainWindow.selectedModules.remove(module.getName());
+        Main.modulesClipboard.remove(module.getName());
+        selected = false;
         this.setStyle("-fx-border-color:rgba(119,85,51,255)");
         this.setStyle("-fx-effect: null");
         unselectLinks();
@@ -365,7 +400,7 @@ public class DraggableModule extends Pane {
         titleBar.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(MainWindow.currentSidebar!=null)
+                if (MainWindow.currentSidebar != null)
                     MainWindow.closeSidebar();
                 oldPosition = new Point2D(event.getSceneX(), event.getSceneY());
                 // System.out.println("parent: " + getParent().getParent().getClass().getName());
@@ -402,8 +437,7 @@ public class DraggableModule extends Pane {
         Point2D localCoords;
 
         position = p;
-        Group par=(Group) Main.mScene.lookup("#mainGroup");
-        System.out.println(par.getClass());
+        Group par = (Group) Main.mScene.lookup("#mainGroup");
 
         localCoords = par.sceneToLocal(p);
 
@@ -447,7 +481,7 @@ public class DraggableModule extends Pane {
         //   CareTaker.addMemento(move);
 
 
-      //  System.out.println(links.size() + "-----------------");
+        //  System.out.println(links.size() + "-----------------");
         for (LinkView lv : links) {
 
             lv.updateBottonChannels();
@@ -483,7 +517,6 @@ public class DraggableModule extends Pane {
     public void removeLinkView(LinkView lvToDel) {
 
         links.remove(lvToDel);
-
 
 
     }

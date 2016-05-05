@@ -25,7 +25,7 @@ public class Converter {
 
     public static Module jsonToModule(String name, JSONObject jsonObject) {
 
-        Module module = null;
+                Module module = null;
         String type = (String) jsonObject.get("type");
 
         Point2D position = null;
@@ -43,6 +43,7 @@ public class Converter {
         ModuleTemplate template = Main.templates.get(type);
 
         module = Module.getInstance(template);
+        name = BadElements.checkDuplicateModules(name, 0);
         module.setName(name);
         if (position != null)
             module.setPosition(position);
@@ -62,7 +63,7 @@ public class Converter {
         JSONObject jsonObject = new JSONObject();
 
         jsonObject.put("type", module.getType());
-        module.getParameters().keySet().parallelStream().forEach(key ->
+        module.getParameters().keySet().forEach(key ->
                 jsonObject.put(key, module.getParameters().get(key).getValue()));
 
         jsonObject.put("#x", module.getPosition().getX());
@@ -70,7 +71,7 @@ public class Converter {
 
         if (module.getcParams() != null) {
             JSONArray jsonArray = new JSONArray();
-            module.getcParams().parallelStream().forEach(param -> jsonArray.add(param.get()));
+            module.getcParams().forEach(param -> jsonArray.add(param.get()));
             jsonObject.put("cparams", jsonArray);
         }
 
@@ -161,6 +162,25 @@ public class Converter {
 
 
         return params;
+    }
+
+    public static void populateClipBoards(Map<String, Module> modules, Map<String, Link> links){
+        Main.modulesClipboard.clear();
+        Main.linksClipboard.clear();
+
+        modules.keySet().forEach(key -> {
+            Module current =  modules.get(key);
+            System.out.println(current);
+            Main.modulesClipboard.put(current.getName(), moduleToJSON(current));
+        });
+
+        links.keySet().forEach(key -> {
+            Link current = links.get(key);
+            ArrayList<JSONObject> jsonLinks = linkToJSON(current);
+            jsonLinks.forEach(jsonLink -> {
+                Main.linksClipboard.put(current.getID(), jsonLink);
+            });
+        });
     }
 
     /**

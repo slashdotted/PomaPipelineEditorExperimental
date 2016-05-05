@@ -5,6 +5,8 @@ import commands.Import;
 import commands.Save;
 import controller.MainWindow;
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
@@ -24,7 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Main extends Application {
-
+    public static BooleanProperty dirty = new SimpleBooleanProperty(false);
     public static Map<String, ModuleTemplate> templates = new TreeMap<>();
 
     public static Map<String, Module> modules = new HashMap<>();
@@ -33,7 +35,7 @@ public class Main extends Application {
     public static Map<String, JSONObject> modulesClipboard = new HashMap<>();
     public static Map<String, JSONObject> linksClipboard = new HashMap<>();
     public static Scene mScene;
-    public static BorderPane root;
+    public static MainWindow root;
 
     //public static String currentJSON = "";
 
@@ -45,13 +47,13 @@ public class Main extends Application {
         confManager.load(conf);
 
 
-        // TODO remove this test
+//        // TODO remove this test
 //        conf = new File("pipeline_test.json");
 //
 //        Command importCommand = new Import(conf);
 //        importCommand.execute();
-
-
+//
+//
 //        File saveFile = new File("pipeline_saved_test.json");
 //
 //        Command save = new Save(saveFile, modulesClipboard, linksClipboard);
@@ -78,6 +80,15 @@ public class Main extends Application {
         // System.out.println(System.currentTimeMillis()-startTime);
 
         primaryStage.setTitle("PoorMans Pipeline Editor");
+
+        dirty.addListener((observable, oldValue, newValue) -> {
+            if(observable.getValue()){
+                primaryStage.setTitle("*PoorMans Pipeline Editor");
+            }else{
+                primaryStage.setTitle("PoorMans Pipeline Editor");
+            }
+        });
+
         mScene=new Scene(root, 1000, 600);
         primaryStage.setMaximized(true);
         primaryStage.setMinHeight(500);
@@ -96,11 +107,10 @@ public class Main extends Application {
     }
 
     private static void clearData() {
-        modules.clear();
-        modulesClipboard.clear();
-
-        links.clear();
-        linksClipboard.clear();
+//        modules.clear();
+//        modulesClipboard.clear();
+//        links.clear();
+//        linksClipboard.clear();
     }
 
 

@@ -18,20 +18,19 @@ public class RemoveLink implements Command {
 
     @Override
     public boolean execute() {
-
-        LinkView lv= MainWindow.allLinkView.get(link.getID());
+        debug("Link id: " + link.getID());
+        LinkView lv = MainWindow.allLinkView.get(link.getID());
         MainWindow.removeLinkView(lv);
-        if(Main.links.containsKey(link.getID())){
+        if (Main.links.containsKey(link.getID())) {
             Main.links.remove(link.getID());
         }
         return false;
     }
 
 
-
     @Override
     public boolean reverse() {
-        Command addLink=new AddLink(link);
+        Command addLink = new AddLink(link);
         return addLink.execute();
     }
 }

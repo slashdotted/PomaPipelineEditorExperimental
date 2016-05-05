@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
@@ -20,7 +21,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                    <MenuItem mnemonicParsing="false" text="Exit" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -35,51 +36,78 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <FlowPane hgap="5.0" vgap="5.0">
+            <FlowPane hgap="15.0" vgap="5.0">
                <children>
-                  <Button fx:id="newButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="2.0" mnemonicParsing="false" text="New">
+                  <Button fx:id="newButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="2.0" mnemonicParsing="false" onAction="#newPipeline" prefHeight="20.0" prefWidth="20.0" text="New">
                      <FlowPane.margin>
-                        <Insets bottom="5.0" left="5.0" />
+                        <Insets />
                      </FlowPane.margin>
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="6.0" radius="2.25" width="5.0" />
+                     </effect>
                   </Button>
-                  <Button fx:id="openButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Open">
+                  <Button fx:id="openButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#openPipeline" prefHeight="20.0" prefWidth="20.0" text="Open">
                      <FlowPane.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </FlowPane.margin>
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="6.0" radius="2.25" width="5.0" />
+                     </effect>
                   </Button>
-                  <Button fx:id="importButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Import">
+                  <Button fx:id="importButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#importPipeline" prefHeight="20.0" prefWidth="20.0" text="Import">
                      <FlowPane.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </FlowPane.margin>
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="6.0" radius="2.25" width="5.0" />
+                     </effect>
                   </Button>
-                  <Button fx:id="saveButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Save">
+                  <Button fx:id="saveButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#savePipeline" prefHeight="20.0" prefWidth="20.0" text="Save">
                      <FlowPane.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </FlowPane.margin>
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="6.0" radius="2.25" width="5.0" />
+                     </effect>
                   </Button>
                   <Separator orientation="VERTICAL" />
-                <Button fx:id="undoButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Undo">
+                <Button fx:id="undoButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#undo" prefHeight="20.0" prefWidth="20.0" text="Undo">
                      <FlowPane.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </FlowPane.margin>
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="6.0" radius="2.25" width="5.0" />
+                     </effect>
                   </Button>
-                  <Button fx:id="redoButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Redo">
+                  <Button fx:id="redoButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#redo" prefHeight="20.0" prefWidth="20.0" text="Redo">
                      <FlowPane.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </FlowPane.margin>
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="6.0" radius="2.25" width="5.0" />
+                     </effect>
                   </Button>
                   <Separator orientation="VERTICAL" />
-                  <Button fx:id="copyButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Copy">
+                  <Button fx:id="copyButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#copy" prefHeight="20.0" prefWidth="20.0" text="Copy">
                      <FlowPane.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </FlowPane.margin>
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="6.0" radius="2.25" width="5.0" />
+                     </effect>
                   </Button>
-                  <Button fx:id="pasteButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Paste">
+                  <Button fx:id="pasteButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#paste" prefHeight="20.0" prefWidth="20.0" text="Paste">
                      <FlowPane.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </FlowPane.margin>
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="6.0" radius="2.25" width="5.0" />
+                     </effect>
                   </Button>
                </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
             </FlowPane>
          </children>
       </VBox>
@@ -87,7 +115,7 @@
    <center>
       <SplitPane fx:id="splitPane" dividerPositions="0.25" BorderPane.alignment="CENTER">
          <items>
-            <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <content>
                   <VBox fx:id="moduleVBox" minWidth="200.0" />
                </content>

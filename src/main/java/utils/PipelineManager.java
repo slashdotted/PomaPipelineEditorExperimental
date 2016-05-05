@@ -13,6 +13,7 @@ import java.io.*;
  */
 public class PipelineManager {
 
+    public static String CURRENT_PIPELINE_PATH = null;
 
     private ClipboardContent clipboard = new ClipboardContent();
 
@@ -37,6 +38,8 @@ public class PipelineManager {
 
 
     public boolean load(File input) {
+        CURRENT_PIPELINE_PATH =input.getPath();
+        //System.err.println("Current Path: "+CURRENT_PIPELINE_PATH);
         FileReader fileReader = null;
         JSONParser parser = new JSONParser();
         JSONObject root = new JSONObject();

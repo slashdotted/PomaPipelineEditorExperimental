@@ -166,6 +166,11 @@ public class Link {
         return null;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Link{" +
+                "moduleB=" + moduleB +
+                ", moduleA=" + moduleA +
+                '}';
+    }
 }

@@ -18,11 +18,12 @@ public class AddModule implements Command{
 
     @Override
     public boolean execute() {
-        Main.modules.put(module.getName(), module);
-        Platform.runLater(() ->MainWindow.addDraggableModule(module) );
+        //debug("module = " + module.toString());
 
-        debug("module = " + module.getName());
-        return false;
+        Main.modules.put(module.getName(), module);
+        //Platform.runLater(() ->MainWindow.addDraggableModule(module) );
+        MainWindow.addDraggableModule(module);
+        return true;
     }
 
     @Override

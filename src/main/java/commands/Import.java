@@ -1,5 +1,7 @@
 package commands;
 
+import controller.MainWindow;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
@@ -20,11 +22,12 @@ import java.io.File;
 public class Import implements Command {
 
     private File file;
-
+    private int importedFiles = 0;
 
     public Import(File file) {
         this.file = file;
     }
+
 
     @Override
     public boolean execute() {
@@ -44,30 +47,33 @@ public class Import implements Command {
 
 
         jsonModules.keySet().forEach(key -> {
+
+
+
             Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
 
             Command addModule = new AddModule(module);
             addModule.execute();
             CareTaker.addMemento(addModule);
+            importedFiles++;
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             //TODO add memento
             // Main.modules.put(String.valueOf(key), module);
             // Main.modulesClipboard.put(String.valueOf(key), (JSONObject) jsonModules.get(key));
         });
 
-        jsonArray.forEach(obj -> {
-            JSONObject jsonLink = (JSONObject) obj;
-            Link link = Converter.jsonToLink(jsonLink);
-            Command addLink = new AddLink(link);
-            addLink.execute();
+        if (jsonArray != null)
+            jsonArray.forEach(obj -> {
+                JSONObject jsonLink = (JSONObject) obj;
+                Link link = Converter.jsonToLink(jsonLink);
+                Command addLink = new AddLink(link);
+                addLink.execute();
 
-            //Main.links.put(link.getID(), link);
-//            String channel = (String)jsonLink.get("channel");
-//            if(channel == null)
-//                channel = "default";
-            // Main.linksClipboard.put(link.getJsonId(channel),jsonLink);
-
-        });
-
+            });
         // Main.modules.putAll(clipboard);
         return true;
     }
@@ -75,7 +81,19 @@ public class Import implements Command {
 
     @Override
     public boolean reverse() {
-        return false;
+        for (int i = 0; i < importedFiles; i++) {
+            CareTaker.undo();
+        }
+        PipelineManager.CURRENT_PIPELINE_PATH = null;
+        Platform.runLater(() -> CareTaker.redoable.setValue(false));
+//        Main.modules.keySet().forEach(s -> System.out.println(Main.modules.get(s)));
+//        Main.links.keySet().forEach(s -> System.out.println(Main.links.get(s)));
+//        MainWindow.allDraggableModule.keySet().forEach(s -> System.out.println(MainWindow.allDraggableModule.get(s)));
+//        MainWindow.allLinkView.keySet().forEach(s -> System.out.println(MainWindow.allLinkView.get(s)));
+        return true;
     }
 
+    public int getImportedFiles(){
+        return importedFiles;
+    }
 }

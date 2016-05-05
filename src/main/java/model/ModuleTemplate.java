@@ -82,7 +82,7 @@ public class ModuleTemplate {
     }
 
     public String getNameInstance() {
-        return this.type.toLowerCase() + this.counter++;
+        return this.type.toLowerCase() + "_" + this.counter++;
     }
 
 

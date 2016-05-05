@@ -112,40 +112,31 @@ public class SideBar extends VBox {
         moduleImage.setImage(new Image(module.getTemplate().getImageURL()));
         paramBoxes = new ArrayList<>();
         templateLabel.setTooltip(new Tooltip(template.getType()));
-        setParametersArea();
+        //setParametersArea();
         this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
         this.cparamsBox.setFillWidth(true);
         hostTextField.setText(module.getHost());
+        setParametersArea();
+        initializeCParams();
+        setEvents();
         setButtons();
 
-//        addCParam.setOnMousePressed(event -> {
-//            addCParam.setGraphic(new ImageView(addImageShadow));
-//        });
-//
-//        addCParam.setOnMouseReleased(event -> {
-//            addCParam.setGraphic(new ImageView(addImageNormal));
-//        });
 
 
-        //addCParam.setGraphic(new ImageView("images/plus.png"));
-        //addCParam.setOnAction(event -> addNewCParam(new SimpleStringProperty()));
 
+    }
+
+    private void initializeCParams(){
         if (!cparams.isEmpty()) {
             for (int i = 0; i < cparams.size(); i++) {
                 addNewCParam(cparams.get(i), false);
             }
 
         }
-        setEvents();
-        //this.setMaxHeight(Double.MAX_VALUE);
         cparamsBox.setFillWidth(true);
         cparamsBox.setMaxHeight(Double.MAX_VALUE);
         this.setVgrow(cparamsBox, Priority.ALWAYS);
         this.setVgrow(this, Priority.ALWAYS);
-
-        //this.setFitToHeight(true);
-
-
     }
 
     private void setButtons() {
@@ -245,10 +236,10 @@ public class SideBar extends VBox {
                 if (isVisible()) {
                     hidePanel.play();
 
-
                 } else {
                     setVisible(true);
                     showPanel.play();
+
                 }
             }
         });
@@ -259,7 +250,8 @@ public class SideBar extends VBox {
         temp.selectAll();
         temp.setFont(Font.font("System", FontWeight.BOLD, 14));
         VBox infoBox = (VBox) this.lookup("#infoBox");
-        nameLabel.setVisible(false);
+        //nameLabel.setVisible(false);
+        infoBox.getChildren().remove(nameLabel);
         infoBox.getChildren().add(0, temp);
         temp.requestFocus();
         temp.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -273,7 +265,7 @@ public class SideBar extends VBox {
     }
 
     private void acceptEdit(TextField temp, VBox infoBox) {
-        if (!temp.getText().equals(module.getName())) {
+        if (!temp.getText().equals("") && !temp.getText().equals(module.getName())) {
             System.out.println("Text changed");
             Command editName = new EditModule(module, EditModule.Type.Name, temp.getText());
             editName.execute();
@@ -283,7 +275,8 @@ public class SideBar extends VBox {
         }
 
         infoBox.getChildren().remove(temp);
-        nameLabel.setVisible(true);
+        infoBox.getChildren().add(0, nameLabel);
+        //nameLabel.setVisible(true);
     }
 
 
