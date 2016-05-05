@@ -47,20 +47,30 @@ public class Link {
         this.channelsAToB.add(new SimpleStringProperty(channel));
     }
 
+    public boolean addChannel(String orientation, SimpleStringProperty channel){
+        switch (orientation){
+            case "fromTo":
+                return addChannel(moduleA,moduleB,channel);
 
+            case "toFrom":
+                return addChannel(moduleB,moduleA,channel);
 
-    public boolean addChannel(Module from, Module to, String channel) {
+            default:
+                return false;
+        }
+    }
+    public boolean addChannel(Module from, Module to, SimpleStringProperty channel) {
         if (from.equals(moduleA)) {
-            if ((to.equals(moduleB))&&(!checkIfPresent(channel,channelsAToB))) {
+            if ((to.equals(moduleB))&&(!checkIfPresent(channel.getValue(),channelsAToB))) {
 
-                channelsAToB.add(new SimpleStringProperty(channel));
+                channelsAToB.add(channel);
                 return true;
             }
         }
 
         if (from.equals(moduleB)) {
-            if ((to.equals(moduleA))&&(!checkIfPresent(channel,channelsBToA))) {
-                channelsBToA.add(new SimpleStringProperty(channel));
+            if ((to.equals(moduleA))&&(!checkIfPresent(channel.getValue(),channelsBToA))) {
+                channelsBToA.add(channel);
                 return true;
             }
         }
@@ -69,22 +79,16 @@ public class Link {
 
 
 
-    public boolean removeChannel(Module from, Module to, String channel) {
-        if (from.equals(moduleA)) {
-            if (to.equals(moduleB)) {
-               return channelsAToB.remove(new SimpleStringProperty(channel));
-
-            }
+    public boolean removeChannel(String orientation,SimpleStringProperty channel) {
+        switch (orientation){
+            case "fromTo":
+                return channelsAToB.remove(channel);
+            case "toFrom":
+                return channelsBToA.remove(channel);
+            default:
+                return false;
         }
 
-        if (from.equals(moduleB)) {
-            if (to.equals(moduleA)) {
-                return channelsBToA.remove(new SimpleStringProperty(channel));
-
-            }
-        }
-
-        return false;
     }
 
 

@@ -723,38 +723,10 @@ public class MainWindow extends BorderPane {
                 }
             }
         });
-      /*  mainScrollPane.setOnMouseClicked(event -> {
-
-            Point2D posClicked = new Point2D(event.getSceneX(), event.getSceneY());
-
-            Group group = (Group) mainScrollPane.getContent();
-            boolean resetSelection = false;
-            Point2D posLocal = group.sceneToLocal(posClicked);
-            for (Node node : group.getChildren()) {
-                System.out.println(node.getClass());
-                if (node instanceof DraggableModule) {
-                    if (!isContained(posLocal, node)) {
-
-                        resetSelection = true;
-                        break;
-                    }
-
-                }
-            }
-            if (resetSelection) {
-                resetSelection();
-            }
-        });*/
 
     }
 
 
-//    private void resetSelection() {
-//        MainWindow.unselectAll();
-////        for (String modId : MainWindow.selectedModules.keySet()) {
-////            MainWindow.allDraggableModule.get(modId).unselect(MainWindow.allDraggableModule.get(modId));
-////        }
-//    }
 
     private boolean isContained(Point2D posLocal, Node node) {
         DraggableModule dm = (DraggableModule) node;
@@ -854,20 +826,22 @@ public class MainWindow extends BorderPane {
 
     }
 
-    public static void removeDraggableModule(DraggableModule dm) {
+    public static Command removeDraggableModule(DraggableModule dm) {
         dm.unselect();
         ArrayList<Command> allCommands = new ArrayList<>();
         for (LinkView lv : dm.getLinks()) {
             Command removeLV = new RemoveLink(lv.getLink());
             allCommands.add(removeLV);
         }
-        for (Command comm : allCommands) {
-            comm.execute();
-            CareTaker.addMemento(comm);
-        }
+        Command execAll = new ExecuteAll(allCommands);
+        //execAll.execute();
+
+        //CareTaker.addMemento(execAll);
+
         allDraggableModule.remove(dm.getName());
         Group group = (Group) mainScrollPaneStat.getContent();
         group.getChildren().remove(dm);
+        return execAll;
     }
 
     public static void updateLinkView(LinkView lv, String orientation) {
@@ -901,19 +875,28 @@ public class MainWindow extends BorderPane {
     private void deleteSelected() {
         System.out.println("unselecting all");
         Set<String> selected = new HashSet<>(selectedModules.keySet());
+      ArrayList<Command> allRemMod=new ArrayList<>();
         selected.forEach(key -> {
             allDraggableModule.get(key).unselect();
             Command removeModule = new RemoveModule(Main.modules.get(key));
-            removeModule.execute();
-            CareTaker.addMemento(removeModule);
+            allRemMod.add(removeModule);
+
         });
+
+
         selected = new HashSet<>(selectedLinks.keySet());
         selected.forEach(key -> {
             allLinkView.get(key).unselectLinkView();
             Command removeLink = new RemoveLink(Main.links.get(key));
-            removeLink.execute();
-            CareTaker.addMemento(removeLink);
+            allRemMod.add(removeLink);
+
+
         });
+
+        Command remModAll=new ExecuteAll(allRemMod);
+
+        remModAll.execute();
+        CareTaker.addMemento(remModAll);
 
         Main.modulesClipboard.clear();
         selectedModules.clear();

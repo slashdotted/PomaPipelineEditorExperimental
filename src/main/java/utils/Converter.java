@@ -1,5 +1,6 @@
 package utils;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.input.DataFormat;
 import main.Main;
@@ -112,12 +113,12 @@ public class Converter {
             channel = "default";
 
         if ((link = Main.links.get(from.getName() + "-" + to.getName())) != null) {
-            link.addChannel(from, to, channel);
+            link.addChannel(from, to, new SimpleStringProperty(channel));
             return link;
         }
 
         if ((link = Main.links.get(to.getName() + "-" + from.getName())) != null) {
-            link.addChannel(from, to, channel);
+            link.addChannel(from, to,new SimpleStringProperty(channel));
             return link;
         }
 

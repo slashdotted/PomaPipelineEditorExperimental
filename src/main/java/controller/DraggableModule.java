@@ -411,9 +411,6 @@ public class DraggableModule extends Pane {
 
                 event.setDropCompleted(true);
                 setAllFinalPosition(new Point2D(event.getSceneX()-position.getX(),event.getSceneY()-position.getY()));
-             /*   Command move = new Move(selfie, oldPosition, position, mOldDragOffset, mDragOffset);
-                move.execute();
-                CareTaker.addMemento(move);*/
 
                 event.consume();
 
@@ -442,8 +439,6 @@ public class DraggableModule extends Pane {
                 //set operations drag
                 mDragOffset = new Point2D(event.getX(), event.getY());
                 mOldDragOffset = new Point2D(event.getX(), event.getY());
-
-            //   relocateToPoint(new Point2D(event.getSceneX(),event.getSceneY()));
 
 
                 ClipboardContent content = new ClipboardContent();

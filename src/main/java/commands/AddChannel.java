@@ -26,11 +26,11 @@ public class AddChannel implements Command {
 
     @Override
     public boolean execute() {
+        System.out.println("Da cancellare"+newValue.getValue());
         LinkView lv= MainWindow.allLinkView.get(link.getID());
-        motherStructure.add(newValue);
+        boolean success=link.addChannel(orientation,newValue);
         MainWindow.updateLinkView(lv,orientation);
-
-        return false;
+        return success;
     }
 
     @Override

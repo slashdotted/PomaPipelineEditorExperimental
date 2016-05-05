@@ -28,12 +28,13 @@ public class RemoveChannel implements Command {
 
     @Override
     public boolean execute() {
+        System.out.println("Da cancellare"+valueToRemove.getValue());
         LinkView lv= MainWindow.allLinkView.get(link.getID());
-        motherStructure.remove(valueToRemove);
+        boolean success= link.removeChannel(orientation,valueToRemove);
         Platform.runLater(() -> lv.updateImageViews(orientation));
 
 
-        return false;
+        return success;
     }
 
     @Override
