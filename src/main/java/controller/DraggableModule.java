@@ -40,6 +40,7 @@ public class DraggableModule extends Pane {
 
     private Point2D mDragOffset = new Point2D(0.0, 0.0);
     private Point2D mOldDragOffset = new Point2D(0.0, 0.0);
+    private Point2D mOldDragOffset2= new Point2D(0.0,0.0);
 
     private Module module;
     private ArrayList<LinkView> links = new ArrayList<>();
@@ -197,33 +198,9 @@ public class DraggableModule extends Pane {
         });
 
         titleBar.setOnMouseReleased(event -> {
-            Map<String, Module> selectedModules = MainWindow.selectedModules;
 
-            if (!event.isControlDown()) {
 
-                if (selectedModules.size()>1) {
-                    MainWindow.unselectAll();
-                    select();
-                }else{
-                    MainWindow.unselectAll();
-                    if(selected){
-                        unselect();
-                    }else{
-                        select();
-                    }
-
-                }
-            }else{
-                if(selected){
-                    unselect();
-                }else{
-
-                    select();
-                }
-            }
-
-            System.out.println(selectedModules.size());
-            System.out.println(MainWindow.selectedLinks.size());
+            controllSelectAction(event);
         });
 
 
@@ -334,6 +311,35 @@ public class DraggableModule extends Pane {
         };
     }
 
+    private void controllSelectAction(MouseEvent event) {
+        Map<String, Module> selectedModules = MainWindow.selectedModules;
+        if (!event.isControlDown()) {
+
+            if (selectedModules.size()>1) {
+                MainWindow.unselectAll();
+                select();
+            }else{
+                MainWindow.unselectAll();
+                if(selected){
+                    unselect();
+                }else{
+                    select();
+                }
+
+            }
+        }else{
+            if(selected){
+                unselect();
+            }else{
+
+                select();
+            }
+        }
+
+        System.out.println(selectedModules.size());
+        System.out.println(MainWindow.selectedLinks.size());
+    }
+
 //    private void unselectAll() {
 //        for (String dbNome:  ) {
 //            if(!getName().equals(dbNome)){
@@ -388,9 +394,9 @@ public class DraggableModule extends Pane {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
-                //position = new Point2D(event.getSceneX(), event.getSceneY());
+                relocateSelection(new Point2D(event.getSceneX()-position.getX(),event.getSceneY()-position.getY()));
                 relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
-
+                System.out.println(position.toString());
                 event.consume();
             }
         };
@@ -404,10 +410,10 @@ public class DraggableModule extends Pane {
                 mainScrollPane.setOnDragDropped(null);
 
                 event.setDropCompleted(true);
-
-                Command move = new Move(selfie, oldPosition, position, mOldDragOffset, mDragOffset);
+                setAllFinalPosition(new Point2D(event.getSceneX()-position.getX(),event.getSceneY()-position.getY()));
+             /*   Command move = new Move(selfie, oldPosition, position, mOldDragOffset, mDragOffset);
                 move.execute();
-                CareTaker.addMemento(move);
+                CareTaker.addMemento(move);*/
 
                 event.consume();
 
@@ -421,8 +427,11 @@ public class DraggableModule extends Pane {
             public void handle(MouseEvent event) {
                 if (MainWindow.currentSidebar != null)
                     MainWindow.closeSidebar();
+
+                controllSelectAction(event);
+                select();
                 oldPosition = new Point2D(event.getSceneX(), event.getSceneY());
-                // System.out.println("parent: " + getParent().getParent().getClass().getName());
+                System.out.println("parent: " + getParent().getParent().getClass().getName());
 
                 mainScrollPane.setOnDragOver(null);
                 mainScrollPane.setOnDragDropped(null);
@@ -434,7 +443,8 @@ public class DraggableModule extends Pane {
                 mDragOffset = new Point2D(event.getX(), event.getY());
                 mOldDragOffset = new Point2D(event.getX(), event.getY());
 
-                relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
+            //   relocateToPoint(new Point2D(event.getSceneX(),event.getSceneY()));
+
 
                 ClipboardContent content = new ClipboardContent();
                 DragContainer container = new DragContainer();
@@ -450,6 +460,30 @@ public class DraggableModule extends Pane {
 
     }
 
+    private void setAllFinalPosition(Point2D subtract) {
+        for (String modID:MainWindow.selectedModules.keySet() ) {
+            DraggableModule dm=MainWindow.allDraggableModule.get(modID);
+            Point2D pos=dm.position;
+
+
+            Command move = new Move(dm, dm.oldPosition, pos.add(subtract), dm.mOldDragOffset,dm.mDragOffset);
+            move.execute();
+            CareTaker.addMemento(move);
+
+        }
+
+    }
+
+    private void relocateSelection(Point2D subtract) {
+
+        for (String modID:MainWindow.selectedModules.keySet() ) {
+            Point2D oldPos=MainWindow.allDraggableModule.get(modID).position;
+
+            MainWindow.allDraggableModule.get(modID).relocateToPoint(oldPos.add(subtract));
+        }
+    }
+
+
     public void relocateToPoint(Point2D p, Point2D offset) {
         //relocates the object to a point that has been converted to
         //scene coordinates
@@ -459,19 +493,21 @@ public class DraggableModule extends Pane {
         Group par = (Group) Main.mScene.lookup("#mainGroup");
 
         localCoords = par.sceneToLocal(p);
+        System.out.println(localCoords.getX()+"--"+localCoords.getY());
 
-        // System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
-        // System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
-        this.relocate(
-                (int) localCoords.getX() - offset.getX(), (int) localCoords.getY() - offset.getY()
+            this.relocate(
+                    (int) localCoords.getX() - offset.getX(), (int) localCoords.getY() - offset.getY()
 
-        );
-        //System.out.println("mdragoffset: " + offset.getX() + " " + offset.getY());
+            );
+            //System.out.println("mdragoffset: " + offset.getX() + " " + offset.getY());
 
-        for (LinkView lv : links) {
+            for (LinkView lv : links) {
 
-            lv.updateBottonChannels();
-        }
+                lv.updateBottonChannels();
+            }
+
+
+
     }
 
     public void relocateToPoint(Point2D p) {
@@ -488,23 +524,26 @@ public class DraggableModule extends Pane {
 
         // System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
         // System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
-        this.relocate(
-                (int) localCoords.getX() - mDragOffset.getX(), (int) localCoords.getY() - mDragOffset.getY()
 
-        );
-        //System.out.println("mdragoffset: " + mDragOffset.getX() + " " + mDragOffset.getY());
+            this.relocate(
+                    (int) localCoords.getX() - mDragOffset.getX(), (int) localCoords.getY() - mDragOffset.getY()
 
-
-        //   Command move = new Move(this, oldPosition, new Point2D(localCoords.getX() - mDragOffset.getX(), localCoords.getY() - mDragOffset.getY()));
-        //  move.execute();
-        //   CareTaker.addMemento(move);
+            );
+            //System.out.println("mdragoffset: " + mDragOffset.getX() + " " + mDragOffset.getY());
 
 
-        //  System.out.println(links.size() + "-----------------");
-        for (LinkView lv : links) {
+            //   Command move = new Move(this, oldPosition, new Point2D(localCoords.getX() - mDragOffset.getX(), localCoords.getY() - mDragOffset.getY()));
+            //  move.execute();
+            //   CareTaker.addMemento(move);
 
-            lv.updateBottonChannels();
-        }
+
+            //  System.out.println(links.size() + "-----------------");
+            for (LinkView lv : links) {
+
+                lv.updateBottonChannels();
+            }
+
+
     }
 
 
