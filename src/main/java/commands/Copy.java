@@ -3,8 +3,9 @@ package commands;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import main.Main;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import utils.Converter;
 
 import java.util.HashMap;
@@ -43,10 +44,10 @@ public class Copy implements Command {
         ClipboardContent clipboardContent = new ClipboardContent();
 
         JSONObject modulesObject = new JSONObject();
-        modulesObject.putAll(modules);
+        modulesObject.put("modules", modules);
 
         JSONArray linksArray = new JSONArray();
-        linksArray.addAll(links.values());
+        linksArray.put(links.values());
 
         clipboardContent.putString(Converter.getPipelineString(modulesObject, linksArray));
 

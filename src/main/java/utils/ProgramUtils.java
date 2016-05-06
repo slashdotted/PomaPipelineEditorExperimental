@@ -1,22 +1,8 @@
 package utils;
 
-import commands.AddLink;
-import commands.AddModule;
-import commands.Command;
-import commands.ExecuteAll;
-import javafx.concurrent.Task;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import model.Link;
-import model.Module;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by felipe on 05/05/16.

@@ -39,27 +39,34 @@ public class ContextualMenu {
         contextMenu.getItems().add(paste);
 
 
+/*
         MainWindow.mainScrollPaneStat.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
 
                             if (event.getButton() == MouseButton.SECONDARY) {
-
-                                contextMenu.show(MainWindow.mainScrollPaneStat, event.getScreenX(), event.getScreenY());
+                                System.out.println("faccio vedere");
+                                        contextMenu.show(MainWindow.mainScrollPaneStat, event.getScreenX(), event.getScreenY());
                             }
 
                     }
                 });
-
+*/
 
     }
 
+    public void showContextMenu(MouseEvent event){
+        MainWindow.mainScrollPaneStat.setContextMenu(contextMenu);
+        contextMenu.show(MainWindow.mainScrollPaneStat, event.getScreenX(), event.getScreenY());
+        MainWindow.mainScrollPaneStat.setContextMenu(null);
+    }
     public ContextMenu getContextMenu() {
         return contextMenu;
     }
 
     public void setMouse(MouseEvent mouse) {
+
         this.mouse = mouse;
     }
 }

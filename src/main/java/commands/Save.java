@@ -3,8 +3,9 @@ package commands;
 import controller.MainWindow;
 import javafx.scene.input.ClipboardContent;
 import main.Main;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import utils.Converter;
 import utils.PipelineManager;
 
@@ -54,8 +55,8 @@ public class Save implements Command {
         JSONObject pipelineModules = new JSONObject();
         JSONArray pipelineLinks = new JSONArray();
 
-        pipelineModules.putAll(modules);
-        pipelineLinks.addAll(links.values());
+        pipelineModules.put("module", modules.values());
+        pipelineLinks.put(links.values());
 
         PipelineManager pipelineManager = new PipelineManager();
         if(pipelineManager.save(output, pipelineModules, pipelineLinks)) {

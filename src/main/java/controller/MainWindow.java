@@ -107,7 +107,8 @@ public class MainWindow extends BorderPane {
     private EventHandler<DragEvent> mModuleItemOverRoot = null;
     private EventHandler<DragEvent> mModuleItemDropped = null;
     private EventHandler<DragEvent> mModuleItemOverMainScrollPane = null;
-    private  ContextualMenu contextualMenu;
+    private ContextualMenu contextualMenu;
+
     public MainWindow() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mainWindow.fxml"));
         fxmlLoader.setRoot(this);
@@ -121,8 +122,8 @@ public class MainWindow extends BorderPane {
         }
         mainScrollPaneStat = mainScrollPane;
 
-         contextualMenu=new ContextualMenu();
-        mainScrollPaneStat.setContextMenu(contextualMenu.getContextMenu());
+        contextualMenu = new ContextualMenu();
+
 
 
     }
@@ -280,9 +281,15 @@ public class MainWindow extends BorderPane {
 
         if (pipelineFile != null) {
             Command importPipeline = new Import(pipelineFile);
-            importPipeline.execute();
+            boolean success = importPipeline.execute();
             CareTaker.addMemento(importPipeline);
-            stackedLogBar.log("Pipeline imported");
+
+            if(success){
+                stackedLogBar.logAndSuccess("Pipeline imported");
+            }else{
+                stackedLogBar.logAndWarning("There was an error while importing");
+            }
+
 //            Main.modules.keySet().forEach(s -> System.out.println(Main.modules.get(s)));
 //            Main.links.keySet().forEach(s -> System.out.println(Main.links.get(s)));
 //            MainWindow.allDraggableModule.keySet().forEach(s -> System.out.println(MainWindow.allDraggableModule.get(s)));
@@ -291,7 +298,6 @@ public class MainWindow extends BorderPane {
         posXAssign = 300;
         posYAssign = 100;
     }
-
 
 
     @FXML
@@ -318,7 +324,7 @@ public class MainWindow extends BorderPane {
 
         if (destination != null) {
             //if (Main.modulesClipboard.isEmpty() && Main.linksClipboard.isEmpty())
-                Converter.populateClipBoards(Main.modules, Main.links);
+            Converter.populateClipBoards(Main.modules, Main.links);
             Command save = new Save(destination);
             if (save.execute()) {
                 CareTaker.addMemento(save);
@@ -333,8 +339,8 @@ public class MainWindow extends BorderPane {
     }
 
     @FXML
-    private void saveSelected(){
-        if(selectedModules.isEmpty() && selectedLinks.isEmpty()){
+    private void saveSelected() {
+        if (selectedModules.isEmpty() && selectedLinks.isEmpty()) {
             stackedLogBar.displayWarning("No items selected!");
 
             return;
@@ -380,9 +386,9 @@ public class MainWindow extends BorderPane {
 
 
     public static void paste(MouseEvent eventContextMenu) {
-
-      //  Command pasteCommand=new Paste(eventContextMenu);
-
+        //System.out.println(eventContextMenu.getX());
+        Command pasteCommand = new Paste(eventContextMenu);
+        pasteCommand.execute();
 
     }
 
@@ -405,7 +411,8 @@ public class MainWindow extends BorderPane {
         originalScaleY = mainGroup.getScaleY();
 
         mainScrollPane.setOnMouseClicked(event1 -> {
-            if(event1.getButton()==MouseButton.SECONDARY){
+            contextualMenu.getContextMenu().hide();
+            if ((event1.getButton() != MouseButton.SECONDARY)) {
                 if (!mainGroup.contains(event1.getX(), event1.getY())) {
 
                     System.out.println("Unselect all from mainScrollPane");
@@ -414,9 +421,12 @@ public class MainWindow extends BorderPane {
                 if (currentSidebar != null && event1.getClickCount() < 2) {
                     closeSidebar();
                 }
-            }if (mainGroup.contains(event1.getX(), event1.getY())){
+            } else if (!mainGroup.contains(event1.getX(), event1.getY())) {
+                System.out.println("mostrooooooooooo");
                 contextualMenu.setMouse(event1);
-                Platform.runLater(() ->contextualMenu.getContextMenu().hide() );
+                contextualMenu.showContextMenu(event1);
+
+
 
             }
 
@@ -774,7 +784,6 @@ public class MainWindow extends BorderPane {
     }
 
 
-
     private boolean isContained(Point2D posLocal, Node node) {
         DraggableModule dm = (DraggableModule) node;
         System.out.println(node.getLayoutX() + "nodo" + ((node.getLayoutX() + dm.getWidth())));
@@ -925,10 +934,11 @@ public class MainWindow extends BorderPane {
         //TODO handle links selection
     }
 
+
     private void deleteSelected() {
         System.out.println("unselecting all");
         Set<String> selected = new HashSet<>(selectedModules.keySet());
-      ArrayList<Command> allRemMod=new ArrayList<>();
+        ArrayList<Command> allRemMod = new ArrayList<>();
         selected.forEach(key -> {
             allDraggableModule.get(key).unselect();
             Command removeModule = new RemoveModule(Main.modules.get(key));
@@ -946,7 +956,7 @@ public class MainWindow extends BorderPane {
 
         });
 
-        Command remModAll=new ExecuteAll(allRemMod);
+        Command remModAll = new ExecuteAll(allRemMod);
 
         remModAll.execute();
         CareTaker.addMemento(remModAll);

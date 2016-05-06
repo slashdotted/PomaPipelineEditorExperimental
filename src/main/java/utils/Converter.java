@@ -8,8 +8,9 @@ import model.Link;
 import model.Module;
 import model.ModuleTemplate;
 import model.Value;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,13 +27,16 @@ public class Converter {
 
     public static Module jsonToModule(String name, JSONObject jsonObject) {
 
-                Module module = null;
+        Module module = null;
         String type = (String) jsonObject.get("type");
 
         Point2D position = null;
-
-        Double x = (Double) jsonObject.get("#x");
-        Double y = (Double) jsonObject.get("#y");
+        Double x = null;
+        Double y = null;
+        if (jsonObject.has("#x"))
+            x = jsonObject.getDouble("#x");
+        if (jsonObject.has("#y"))
+            y = jsonObject.getDouble("#y");
 
 
         if (x != null && y != null)
@@ -52,7 +56,9 @@ public class Converter {
 
         module.setParameters(extractParams(template, jsonObject));
 
-        JSONArray jsonArray = (JSONArray) jsonObject.get("cparams");
+        JSONArray jsonArray = null;
+        if (jsonObject.has("cparams"))
+            jsonArray = jsonObject.getJSONArray("cparams");
 
         if (jsonArray != null)
             module.addCParams(jsonArray);
@@ -72,7 +78,7 @@ public class Converter {
 
         if (module.getcParams() != null) {
             JSONArray jsonArray = new JSONArray();
-            module.getcParams().forEach(param -> jsonArray.add(param.get()));
+            module.getcParams().forEach(param -> jsonArray.put(param.get()));
             jsonObject.put("cparams", jsonArray);
         }
 
@@ -111,13 +117,16 @@ public class Converter {
         Module from = Main.modules.get(fromName);
         Module to = Main.modules.get(toName);
 
-        String channel = (String) jsonLink.get("channel");
+        String channel = null;
+        if (jsonLink.has("channel"))
+            channel = jsonLink.getString("channel");
+
         if (channel == null)
             channel = "default";
 
         if ((link = Main.links.get(from.getName() + "-" + to.getName())) != null) {
             System.out.println("FromTo " + channel);
-          //  link.addChannel("fromTo",new SimpleStringProperty(channel));
+            //  link.addChannel("fromTo",new SimpleStringProperty(channel));
             link.addChannel(from, to, new SimpleStringProperty(channel));
             return link;
         }
@@ -125,8 +134,8 @@ public class Converter {
         if ((link = Main.links.get(to.getName() + "-" + from.getName())) != null) {
             System.out.println("ToFrom " + channel);
 
-           // link.addChannel("toFrom",new SimpleStringProperty(channel));
-            link.addChannel(from, to,new SimpleStringProperty(channel));
+            // link.addChannel("toFrom",new SimpleStringProperty(channel));
+            link.addChannel(from, to, new SimpleStringProperty(channel));
             return link;
         }
 
@@ -145,8 +154,11 @@ public class Converter {
             template.getMandatoryParameters().keySet().forEach(key -> {
                 boolean validValue = false;
                 Value value = new Value(template.getMandatoryParameters().get(key));
-                Object val = jsonObject.get(key);
-                if(val!=null){
+                Object val = null;
+                if (jsonObject.has(key))
+                    val = jsonObject.get(key);
+
+                if (val != null) {
                     value.setValue(val);
                     validValue = true;
                 }
@@ -160,9 +172,11 @@ public class Converter {
             template.getOptParameters().keySet().forEach(key -> {
                 boolean validValue = false;
                 Value value = new Value(template.getOptParameters().get(key));
+                Object val = null;
+                if (jsonObject.has(key))
+                    val = jsonObject.get(key);
 
-                Object val = jsonObject.get(key);
-                if(val!=null){
+                if (val != null) {
                     value.setValue(val);
                     validValue = true;
                 }
@@ -174,16 +188,17 @@ public class Converter {
         return params;
     }
 
-    public static void populateClipBoards(Map<String, Module> modules, Map<String, Link> links){
+    public static void populateClipBoards(Map<String, Module> modules, Map<String, Link> links) {
         Main.modulesClipboard.clear();
         Main.linksClipboard.clear();
         System.out.println("Before populating modules");
 
         modules.keySet().forEach(key -> {
             System.out.println("Populating module");
-            Module current =  modules.get(key);
+            Module current = modules.get(key);
             System.out.println(current);
             Main.modulesClipboard.put(current.getName(), moduleToJSON(current));
+
         });
         System.out.println("Before Populating links: " + links.size());
 
@@ -193,7 +208,15 @@ public class Converter {
             System.out.println("json links size: " + jsonLinks.size());
             jsonLinks.forEach(jsonLink -> {
                 System.out.println("Populating links");
-                Main.linksClipboard.put( "" + jsonLink.get("from") + jsonLink.get("to") + jsonLink.get("channel"), jsonLink);
+
+
+                String channel = "default";
+
+                if (jsonLink.has("channel"))
+                    channel = jsonLink.getString("channel");
+
+
+                Main.linksClipboard.put("" + jsonLink.get("from") + jsonLink.get("to") + channel, jsonLink);
             });
         });
     }
@@ -210,9 +233,9 @@ public class Converter {
         StringBuffer pipelineStringBuffer = new StringBuffer();
 
         pipelineStringBuffer.append("{\n\t\"modules\" : ");
-        pipelineStringBuffer.append(pipelineModules.toJSONString());
+        pipelineStringBuffer.append(pipelineModules.toString());
         pipelineStringBuffer.append(",\n\t\"links\" : ");
-        pipelineStringBuffer.append(pipelineLinks.toJSONString());
+        pipelineStringBuffer.append(pipelineLinks.toString());
         pipelineStringBuffer.append("\n}");
 
         return pipelineStringBuffer.toString();
@@ -223,7 +246,7 @@ public class Converter {
 
         for (Object pipelineLink : pipelineLinks) {
             JSONObject link = (JSONObject) pipelineLink;
-            if (!(pipelineModules.containsKey(link.get("from")) && pipelineModules.containsKey(link.get("to")))) ;
+            if (!(pipelineModules.has(link.get("from").toString()) && pipelineModules.has(link.get("to").toString()))) ;
             return false;
         }
 

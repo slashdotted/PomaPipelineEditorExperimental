@@ -1,10 +1,11 @@
 package utils;
 
 import javafx.scene.input.ClipboardContent;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 
 import java.io.*;
 
@@ -15,7 +16,7 @@ public class PipelineManager {
 
     public static String CURRENT_PIPELINE_PATH = null;
 
-    private ClipboardContent clipboard = new ClipboardContent();
+    private static ClipboardContent clipboard = new ClipboardContent();
 
 
     public boolean save(File output, JSONObject pipelineModules, JSONArray pipelineLinks) {
@@ -38,50 +39,70 @@ public class PipelineManager {
 
 
     public boolean load(File input) {
-        CURRENT_PIPELINE_PATH =input.getPath();
+        CURRENT_PIPELINE_PATH = input.getPath();
         //System.err.println("Current Path: "+CURRENT_PIPELINE_PATH);
         FileReader fileReader = null;
-        JSONParser parser = new JSONParser();
-        JSONObject root = new JSONObject();
+        JSONObject root;
 
         try {
             fileReader = new FileReader(input);
-            root = (JSONObject) parser.parse(fileReader);
+
+
+            // root = parser.
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        //extractPipeline(root.toJSONString());
+
         //Modules import
         //final JSONObject jsonModules = (JSONObject) root.get("modules");
         //final JSONArray jsonArray = (JSONArray) root.get("links");
+        JSONTokener parser = null;
+        try {
+            parser= new JSONTokener(fileReader);
+            root = new JSONObject(parser);
+            extractPipeline(root.toString());
+        }catch (JSONException e){
+            System.err.println("No modules here");
 
-        clipboard.put(Converter.MODULES_DATA_FORMAT, root.get("modules"));
-        clipboard.put(Converter.LINKS_DATA_FORMAT, root.get("links"));
+        }
 
         return true;
     }
 
-//    private Map<String, Module> getModules(JSONObject jsonModules) {
-//        Map<String, Module> modules = new HashMap<>();
-//        // ClipboardContent content = Main.modules;
-//        jsonModules.keySet().forEach(key -> {
-//            DataFormat keyDF = new DataFormat(key.toString());
-//            clipboard.put(keyDF, (JSONObject) jsonModules.get(key));
-//
-//        });
-//        JSONObject obj = new JSONObject();
-//        return modules;
-//    }
-//
-//
-//    private boolean checkIsComment(String key) {
-//        return key.charAt(0) == '#';
-//    }
+    public static void extractPipeline(String jsonString) {
 
-    public ClipboardContent getClipboard() {
+
+
+        JSONObject pipeline = null;
+
+        try {
+            pipeline = new org.json.JSONObject(jsonString);
+        }catch (JSONException e){
+            System.err.println("No modules here");
+        }
+
+        if(pipeline == null)
+            return;
+
+        JSONObject jsonModules = null;
+        JSONArray jsonLinks = null;
+        if (pipeline.has("modules"))
+            jsonModules = (JSONObject) pipeline.get("modules");
+        if (pipeline.has("links"))
+            jsonLinks = (JSONArray) pipeline.get("links");
+
+
+        clipboard.put(Converter.MODULES_DATA_FORMAT, jsonModules);
+        clipboard.put(Converter.LINKS_DATA_FORMAT, jsonLinks);
+    }
+
+    public static ClipboardContent getClipboard(String jsonString) {
+        extractPipeline(jsonString);
+        return clipboard;
+    }
+
+    public static ClipboardContent getClipboard() {
         return clipboard;
     }
 }

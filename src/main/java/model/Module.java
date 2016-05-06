@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -134,6 +134,13 @@ public class Module {
 
     public void addCParams(ArrayList<String> cparams) {
         cparams.forEach(s -> this.cParams.add(new SimpleStringProperty(s)));
+    }
+
+    public void addCParams(JSONArray jsonparams){
+        for (int i = 0; i < jsonparams.length(); i++) {
+            this.cParams.add(new SimpleStringProperty(jsonparams.getString(i)));
+        }
+
     }
 
     public String getHost() {

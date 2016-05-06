@@ -7,9 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,11 +17,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import main.Main;
 import model.Link;
-import model.Module;
-import org.json.simple.JSONObject;
-import utils.Converter;
-
-import java.util.ArrayList;
 
 /**
  * Created by Marco on 18/03/2016.

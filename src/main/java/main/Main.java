@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import model.Link;
 import model.Module;
 import model.ModuleTemplate;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import utils.Converter;
 import utils.EditorConfManager;
 
