@@ -79,7 +79,7 @@ public class PipelineManager {
         try {
             pipeline = new org.json.JSONObject(jsonString);
         }catch (JSONException e){
-            System.err.println("No modules here");
+           // System.err.println("No modules here");
         }
 
         if(pipeline == null)

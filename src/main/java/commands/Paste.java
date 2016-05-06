@@ -53,15 +53,20 @@ public class Paste implements Command {
         String externalJSON = systemClipboard.getString();
         if (externalJSON != null) {
             clipboard = PipelineManager.getClipboard(externalJSON);
+
             JSONObject jsonModules = (JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
             JSONArray jsonLinks = (JSONArray)  clipboard.get(Converter.LINKS_DATA_FORMAT);
 
-            if(jsonModules == null){
-                MainWindow.stackedLogBar.displayWarning("No pipeline found in clipboard!");
+            Command importElements = new Import(jsonModules,jsonLinks,mousePos);
+            importElements.execute();
 
-            }else{
-                MainWindow.stackedLogBar.displaySuccess("Hurra!");
-            }
+//            if(jsonModules == null){
+//                MainWindow.stackedLogBar.displayWarning("No pipeline found in clipboard!");
+//
+//            }else{
+//                MainWindow.stackedLogBar.displaySuccess("Hurra!");
+//            }
+
 
 
             //System.out.println(jsonModules.toString(4));
