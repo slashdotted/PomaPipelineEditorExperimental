@@ -224,7 +224,7 @@ public class MainWindow extends BorderPane {
         newMenuItem.disableProperty().bind(Main.dirty.not());
         saveMenuItem.disableProperty().bind(Main.dirty.not());
         saveAsMenuItem.disableProperty().bind(Main.dirty.not());
-        saveSelMenuItem.disableProperty().bind(Main.dirty.not());
+      //  saveSelMenuItem.disableProperty().bind(Main.dirty.not());
     }
 
 
@@ -338,6 +338,13 @@ public class MainWindow extends BorderPane {
         }
         String previousPath = PipelineManager.CURRENT_PIPELINE_PATH;
         Converter.populateClipBoards(selectedModules, selectedLinks);
+        System.out.println(Main.linksClipboard.size());
+        System.out.println(Main.modulesClipboard.size());
+
+        //selected
+        System.out.println(MainWindow.selectedLinks.size());
+        System.out.println(MainWindow.selectedModules.size());
+
         saveAs();
         PipelineManager.CURRENT_PIPELINE_PATH = previousPath;
     }
@@ -393,7 +400,7 @@ public class MainWindow extends BorderPane {
         originalScaleY = mainGroup.getScaleY();
 
         mainScrollPane.setOnMouseClicked(event1 -> {
-            if (!mainGroup.contains(event1.getX(), event1.getY()) && !selectedModules.isEmpty()) {
+            if (!mainGroup.contains(event1.getX(), event1.getY()) ) {
                 System.out.println("Unselect all from mainScrollPane");
                 unselectAll();
             }
@@ -689,7 +696,7 @@ public class MainWindow extends BorderPane {
                                 String idLink;
                                 Command addChannel;
                                 SimpleStringProperty channel = new SimpleStringProperty("default");
-                                ;
+
                                 switch (orientationLink) {
                                     case "fromTo":
 
@@ -834,9 +841,7 @@ public class MainWindow extends BorderPane {
             allCommands.add(removeLV);
         }
         Command execAll = new ExecuteAll(allCommands);
-        //execAll.execute();
 
-        //CareTaker.addMemento(execAll);
 
         allDraggableModule.remove(dm.getName());
         Group group = (Group) mainScrollPaneStat.getContent();
@@ -863,19 +868,25 @@ public class MainWindow extends BorderPane {
         Set<String> selected = new HashSet<>(selectedModules.keySet());
         selected.forEach(key -> {
             allDraggableModule.get(key).unselect();
-            selectedModules.remove(key);
+
+        });
+
+       selected = new HashSet<>(selectedLinks.keySet());
+
+        selected.forEach(key -> {
+           allLinkView.get(key).unselectLinkView();
+
         });
         Main.modulesClipboard.clear();
+        Main.modulesClipboard.clear();
         selectedModules.clear();
-
-
-        //TODO handle links selection
+        selectedLinks.clear();
     }
 
     private void deleteSelected() {
         System.out.println("unselecting all");
         Set<String> selected = new HashSet<>(selectedModules.keySet());
-      ArrayList<Command> allRemMod=new ArrayList<>();
+        ArrayList<Command> allRemMod=new ArrayList<>();
         selected.forEach(key -> {
             allDraggableModule.get(key).unselect();
             Command removeModule = new RemoveModule(Main.modules.get(key));

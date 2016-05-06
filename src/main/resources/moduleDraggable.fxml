@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -9,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="mopdelPane" prefHeight="80.0" prefWidth="120.0" styleClass="draggable-module" stylesheets="@application.css" type="Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="mopdelPane" prefHeight="80.0" prefWidth="120.0" styleClass="draggable-module" stylesheets="@application.css" type="Pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" maxWidth="120.0" prefWidth="120.0">
          <children>
@@ -35,18 +42,24 @@
             </Pane>
             <Pane fx:id="paneItemImage" maxWidth="120.0" prefHeight="44.0" prefWidth="120.0" styleClass="draggable-moduleText">
                <children>
-                  <VBox prefWidth="120.0" spacing="5.0">
+                  <HBox fx:id="hBoxDragMod" prefHeight="44.0" prefWidth="120.0">
                      <children>
-                        <Label fx:id="labelTemplate" maxWidth="120.0" text="Label">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></Label>
-                        <Label fx:id="labelHost" maxWidth="120.0" text="Label" />
+                        <VBox prefHeight="100.0" prefWidth="88.0" spacing="5.0">
+                           <children>
+                              <Label fx:id="labelTemplate" maxWidth="120.0" text="Label">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Label fx:id="labelHost" maxWidth="120.0" text="Label" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </VBox>
+                        <ImageView fx:id="validImage" fitHeight="39.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
-                     <padding>
-                        <Insets left="5.0" />
-                     </padding>
-                  </VBox>
+                  </HBox>
                </children>
                <cursor>
                   <Cursor fx:constant="CROSSHAIR" />

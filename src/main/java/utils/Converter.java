@@ -1,5 +1,7 @@
 package utils;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.input.DataFormat;
@@ -49,14 +51,14 @@ public class Converter {
         if (position != null)
             module.setPosition(position);
 
-
-        module.setParameters(extractParams(template, jsonObject));
+        SimpleBooleanProperty validModule = new SimpleBooleanProperty(true);
+        module.setParameters(extractParams(template, jsonObject, validModule));
 
         JSONArray jsonArray = (JSONArray) jsonObject.get("cparams");
 
         if (jsonArray != null)
             module.addCParams(jsonArray);
-
+        module.setValid(validModule.getValue());
         return module;
     }
 
@@ -84,19 +86,24 @@ public class Converter {
         ArrayList<JSONObject> jsonLinks = new ArrayList<>();
 
         link.getChannelsAToB().forEach(channel -> {
+
             JSONObject jsonLink = new JSONObject();
             jsonLink.put("from", link.getModuleA().getName());
             jsonLink.put("to", link.getModuleB().getName());
+            System.out.println("fromTO" +channel.getValue());
             if (!channel.getValue().equals("default"))
                 jsonLink.put("channel", channel.getValue());
+              jsonLinks.add(jsonLink);
         });
 
         link.getChannelsBToA().forEach(channel -> {
             JSONObject jsonLink = new JSONObject();
+            System.out.println("toFROM" +channel.getValue());
             jsonLink.put("from", link.getModuleB().getName());
             jsonLink.put("to", link.getModuleA().getName());
             if (!channel.getValue().equals("default"))
                 jsonLink.put("channel", channel.getValue());
+            jsonLinks.add(jsonLink);
         });
         return jsonLinks;
     }
@@ -127,7 +134,7 @@ public class Converter {
     }
 
 
-    private static Map<String, Value> extractParams(ModuleTemplate template, JSONObject jsonObject) {
+    private static Map<String, Value> extractParams(ModuleTemplate template, JSONObject jsonObject, final SimpleBooleanProperty validModule) {
         Map<String, Value> params = new HashMap<>();
         // Mandatory params extraction
 
@@ -141,8 +148,12 @@ public class Converter {
                     value.setValue(val);
                     validValue = true;
                 }
+                if(!validValue){
+                    validModule.setValue(false);
+                }
                 value.setValid(validValue);
                 params.put(key, value);
+
             });
 
         // Optional params extraction
@@ -170,16 +181,19 @@ public class Converter {
         Main.linksClipboard.clear();
 
         modules.keySet().forEach(key -> {
+
             Module current =  modules.get(key);
             System.out.println(current);
             Main.modulesClipboard.put(current.getName(), moduleToJSON(current));
         });
 
         links.keySet().forEach(key -> {
+
             Link current = links.get(key);
             ArrayList<JSONObject> jsonLinks = linkToJSON(current);
             jsonLinks.forEach(jsonLink -> {
-                Main.linksClipboard.put(current.getID() + jsonLink.get("channel"), jsonLink);
+                Main.linksClipboard.put(""+jsonLink.get("from")+(jsonLink.get("to"))+jsonLink.get("channel"), jsonLink);
+
             });
         });
     }

@@ -25,24 +25,6 @@ public class Value<T> {
         //initialize();
     }
 
-//    private void initialize() {
-//        System.out.println("Value: " + name + ", Type: " + getType() + ", Default: " + defaultValue);
-//        System.out.println("Before initialize: " + value.toString());
-//        if(value.toString().equals("0")){
-//            System.out.println("\tCalling update!: "+ updateValue(""));
-//
-//        }
-//        System.out.println("After initialize: " + value.toString());
-//        System.out.println();
-//    }
-
-//    public Value(String name, T val) {
-//        this.name = name;
-//        this.value = val;
-//        this.defaultValue = null;
-//        //initialize();
-//
-//    }
 
     public Value(Value value) {
         this.name = value.getName();
