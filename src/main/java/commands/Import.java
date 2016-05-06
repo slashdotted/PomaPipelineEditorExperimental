@@ -64,6 +64,10 @@ public class Import implements Command {
         jsonModules.keySet().forEach(key -> {
             Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
 
+            if ((mousePos!=null)&&(module.getPosition()!=null)){
+
+
+            }
             if (!String.valueOf(key).equals(module.getName())) {
                 nameMappings.put(String.valueOf(key), module.getName());
             }

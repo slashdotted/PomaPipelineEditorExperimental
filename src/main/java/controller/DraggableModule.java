@@ -14,10 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import main.Main;
@@ -26,6 +23,7 @@ import model.ModuleTemplate;
 import utils.CareTaker;
 import utils.Converter;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -419,6 +417,24 @@ public class DraggableModule extends Pane {
     }
 
     private void buildNodeDragHandlers() {
+
+     /*   mainScrollPane.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasFiles()) {
+                    success = true;
+                    String filePath = null;
+                    for (File file:db.getFiles()) {
+                        filePath = file.getAbsolutePath();
+                        System.out.println(filePath);
+                    }
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });*/
         mModuleHandlerDrag = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -434,16 +450,23 @@ public class DraggableModule extends Pane {
         mModuleHandlerDrop = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                if (db.hasFiles()) {
+                    event.acceptTransferModes(TransferMode.COPY);
+                } else {
 
-                mainScrollPane.setOnDragOver(null);
-                mainScrollPane.setOnDragDropped(null);
 
-                event.setDropCompleted(true);
-                setAllFinalPosition(new Point2D(event.getSceneX()-position.getX(),event.getSceneY()-position.getY()));
 
-                event.consume();
+                    mainScrollPane.setOnDragOver(null);
+                    mainScrollPane.setOnDragDropped(null);
 
-            }
+                    event.setDropCompleted(true);
+                    setAllFinalPosition(new Point2D(event.getSceneX() - position.getX(), event.getSceneY() - position.getY()));
+
+                    event.consume();
+                }
+                }
+
         };
         //controller of event drag
 

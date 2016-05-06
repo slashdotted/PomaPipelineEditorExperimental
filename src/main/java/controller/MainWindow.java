@@ -51,6 +51,8 @@ public class MainWindow extends BorderPane {
     public static double posYAssign = 100;
     double originalScaleX = 0;
     double originalScaleY = 0;
+    static boolean fileReaded=false;
+    static String filePath = null;
 
     public static Button toggleSidebar = new Button();
     //SELECTION
@@ -125,7 +127,6 @@ public class MainWindow extends BorderPane {
         contextualMenu = new ContextualMenu();
 
 
-
     }
 
 
@@ -165,6 +166,7 @@ public class MainWindow extends BorderPane {
 
 
         //TODO create true size
+        //Pane pane=new Pane();
         mainGroup.getChildren().add(new Pane());
 
 
@@ -284,9 +286,9 @@ public class MainWindow extends BorderPane {
             boolean success = importPipeline.execute();
             CareTaker.addMemento(importPipeline);
 
-            if(success){
+            if (success) {
                 stackedLogBar.logAndSuccess("Pipeline imported");
-            }else{
+            } else {
                 stackedLogBar.logAndWarning("There was an error while importing");
             }
 
@@ -425,7 +427,6 @@ public class MainWindow extends BorderPane {
                 System.out.println("mostrooooooooooo");
                 contextualMenu.setMouse(event1);
                 contextualMenu.showContextMenu(event1);
-
 
 
             }
@@ -570,34 +571,9 @@ public class MainWindow extends BorderPane {
         group.getChildren().add(node);
         mod.setPosition(new Point2D(position.getX() - 50, position.getY() - 40));
         node.relocateToPoint(new Point2D(position.getX() - 50, position.getY() - 40));
-//        unselectAll();
-//        node.select();
+
     }
 
-//    private static double getBiggerX(double biggerY) {
-//        double bigger = 300;
-//        if (!MainWindow.allDraggableModule.isEmpty())
-//            for (String key : MainWindow.allDraggableModule.keySet()) {
-//                if (MainWindow.allDraggableModule.get(key).getPosition().getY() < biggerY) {
-//                    continue;
-//                }
-//                double currentX = MainWindow.allDraggableModule.get(key).getPosition().getX();
-//                if (currentX > bigger)
-//                    bigger = currentX;
-//            }
-//        return bigger;
-//    }
-//
-//    private static double getBiggerY() {
-//        double bigger = 100;
-//        if (!MainWindow.allDraggableModule.isEmpty())
-//            for (String key : MainWindow.allDraggableModule.keySet()) {
-//                double currentY = MainWindow.allDraggableModule.get(key).getPosition().getY();
-//                if (currentY > bigger)
-//                    bigger = currentY;
-//            }
-//        return bigger;
-//    }
 
 
     private void addDragDetection(ModuleItem moduleItem) {
@@ -639,6 +615,50 @@ public class MainWindow extends BorderPane {
 
     private void buildDragHandlers() {
 
+        mainScrollPane.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                if (db.hasFiles()) {
+                    event.acceptTransferModes(TransferMode.COPY);
+                } else {
+                    event.consume();
+                }
+            }
+        });
+        this.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasFiles()) {
+                    success = true;
+                    String filePath = null;
+                    for (File file:db.getFiles()) {
+                        filePath = file.getAbsolutePath();
+                        System.out.println(filePath);
+
+                    }
+                    db.clear();
+
+                    Command importCommand=new Import(new File(filePath));
+                    boolean imported=importCommand.execute();
+                    if(imported){
+                        CareTaker.addMemento(importCommand);
+                    }
+                    PipelineManager.CURRENT_PIPELINE_PATH=null;
+                    if (imported){
+                        stackedLogBar.logAndSuccess("Imported file: "+filePath);
+                    }else{
+                        stackedLogBar.logAndWarning("No modules here");
+                    }
+                    filePath="";
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+
 
         //to manage the movement from left to right pane
         mModuleItemOverRoot = new EventHandler<DragEvent>() {
@@ -654,6 +674,7 @@ public class MainWindow extends BorderPane {
                 }
 
                 event.consume();
+
             }
         };
 
@@ -668,22 +689,26 @@ public class MainWindow extends BorderPane {
             draggableModuleItem.relocate(position);
 
             event.consume();
+
         };
         mModuleItemDropped = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
-                //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
-                container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
-                ClipboardContent content = new ClipboardContent();
+                    DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
+                    //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
+                    container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
-                content.put(DragContainer.AddNode, container);
+                    ClipboardContent content = new ClipboardContent();
 
-                event.getDragboard().setContent(content);
-                event.setDropCompleted(true);
-            }
+                    content.put(DragContainer.AddNode, container);
+
+                    event.getDragboard().setContent(content);
+                    event.setDropCompleted(true);
+                }
+
         };
+
         this.setOnDragDone(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {

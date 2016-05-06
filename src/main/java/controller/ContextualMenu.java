@@ -22,12 +22,13 @@ import main.Main;
 public class ContextualMenu {
 
     private final ContextMenu contextMenu = new ContextMenu();
-    private MenuItem paste = new MenuItem("Paste");
+    private MenuItem pasteIt = new MenuItem("Paste");
+    private MenuItem importIt =new MenuItem("Import");
     private static MouseEvent mouse;
 
     public ContextualMenu() {
 
-        paste.setOnAction(new EventHandler<ActionEvent>() {
+        pasteIt.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
 
                 MainWindow.paste(mouse);
@@ -36,7 +37,8 @@ public class ContextualMenu {
                 System.out.println("Arrivo a paste");
             }
         });
-        contextMenu.getItems().add(paste);
+
+        contextMenu.getItems().add(pasteIt);
 
 
 /*
@@ -49,8 +51,7 @@ public class ContextualMenu {
                                 System.out.println("faccio vedere");
                                         contextMenu.show(MainWindow.mainScrollPaneStat, event.getScreenX(), event.getScreenY());
                             }
-
-                    }
+                      }
                 });
 */
 
