@@ -69,6 +69,7 @@ public class SideBar extends VBox {
 
     private List<ParamBox> paramBoxes;
     private ObservableList<SimpleStringProperty> cparams;
+    private List<FormBox> mandatFormBoxes;
     //private ArrayList<String> cparams;
     private Module module;
     private ModuleTemplate template;
@@ -118,6 +119,7 @@ public class SideBar extends VBox {
         this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
         this.cparamsBox.setFillWidth(true);
         hostTextField.setText(module.getHost());
+        mandatFormBoxes=new ArrayList<>();
         setParametersArea();
         initializeCParams();
         setEvents();
@@ -236,6 +238,7 @@ public class SideBar extends VBox {
             if (showPanel.statusProperty().get() == Animation.Status.STOPPED
                     && hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
                 if (isVisible()) {
+                    setModuleAsValid();
                     hidePanel.play();
 
                 } else {
@@ -245,6 +248,17 @@ public class SideBar extends VBox {
                 }
             }
         });
+    }
+
+    private void setModuleAsValid() {
+
+        boolean isValid=true;
+        for (FormBox form:mandatFormBoxes ) {
+            isValid&=form.isValid();
+            System.out.println("form validation: " + isValid);
+        }
+        System.out.println();
+        module.setValid(isValid);
     }
 
     private void editName() {
@@ -297,7 +311,6 @@ public class SideBar extends VBox {
 
     private void setParametersArea() {
 
-        //TODO initialize present fields
 
 
         mandatoryBox = new VBox();
@@ -310,7 +323,11 @@ public class SideBar extends VBox {
 
             //Value value = template.getMandatoryParameters().get(key);
             Value value = module.getParameters().get(key);
-            VBox current = new FormBox(value);
+
+
+            //System.out.println("in sidebar drrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"+value);
+            FormBox current = new FormBox(value);
+            mandatFormBoxes.add(current);
             mandatoryBox.getChildren().add(current);
             //Value value = module.getParameters().get(key);
             mandatoryBox.getChildren().add(GraphicsElementsFactory.getSeparator());

@@ -1,5 +1,7 @@
 package model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +32,7 @@ public class Module {
     private Point2D position;
 
     private String host = "localhost";
+    private SimpleBooleanProperty valid=new SimpleBooleanProperty(true);
 
 
     private Module(ModuleTemplate template) {
@@ -143,5 +146,17 @@ public class Module {
 
     public void cloneParams() {
         this.parameters = template.getParamsCopy();
+    }
+
+    public void setValid(boolean valid) {
+
+        this.valid.setValue(valid);
+    }
+    public SimpleBooleanProperty getValid() {
+        return this.valid;
+    }
+
+    public boolean isValid() {
+        return valid.getValue();
     }
 }

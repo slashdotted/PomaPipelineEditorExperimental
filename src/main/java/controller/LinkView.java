@@ -394,6 +394,7 @@ public class LinkView extends Group {
      if(dragMod.equals(from.getName())){
         if(to.isSelected()){
             selectLinkView();
+
         }
      }   else{
          if(from.isSelected()){
@@ -402,6 +403,7 @@ public class LinkView extends Group {
      }
 
     }
+
 
 
 }

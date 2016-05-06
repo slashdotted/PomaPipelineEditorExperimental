@@ -3,6 +3,7 @@ package controller;
 import commands.Command;
 import commands.Move;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import main.Main;
 import model.Module;
@@ -46,6 +48,7 @@ public class DraggableModule extends Pane {
     private ArrayList<LinkView> links = new ArrayList<>();
     private DraggableModule selfie;
     private boolean selected;
+    private SimpleBooleanProperty valid=new SimpleBooleanProperty(true);
 
     @FXML
     private Pane modelPane;
@@ -61,7 +64,12 @@ public class DraggableModule extends Pane {
     private Label labelTemplate;
 
     @FXML
+    private HBox hBoxDragMod;
+
+    @FXML
     private Pane paneItemImage;
+    @FXML
+    private ImageView validImage;
 
     @FXML
     private ImageView modelItemImage;
@@ -117,6 +125,27 @@ public class DraggableModule extends Pane {
         mainScrollPane = (ScrollPane) Main.mScene.lookup("#mainScrollPane");
         addToolTips();
         setLabels();
+        validImage.setImage(new Image("/images/high_Priority.png"));
+
+        validImage.setFitHeight(30);
+        validImage.setFitWidth(30);
+
+        if(module.isValid()){
+            validImage.setVisible(false);
+        }else{
+            validImage.setVisible(true);
+        }
+
+        module.getValid().addListener((observable, oldValue, newValue) -> {
+
+            if(!newValue){
+
+                validImage.setVisible(true);
+            }else{
+
+                validImage.setVisible(false);
+            }
+        });
     }
 
     public Point2D getPosition() {

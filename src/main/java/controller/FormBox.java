@@ -73,6 +73,11 @@ public class FormBox<T> extends VBox {
 
         this.setSpacing(10);
         //System.out.println("\n\n" + value + "\n");
+        ///////////test
+
+            System.out.println(value);
+
+
         formLabel.setText(value.getName());
 
         formTextField.setPromptText("Insert here a " + value.getType() + " value");
