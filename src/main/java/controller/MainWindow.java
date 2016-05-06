@@ -315,7 +315,7 @@ public class MainWindow extends BorderPane {
         }
 
         if (destination != null) {
-            if (Main.modulesClipboard.isEmpty() && Main.linksClipboard.isEmpty())
+            //if (Main.modulesClipboard.isEmpty() && Main.linksClipboard.isEmpty())
                 Converter.populateClipBoards(Main.modules, Main.links);
             Command save = new Save(destination);
             if (save.execute()) {
@@ -334,10 +334,15 @@ public class MainWindow extends BorderPane {
     private void saveSelected(){
         if(selectedModules.isEmpty() && selectedLinks.isEmpty()){
             stackedLogBar.displayWarning("No items selected!");
+
             return;
         }
+
+
         String previousPath = PipelineManager.CURRENT_PIPELINE_PATH;
         Converter.populateClipBoards(selectedModules, selectedLinks);
+
+
         saveAs();
         PipelineManager.CURRENT_PIPELINE_PATH = previousPath;
     }
@@ -366,7 +371,9 @@ public class MainWindow extends BorderPane {
 
     @FXML
     private void copy() {
-        //TODO
+        Converter.populateClipBoards(selectedModules, selectedLinks);
+        Command copyCommand = new Copy();
+        copyCommand.execute();
     }
 
     @FXML
@@ -393,7 +400,7 @@ public class MainWindow extends BorderPane {
         originalScaleY = mainGroup.getScaleY();
 
         mainScrollPane.setOnMouseClicked(event1 -> {
-            if (!mainGroup.contains(event1.getX(), event1.getY()) && !selectedModules.isEmpty()) {
+            if (!mainGroup.contains(event1.getX(), event1.getY())) {
                 System.out.println("Unselect all from mainScrollPane");
                 unselectAll();
             }
@@ -458,9 +465,8 @@ public class MainWindow extends BorderPane {
             LinkView lv = new LinkView(link);
             allLinkView.put(link.getID(), lv);
 
-
+            lv.bindLink(allDraggableModule.get(link.getModuleA().getName()), allDraggableModule.get(link.getModuleB().getName()));
             if (link.getChannelsAToB().size() != 0) {
-                lv.bindLink(allDraggableModule.get(link.getModuleA().getName()), allDraggableModule.get(link.getModuleB().getName()));
 
                 lv.bindBottonChannels("fromTo");
                 lv.fromTo = true;
@@ -469,7 +475,7 @@ public class MainWindow extends BorderPane {
 
             }
             if (link.getChannelsBToA().size() != 0) {
-                lv.bindLink(allDraggableModule.get(link.getModuleB().getName()), allDraggableModule.get(link.getModuleA().getName()));
+
                 lv.toFrom = true;
                 lv.bindBottonChannels("toFrom");
                 lv.updateImageViews("toFrom");
@@ -863,10 +869,16 @@ public class MainWindow extends BorderPane {
         Set<String> selected = new HashSet<>(selectedModules.keySet());
         selected.forEach(key -> {
             allDraggableModule.get(key).unselect();
-            selectedModules.remove(key);
         });
         Main.modulesClipboard.clear();
         selectedModules.clear();
+
+        selected = new HashSet<>(selectedLinks.keySet());
+        selected.forEach(key -> {
+            allLinkView.get(key).unselectLinkView();
+        });
+        Main.linksClipboard.clear();
+        selectedLinks.clear();
 
 
         //TODO handle links selection

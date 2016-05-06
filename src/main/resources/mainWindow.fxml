@@ -92,6 +92,10 @@
                 <Menu mnemonicParsing="false" text="Edit">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" onAction="#undo" text="Undo" />
+                        <MenuItem fx:id="redo" mnemonicParsing="false" text="Redo" />
+                        <MenuItem mnemonicParsing="false" text="Copy" />
+                        <MenuItem mnemonicParsing="false" text="Paste" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

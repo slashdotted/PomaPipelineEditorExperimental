@@ -52,7 +52,7 @@ public class Copy implements Command {
 
         Clipboard systemClipboard = Clipboard.getSystemClipboard();
 
-        //systemClipboard.setContent(clipboard);
+        systemClipboard.setContent(clipboardContent);
 
         return false;
     }

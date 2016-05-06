@@ -50,6 +50,7 @@ public class Save implements Command {
     public boolean execute() {
         PipelineManager.CURRENT_PIPELINE_PATH = output.getPath();
 
+        debug("Modules size:  " + modules.size() + " links size: " + links.size());
         JSONObject pipelineModules = new JSONObject();
         JSONArray pipelineLinks = new JSONArray();
 

@@ -19,6 +19,7 @@
     },
     "blob_tracker": {
       "type": "BlobTracker",
+      "debug": "false",
       "vector": "20,20,580,20,580,434,20,434",
       "cparams": [
         "hog/cascade.xml",

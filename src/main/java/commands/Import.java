@@ -66,9 +66,12 @@ public class Import implements Command {
 
                 JSONObject jsonLink = (JSONObject) obj;
                 String from = checkName(jsonLink, "from");
+                System.out.println("-------------------From: " + from);
                 String to = checkName(jsonLink, "to");
-                Link link = Converter.jsonToLink(jsonLink, from, to);
+                System.out.println("-------------------To: " + to);
 
+                Link link = Converter.jsonToLink(jsonLink, from, to);
+                System.out.println(link.getID());
                 Command addLink = new AddLink(link);
                 addLink.execute();
                 //CareTaker.addMemento(addLink);
@@ -83,6 +86,8 @@ public class Import implements Command {
     private String checkName(JSONObject jsonLink, String key) {
         String oldName = (String) jsonLink.get(key);
         String mapped = nameMappings.get(oldName);
+       //System.out.println("Key " + key + " old " +oldName + " new " + mapped + " channel " + jsonLink.get("channel"));
+
         if (mapped == null)
             return oldName;
         else

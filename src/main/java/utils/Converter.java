@@ -89,6 +89,7 @@ public class Converter {
             jsonLink.put("to", link.getModuleB().getName());
             if (!channel.getValue().equals("default"))
                 jsonLink.put("channel", channel.getValue());
+            jsonLinks.add(jsonLink);
         });
 
         link.getChannelsBToA().forEach(channel -> {
@@ -97,6 +98,8 @@ public class Converter {
             jsonLink.put("to", link.getModuleA().getName());
             if (!channel.getValue().equals("default"))
                 jsonLink.put("channel", channel.getValue());
+            jsonLinks.add(jsonLink);
+
         });
         return jsonLinks;
     }
@@ -113,16 +116,22 @@ public class Converter {
             channel = "default";
 
         if ((link = Main.links.get(from.getName() + "-" + to.getName())) != null) {
+            System.out.println("FromTo " + channel);
+          //  link.addChannel("fromTo",new SimpleStringProperty(channel));
             link.addChannel(from, to, new SimpleStringProperty(channel));
             return link;
         }
 
         if ((link = Main.links.get(to.getName() + "-" + from.getName())) != null) {
+            System.out.println("ToFrom " + channel);
+
+           // link.addChannel("toFrom",new SimpleStringProperty(channel));
             link.addChannel(from, to,new SimpleStringProperty(channel));
             return link;
         }
 
         link = new Link(from, to, channel);
+        System.out.println("FromTo " + channel);
         return link;
     }
 
@@ -168,18 +177,23 @@ public class Converter {
     public static void populateClipBoards(Map<String, Module> modules, Map<String, Link> links){
         Main.modulesClipboard.clear();
         Main.linksClipboard.clear();
+        System.out.println("Before populating modules");
 
         modules.keySet().forEach(key -> {
+            System.out.println("Populating module");
             Module current =  modules.get(key);
             System.out.println(current);
             Main.modulesClipboard.put(current.getName(), moduleToJSON(current));
         });
+        System.out.println("Before Populating links: " + links.size());
 
         links.keySet().forEach(key -> {
             Link current = links.get(key);
             ArrayList<JSONObject> jsonLinks = linkToJSON(current);
+            System.out.println("json links size: " + jsonLinks.size());
             jsonLinks.forEach(jsonLink -> {
-                Main.linksClipboard.put(current.getID() + jsonLink.get("channel"), jsonLink);
+                System.out.println("Populating links");
+                Main.linksClipboard.put( "" + jsonLink.get("from") + jsonLink.get("to") + jsonLink.get("channel"), jsonLink);
             });
         });
     }
