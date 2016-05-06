@@ -474,6 +474,7 @@ public class MainWindow extends BorderPane {
 
 
             }
+
             if (link.getChannelsBToA().size() != 0) {
 
                 lv.toFrom = true;
