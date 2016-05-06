@@ -62,7 +62,7 @@ public class Import implements Command {
 
 
         jsonModules.keySet().forEach(key -> {
-            Module module = Converter.jsonToModule(String.valueOf(key), (org.json.JSONObject) jsonModules.get(key));
+            Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
 
             if (!String.valueOf(key).equals(module.getName())) {
                 nameMappings.put(String.valueOf(key), module.getName());
