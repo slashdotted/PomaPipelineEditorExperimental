@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -22,16 +23,15 @@ public class ContextualMenu {
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuItem paste = new MenuItem("Paste");
-
+    private static MouseEvent mouse;
 
     public ContextualMenu() {
 
         paste.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-              /*  Clipboard clipboard = Clipboard.getSystemClipboard();
-                ClipboardContent content = new ClipboardContent();
-                content.putImage(pic.getImage());
-                clipboard.setContent(content);*/
+
+                MainWindow.paste(mouse);
+
 
                 System.out.println("Arrivo a paste");
             }
@@ -44,13 +44,11 @@ public class ContextualMenu {
                     @Override
                     public void handle(MouseEvent event) {
 
-                        if (!MainWindow.getMainGroup().contains(event.getX(), event.getY())) {
-                            System.out.println("eventooooo");
                             if (event.getButton() == MouseButton.SECONDARY) {
 
                                 contextMenu.show(MainWindow.mainScrollPaneStat, event.getScreenX(), event.getScreenY());
                             }
-                        }
+
                     }
                 });
 
@@ -61,4 +59,7 @@ public class ContextualMenu {
         return contextMenu;
     }
 
+    public void setMouse(MouseEvent mouse) {
+        this.mouse = mouse;
+    }
 }

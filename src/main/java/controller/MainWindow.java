@@ -1,6 +1,7 @@
 package controller;
 
 import commands.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -106,7 +107,7 @@ public class MainWindow extends BorderPane {
     private EventHandler<DragEvent> mModuleItemOverRoot = null;
     private EventHandler<DragEvent> mModuleItemDropped = null;
     private EventHandler<DragEvent> mModuleItemOverMainScrollPane = null;
-
+    private  ContextualMenu contextualMenu;
     public MainWindow() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mainWindow.fxml"));
         fxmlLoader.setRoot(this);
@@ -120,7 +121,7 @@ public class MainWindow extends BorderPane {
         }
         mainScrollPaneStat = mainScrollPane;
 
-        ContextualMenu contextualMenu=new ContextualMenu();
+         contextualMenu=new ContextualMenu();
         mainScrollPaneStat.setContextMenu(contextualMenu.getContextMenu());
 
 
@@ -377,10 +378,10 @@ public class MainWindow extends BorderPane {
         copyCommand.execute();
     }
 
-    @FXML
-    private void paste() {
 
+    public static void paste(MouseEvent eventContextMenu) {
 
+      //  Command pasteCommand=new Paste(eventContextMenu);
 
 
     }
@@ -404,14 +405,20 @@ public class MainWindow extends BorderPane {
         originalScaleY = mainGroup.getScaleY();
 
         mainScrollPane.setOnMouseClicked(event1 -> {
-
+            if(event1.getButton()==MouseButton.SECONDARY){
                 if (!mainGroup.contains(event1.getX(), event1.getY())) {
+
                     System.out.println("Unselect all from mainScrollPane");
                     unselectAll();
                 }
                 if (currentSidebar != null && event1.getClickCount() < 2) {
                     closeSidebar();
                 }
+            }if (mainGroup.contains(event1.getX(), event1.getY())){
+                contextualMenu.setMouse(event1);
+                Platform.runLater(() ->contextualMenu.getContextMenu().hide() );
+
+            }
 
         });
 
