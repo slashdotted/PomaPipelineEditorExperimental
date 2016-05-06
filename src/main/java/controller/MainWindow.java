@@ -4,6 +4,7 @@ import commands.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -117,11 +119,10 @@ public class MainWindow extends BorderPane {
             e.printStackTrace();
         }
         mainScrollPaneStat = mainScrollPane;
-        //select
-        rect.setStroke(Color.BLUE);
-        rect.setStrokeWidth(1);
-        rect.setStrokeLineCap(StrokeLineCap.ROUND);
-        rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1.2, 1, 0.6));
+
+        ContextualMenu contextualMenu=new ContextualMenu();
+        mainScrollPaneStat.setContextMenu(contextualMenu.getContextMenu());
+
 
     }
 
@@ -379,6 +380,9 @@ public class MainWindow extends BorderPane {
     @FXML
     private void paste() {
 
+
+
+
     }
 
     @FXML
@@ -400,13 +404,15 @@ public class MainWindow extends BorderPane {
         originalScaleY = mainGroup.getScaleY();
 
         mainScrollPane.setOnMouseClicked(event1 -> {
-            if (!mainGroup.contains(event1.getX(), event1.getY())) {
-                System.out.println("Unselect all from mainScrollPane");
-                unselectAll();
-            }
-            if (currentSidebar != null && event1.getClickCount() < 2) {
-                closeSidebar();
-            }
+
+                if (!mainGroup.contains(event1.getX(), event1.getY())) {
+                    System.out.println("Unselect all from mainScrollPane");
+                    unselectAll();
+                }
+                if (currentSidebar != null && event1.getClickCount() < 2) {
+                    closeSidebar();
+                }
+
         });
 
 //        Group zoomGroup = new Group();
@@ -424,6 +430,7 @@ public class MainWindow extends BorderPane {
                 event.consume();
             }
         });
+
 
         mainScrollPane.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             System.out.println("key released " + event.getCode());
@@ -450,6 +457,32 @@ public class MainWindow extends BorderPane {
 
 
     }
+
+//    private ContextMenu createContextMenu() {
+//        MenuItem paste=new MenuItem("Paste");
+//        paste.setOnAction(new EventHandler<ActionEvent>() {
+//            public void handle(ActionEvent e) {
+//              /*  Clipboard clipboard = Clipboard.getSystemClipboard();
+//                ClipboardContent content = new ClipboardContent();
+//                content.putImage(pic.getImage());
+//                clipboard.setContent(content);*/
+//
+//                System.out.println("Arrivo a paste");
+//            }
+//        });
+//        final ContextMenu contextMenu = new ContextMenu();
+//        contextMenu.getItems().add(paste);
+//
+//
+//        MainWindow.mainScrollPaneStat.addEventHandler(MouseEvent.MOUSE_CLICKED,
+//                new EventHandler<MouseEvent>() {
+//                    @Override public void handle(MouseEvent e) {
+//                        if (e.getButton() == MouseButton.SECONDARY)
+//                            contextMenu.show(MainWindow.mainScrollPaneStat, e.getScreenX(), e.getScreenY());
+//                    }
+//                });
+//        return contextMenu;
+//    }
 
     public void resetZoom() {
         System.out.println("reset zoom");
@@ -916,5 +949,10 @@ public class MainWindow extends BorderPane {
         Main.linksClipboard.clear();
         selectedLinks.clear();
     }
+
+    public static Group getMainGroup() {
+        return mainGroup;
+    }
+
 
 }
