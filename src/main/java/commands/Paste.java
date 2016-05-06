@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import utils.Converter;
 import utils.PipelineManager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,13 +33,13 @@ public class Paste implements Command {
     @Override
     public boolean execute() {
 
-        if (!Main.modulesClipboard.isEmpty()){
+        if (!Main.modulesClipboard.isEmpty()) {
 
             jsonModules = Main.modulesClipboard;
             jsonLinks = Main.linksClipboard;
 
 
-            Command importElements = new Import(getModules(),getLinks(), mousePos);
+            Command importElements = new Import(getModules(), getLinks(), mousePos);
             importElements.execute();
 //            for(String key: jsonModules.keySet()){
 //                JSONObject current = jsonModules.get(key);
@@ -54,11 +55,23 @@ public class Paste implements Command {
         if (externalJSON != null) {
             clipboard = PipelineManager.getClipboard(externalJSON);
 
-            JSONObject jsonModules = (JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
-            JSONArray jsonLinks = (JSONArray)  clipboard.get(Converter.LINKS_DATA_FORMAT);
 
-            Command importElements = new Import(jsonModules,jsonLinks,mousePos);
-            importElements.execute();
+            JSONObject jsonModules = (JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
+            JSONArray jsonLinks = (JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
+            Command importElements = null;
+            if (jsonModules != null) {
+                importElements = new Import(jsonModules, jsonLinks, mousePos);
+            } else if (systemClipboard.getFiles().size()>0) {
+                File file = systemClipboard.getFiles().get(0);
+
+                System.out.println(systemClipboard.getFiles());
+                importElements = new Import(file);
+            }
+
+            if (importElements != null)
+                importElements.execute();
+            else
+                MainWindow.stackedLogBar.displayWarning("No pipeline found in clipboard!");
 
 //            if(jsonModules == null){
 //                MainWindow.stackedLogBar.displayWarning("No pipeline found in clipboard!");
@@ -68,7 +81,6 @@ public class Paste implements Command {
 //            }
 
 
-
             //System.out.println(jsonModules.toString(4));
         }
 
@@ -76,7 +88,7 @@ public class Paste implements Command {
         return true;
     }
 
-    private JSONObject getModules(){
+    private JSONObject getModules() {
         JSONObject modules = new JSONObject();
 
 
@@ -87,9 +99,9 @@ public class Paste implements Command {
         return modules;
     }
 
-    private JSONArray getLinks(){
+    private JSONArray getLinks() {
 
-        if(jsonLinks.isEmpty())
+        if (jsonLinks.isEmpty())
             return null;
 
         JSONArray links = new JSONArray();

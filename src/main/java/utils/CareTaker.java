@@ -25,6 +25,7 @@ public class CareTaker {
     public static BooleanProperty undoable = new SimpleBooleanProperty(false);
 
     public static void addMemento(Command command) {
+        System.out.println("Adding");
 //        System.out.println("---------In add ----------");
 //        System.out.println("Before, mementos size: " + mementos.size());
 //        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
@@ -137,5 +138,10 @@ public class CareTaker {
         redoable.setValue(false);
         undoable.setValue(false);
     }
+
+    public static String caretakerStatus(){
+        return "\tCareTaker: \n" + "\t\tcounter: " + counter + " upperbound : " + upperBound + " mementos size: " +mementos.size();
+    }
+
 
 }

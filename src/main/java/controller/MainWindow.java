@@ -454,21 +454,30 @@ public class MainWindow extends BorderPane {
 
 
             if (ProgramUtils.resetZoomCombination.match(event)) {
+                stackedLogBar.displayMessage("Zoom reset");
                 resetZoom();
             }
             if (ProgramUtils.selectAllCombination.match(event)) {
-                System.out.println("select all");
+                stackedLogBar.displayMessage("All elements selected");
                 selectAll();
             }
             if (ProgramUtils.saveCombination.match(event)) {
-                System.out.println("saving....");
+                stackedLogBar.log("Saving pipeline");
                 savePipeline();
             }
             if (event.getCode() == KeyCode.DELETE) {
-                System.out.println("Deleting all selected");
+               stackedLogBar.logAndWarning("Deleting selected elements...");
                 deleteSelected();
             }
-
+            if (ProgramUtils.copyCombination.match(event)) {
+                stackedLogBar.displayMessage("Selected elements copied");
+               // System.out.println("saving....");
+                copy();
+            }
+//            if (ProgramUtils.pasteCombination.match(event)) {
+//                System.out.println("....");
+//                paste();
+//            }
 
         });
 
@@ -935,6 +944,7 @@ public class MainWindow extends BorderPane {
     }
 
 
+    @FXML
     private void deleteSelected() {
         System.out.println("unselecting all");
         Set<String> selected = new HashSet<>(selectedModules.keySet());

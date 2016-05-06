@@ -49,7 +49,9 @@ public class Import implements Command {
 //        clipboard.clear();
         if (file != null) {
             PipelineManager pipelineLoader = new PipelineManager();
-            pipelineLoader.load(file);
+            boolean loaded = pipelineLoader.load(file);
+            if(!loaded)
+                return false;
             ClipboardContent clipboard = pipelineLoader.getClipboard();
             jsonModules = (org.json.JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
             jsonArray = (org.json.JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
@@ -80,9 +82,8 @@ public class Import implements Command {
 
         if (jsonArray != null) {
             //jsonArray.forEach(obj -> {
-            System.out.println(jsonArray.get(0));
-            for (int i =0; i<jsonArray.length(); i++) {
-
+            //System.out.println(jsonArray.get(0));
+            for (int i = 0; i < jsonArray.length(); i++) {
 
                 JSONObject jsonLink = jsonArray.getJSONObject(i);
                 String from = checkName(jsonLink, "from");
@@ -97,7 +98,7 @@ public class Import implements Command {
                     addLink.execute();
                 } else {
                     success = false;
-
+                    System.out.println("");
                     MainWindow.stackedLogBar.logAndWarning("One or more modules not found for link: from " + from + " to " + to);
                 }
             }
@@ -106,7 +107,7 @@ public class Import implements Command {
             //  });
             // Main.modules.putAll(clipboard);
         }
-        CareTaker.addMemento(executeAll);
+        //CareTaker.addMemento(executeAll);
         return success;
     }
 
@@ -127,7 +128,7 @@ public class Import implements Command {
 //        for (int i = 0; i < importedElements; i++) {
 //            CareTaker.undo();
 //        }
-
+        System.out.println("---------------------------reversing import");
         PipelineManager.CURRENT_PIPELINE_PATH = null;
         Platform.runLater(() -> CareTaker.redoable.setValue(false));
 //        Main.modules.keySet().forEach(s -> System.out.println(Main.modules.get(s)));

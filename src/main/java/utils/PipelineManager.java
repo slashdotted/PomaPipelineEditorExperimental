@@ -64,7 +64,7 @@ public class PipelineManager {
             extractPipeline(root.toString());
         }catch (JSONException e){
             System.err.println("No modules here");
-
+            return false;
         }
 
         return true;

@@ -1,6 +1,8 @@
 package commands;
 
 
+import utils.CareTaker;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +33,7 @@ public class ExecuteAll implements Command {
         for (Command command : commands) {
             executed &= command.reverse();
         }
+        System.out.println(CareTaker.caretakerStatus());
 
         return executed;
     }

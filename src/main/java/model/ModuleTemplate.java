@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +46,9 @@ public class ModuleTemplate {
     }
 
     public void setImageURL(String imageURL) {
-        if (ClassLoader.getSystemResource(imageURL) != null)
+        //ClassLoader.
+        //if (ClassLoader.getSystemResource(imageURL) != null)
+            if (new File(imageURL).exists())
             this.imageURL = imageURL;
     }
 
