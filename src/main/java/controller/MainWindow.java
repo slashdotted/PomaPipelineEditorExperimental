@@ -1,9 +1,11 @@
 package controller;
 
 import commands.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +19,11 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -42,11 +47,11 @@ public class MainWindow extends BorderPane {
     public static SideBar currentSidebar; //TODO wire the visible sidebar to this static field
     public static ScrollPane mainScrollPaneStat;
     public static Group mainGroup;
-    public static double posXAssign = 300;
+    public static double posXAssign =100;
     public static double posYAssign = 100;
     double originalScaleX = 0;
     double originalScaleY = 0;
-    static boolean fileReaded = false;
+    static boolean fileReaded=false;
     static String filePath = null;
 
     public static Button toggleSidebar = new Button();
@@ -223,7 +228,7 @@ public class MainWindow extends BorderPane {
 
         newMenuItem.disableProperty().bind(Main.dirty.not());
         saveMenuItem.disableProperty().bind(Main.dirty.not());
-        // saveAsMenuItem.disableProperty().bind(Main.dirty.not());
+        saveAsMenuItem.disableProperty().bind(Main.dirty.not());
         saveSelMenuItem.disableProperty().bind(Main.dirty.not());
     }
 
@@ -292,8 +297,7 @@ public class MainWindow extends BorderPane {
 //            MainWindow.allDraggableModule.keySet().forEach(s -> System.out.println(MainWindow.allDraggableModule.get(s)));
 //            MainWindow.allLinkView.keySet().forEach(s -> System.out.println(MainWindow.allLinkView.get(s)));
         }
-        posXAssign = 300;
-        posYAssign = 100;
+
     }
 
 
@@ -418,16 +422,11 @@ public class MainWindow extends BorderPane {
         mainScrollPane.setOnMouseClicked(event1 -> {
             contextualMenu.getContextMenu().hide();
             if ((event1.getButton() != MouseButton.SECONDARY)) {
-                if (!mainGroup.contains(event1.getX(), event1.getY())) {
-
-                    // System.out.println("Unselect all from mainScrollPane");
-                    unselectAll();
-                }
                 if (currentSidebar != null && event1.getClickCount() < 2) {
                     closeSidebar();
                 }
             } else if (!mainGroup.contains(event1.getX(), event1.getY())) {
-                //System.out.println("mostrooooooooooo");
+
                 contextualMenu.setMouse(event1);
                 contextualMenu.showContextMenu(event1);
 
@@ -580,16 +579,19 @@ public class MainWindow extends BorderPane {
 
         group.getChildren().add(node);
         node.relocateToPoint(new Point2D(position.getX(), position.getY() ));
-
+        node.select();
 
     }
 
     private static double calcolateBiggerPosY() {
-        double maxPosY=0;
+        double maxPosY=40;
         for (Node node:mainGroup.getChildren() ) {
+
             if(node instanceof DraggableModule){
-                if(node.getLayoutY()>maxPosY){
-                    maxPosY=((DraggableModule) node).getPosition().getY();
+                Point2D posNode=(mainGroup.localToScene(node.getLayoutX(),node.getLayoutY()));
+                if(posNode.getY()>maxPosY){
+
+                    maxPosY=posNode.getY();
                 }
             }
 
@@ -654,26 +656,22 @@ public class MainWindow extends BorderPane {
                 boolean success = false;
                 if (db.hasFiles()) {
                     success = true;
-                    String filePath = null;
-                    for (File file : db.getFiles()) {
-                        filePath = file.getAbsolutePath();
-                        //System.out.println(filePath);
+                    String filePath = db.getString();
+                    filePath = db.getFiles().get(db.getFiles().size()-1).getAbsolutePath();
 
-                    }
                     db.clear();
 
-                    Command importCommand = new Import(new File(filePath));
-                    boolean imported = importCommand.execute();
-                    if (imported) {
+                    Command importCommand=new Import(new File(filePath));
+                    boolean imported=importCommand.execute();
+                    if (imported){
                         CareTaker.addMemento(importCommand);
-                    }
-                    PipelineManager.CURRENT_PIPELINE_PATH = null;
-                    if (imported) {
-                        stackedLogBar.logAndSuccess("Imported file: " + filePath);
-                    } else {
+                        stackedLogBar.logAndSuccess("Imported file: "+filePath);
+                        PipelineManager.CURRENT_PIPELINE_PATH=null;
+                    }else{
                         stackedLogBar.logAndWarning("No modules here");
                     }
-                    filePath = "";
+                    filePath="";
+
                 }
                 event.setDropCompleted(success);
                 event.consume();
@@ -716,17 +714,17 @@ public class MainWindow extends BorderPane {
             @Override
             public void handle(DragEvent event) {
 
-                DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
-                //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
-                container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
+                    DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
+                    //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
+                    container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
-                ClipboardContent content = new ClipboardContent();
+                    ClipboardContent content = new ClipboardContent();
 
-                content.put(DragContainer.AddNode, container);
+                    content.put(DragContainer.AddNode, container);
 
-                event.getDragboard().setContent(content);
-                event.setDropCompleted(true);
-            }
+                    event.getDragboard().setContent(content);
+                    event.setDropCompleted(true);
+                }
 
         };
 
@@ -841,9 +839,6 @@ public class MainWindow extends BorderPane {
 
     private boolean isContained(Point2D posLocal, Node node) {
         DraggableModule dm = (DraggableModule) node;
-//        System.out.println(node.getLayoutX() + "nodo" + ((node.getLayoutX() + dm.getWidth())));
-//        System.out.println(posLocal.getX() + "mouse" + posLocal.getY());
-//        System.out.println();
         if ((node.getLayoutX() < posLocal.getX()) && ((node.getLayoutX() + dm.getWidth()) > posLocal.getX())) {
             if ((node.getLayoutY() < posLocal.getY()) && ((node.getLayoutY() + dm.getHeight()) > posLocal.getX())) {
 
@@ -892,7 +887,6 @@ public class MainWindow extends BorderPane {
     public static void closeSidebar() {
         if (currentSidebar.isVisible())
             toggleSidebar.fire();
-        Main.root.getChildren().remove(currentSidebar);
         currentSidebar = null;
     }
 
@@ -962,7 +956,6 @@ public class MainWindow extends BorderPane {
     }
 
 
-    @FXML
     public void selectAll() {
         unselectAll();
         allDraggableModule.keySet().forEach(key -> {
@@ -972,7 +965,7 @@ public class MainWindow extends BorderPane {
 
 
     public static void unselectAll() {
-        //System.out.println("unselecting all");
+        System.out.println("unselecting all");
         Set<String> selected = new HashSet<>(selectedModules.keySet());
         selected.forEach(key -> {
             allDraggableModule.get(key).unselect();
