@@ -30,9 +30,9 @@ public class StackedLogBar extends VBox {
 
     public StackedLogBar() {
 
-        this.setPrefHeight(150);
+        this.setPrefHeight(200);
         this.setMinHeight(30);
-        this.setMaxHeight(150);
+        this.setMaxHeight(200);
         this.setFillWidth(true);
 
 
@@ -52,7 +52,7 @@ public class StackedLogBar extends VBox {
                 toggleVisibility.setGraphic(showImg);
             } else {
                 logBar.setVisible(true);
-                this.setMaxHeight(150);
+                this.setMaxHeight(200);
                 toggleVisibility.setGraphic(hideImg);
             }
         });
@@ -120,9 +120,9 @@ public class StackedLogBar extends VBox {
         public LogBar() {
             this.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
             this.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-            this.setPrefHeight(150);
+            this.setPrefHeight(200);
             this.setMinHeight(30);
-            this.setMaxHeight(150);
+            this.setMaxHeight(200);
             Date date = new Date();
             //this.externalText = externalText;
 

@@ -42,7 +42,9 @@ public class ChannelView extends HBox {
 //        editChannel.setImage(new Image("/Edit.png"));
 
   //      removeChannel.setImage(new Image("/images/Delete.png"));
+
         textChannel=new TextField();
+
         textChannel.setText(channel);
         textChannel.setEditable(false);
 

@@ -51,10 +51,7 @@ public class Save implements Command {
 
         modules.keySet().forEach(key -> {
             pipelineModules.put(key, modules.get(key));
-
         });
-
-
 
         links.values().forEach(jsonObject -> {
             pipelineLinks.put(jsonObject);

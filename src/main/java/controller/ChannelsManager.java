@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -42,21 +43,21 @@ public class ChannelsManager extends BorderPane {
     private Link link;
     private TextField newChannelField;
     static SimpleStringProperty currentChannel;
-    private int firstSelect=-1;
+    private int firstSelect = -1;
 
     public ChannelsManager(Link link, String orientation) {
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(Main.mScene.getWindow());
         String tittle = "";
-
+        this.setPadding(new Insets(2, 2, 2, 5));
         switch (orientation) {
             case "fromTo":
-                tittle = "From: " + link.getModuleA().getName() + "->" + " to: " +link.getModuleB().getName();
+                tittle = link.getModuleA().getName() + " -> " + link.getModuleB().getName();
 
                 break;
             case "toFrom":
-                tittle = "From: " +link.getModuleB().getName() + "->" + "to: " + link.getModuleA().getName();
+                tittle = link.getModuleB().getName() + " -> " + link.getModuleA().getName();
                 break;
         }
         stage.setTitle(tittle);
@@ -67,7 +68,7 @@ public class ChannelsManager extends BorderPane {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                (MainWindow.allLinkView.get(link.getID())).unselectImage( orientation);
+                (MainWindow.allLinkView.get(link.getID())).unselectImage(orientation);
                 (MainWindow.allLinkView.get(link.getID())).updateImageViews(orientation);
                 if (link.getNumberOfChannels() == 0) {
                     Command removeLink = new RemoveLink(link);
@@ -81,17 +82,16 @@ public class ChannelsManager extends BorderPane {
         });
 
 
-
         setButtons();
         this.link = link;
 
         ChannelsManager.orientation = orientation;
         vBox = new VBox();
         buttons = new HBox();
-        newChannelField=new TextField();
+        newChannelField = new TextField();
         newChannelField.setPrefWidth(240);
 
-        buttons.getChildren().addAll(newChannelField,addChannel, removeChannel);
+        buttons.getChildren().addAll(newChannelField, addChannel, removeChannel);
         buttons.setAlignment(Pos.CENTER_RIGHT);
         vBox.getChildren().add(buttons);
         setCenter(vBox);
@@ -153,28 +153,28 @@ public class ChannelsManager extends BorderPane {
                                 oldValue = channelName.getText();
                                 if (event.isShiftDown()) {
 
-                                    if(firstSelect<0){
-                                        firstSelect=cell;
+                                    if (firstSelect < 0) {
+                                        firstSelect = cell;
                                         System.out.println("setto firstselect");
 
-                                    }else{
+                                    } else {
                                         listV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-                                        int aux=cell;
-                                        if(firstSelect>cell){
+                                        int aux = cell;
+                                        if (firstSelect > cell) {
 
-                                            aux=firstSelect;
-                                            firstSelect=cell;
+                                            aux = firstSelect;
+                                            firstSelect = cell;
 
                                         }
-                                        listV.getSelectionModel().selectRange(firstSelect,aux+1);
+                                        listV.getSelectionModel().selectRange(firstSelect, aux + 1);
                                     }
 
                                 } else if (event.isControlDown()) {
-                                    firstSelect=-1;
+                                    firstSelect = -1;
                                     listV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
                                     listV.getSelectionModel().select(cell);
                                 } else {
-                                    firstSelect=cell;
+                                    firstSelect = cell;
                                     listV.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
                                     listV.getSelectionModel().clearAndSelect(cell);
                                 }
@@ -212,16 +212,15 @@ public class ChannelsManager extends BorderPane {
                                 List<SimpleStringProperty> channels = link.getChannelList(ChannelsManager.orientation);
                                 SimpleStringProperty channelToRemove = link.getChannel(channelName.getText(), ChannelsManager.orientation);
                                 System.out.println(channelToRemove.getValue());
-                                String title="Remove channel";
-                                String msg="Are you sure you wish remove the selected channel?";
+                                String title = "Remove channel";
+                                String msg = "Are you sure you wish remove the selected channel?";
 
-                                if(GraphicsElementsFactory.showWarning(title,msg)) {
+                                if (GraphicsElementsFactory.showWarning(title, msg)) {
                                     Command removeChannel = new RemoveChannel(channelToRemove, channels, link, ChannelsManager.orientation);
                                     removeChannel.execute();
 
                                     CareTaker.addMemento(removeChannel);
                                 }
-
 
 
                             }
@@ -245,7 +244,6 @@ public class ChannelsManager extends BorderPane {
     }
 
 
-
     private void setButtonsEvents() {
         removeChannel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -255,19 +253,18 @@ public class ChannelsManager extends BorderPane {
 
                 System.out.println(selection.size() + "siazeeeeeeeeee");
                 int i = indices.size();
-                String title="Remove channels";
-                String msg="Are you sure you wish remove the "+i+" selected channel?";
-                if(GraphicsElementsFactory.showWarning(title,msg)) {
-                    ArrayList<Command> allAdds=new ArrayList<>();
-                    for(int j=0;j<i;j++){
+                String title = "Remove channels";
+                String msg = "Are you sure you wish remove the " + i + " selected channel?";
+                if (GraphicsElementsFactory.showWarning(title, msg)) {
+                    ArrayList<Command> allAdds = new ArrayList<>();
+                    for (int j = 0; j < i; j++) {
                         SimpleStringProperty selectedItem = listV.getItems().get(indices.get(j));
                         Command command = new RemoveChannel(selectedItem, link.getChannelList(orientation), link, orientation);
 
 
-
                         allAdds.add(command);
                     }
-                    Command executeAll=new ExecuteAll(allAdds);
+                    Command executeAll = new ExecuteAll(allAdds);
                     executeAll.execute();
                     CareTaker.addMemento(executeAll);
                 }
@@ -276,10 +273,10 @@ public class ChannelsManager extends BorderPane {
         });
         addChannel.setOnAction(event -> {
             SimpleStringProperty newValue;
-            String newString =newChannelField.getText();
-            if(!newString.equals("")){
-                newValue=new SimpleStringProperty(newString);
-                Command addChannel=new AddChannel(newValue,link.getChannelList(orientation),link,orientation);
+            String newString = newChannelField.getText();
+            if (!newString.equals("")) {
+                newValue = new SimpleStringProperty(newString);
+                Command addChannel = new AddChannel(newValue, link.getChannelList(orientation), link, orientation);
                 addChannel.execute();
                 CareTaker.addMemento(addChannel);
             }

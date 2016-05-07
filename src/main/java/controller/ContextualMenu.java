@@ -23,22 +23,24 @@ public class ContextualMenu {
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuItem pasteIt = new MenuItem("Paste");
+    private MenuItem selectAllIt = new MenuItem("Select All");
     private MenuItem importIt =new MenuItem("Import");
     private static MouseEvent mouse;
 
     public ContextualMenu() {
-
-        pasteIt.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-
-                MainWindow.paste(mouse);
+        contextMenu.getItems().add(pasteIt);
+        contextMenu.getItems().add(selectAllIt);
 
 
-                System.out.println("Arrivo a paste");
-            }
+        selectAllIt.setOnAction(event -> Main.root.selectAll());
+
+        pasteIt.setOnAction(e -> {
+            MainWindow.paste(mouse);
+            //System.out.println("Arrivo a paste");
         });
 
-        contextMenu.getItems().add(pasteIt);
+
+
 
 
 /*

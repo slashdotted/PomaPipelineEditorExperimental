@@ -43,7 +43,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         EditorConfManager confManager = new EditorConfManager();
-        File conf = new File("conf.json");
+        File conf = new File("conf_final.json");
         confManager.load(conf);
         
 
@@ -66,7 +66,10 @@ public class Main extends Application {
         primaryStage.setMinHeight(500);
         primaryStage.setMinWidth(800);
         primaryStage.setScene(mScene);
-
+        primaryStage.setOnCloseRequest(event -> {
+            root.exitApplication();
+            event.consume();
+        });
 
         primaryStage.show();
 

@@ -47,6 +47,7 @@ public class EditModule implements Command {
 
             case Name:
                 oldValue = module.getName();
+                MainWindow.allDraggableModule.get(oldValue).unselect();
                 newValue = BadElements.checkDuplicateModules(newValue, 0);
                 updateLinks();
                 updateModule();
@@ -94,10 +95,11 @@ public class EditModule implements Command {
 
     private void updateDraggableModule() {
         DraggableModule dm = MainWindow.allDraggableModule.get(oldValue);
+        dm.unselect();
         MainWindow.allDraggableModule.remove(oldValue);
         MainWindow.allDraggableModule.put(module.getName(), dm);
         dm.updateName();
-
+        dm.select();
 
     }
 

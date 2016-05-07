@@ -119,18 +119,16 @@ public class SideBar extends VBox {
         this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
         this.cparamsBox.setFillWidth(true);
         hostTextField.setText(module.getHost());
-        mandatFormBoxes=new ArrayList<>();
+        mandatFormBoxes = new ArrayList<>();
         setParametersArea();
         initializeCParams();
         setEvents();
         setButtons();
 
 
-
-
     }
 
-    private void initializeCParams(){
+    private void initializeCParams() {
         if (!cparams.isEmpty()) {
             for (int i = 0; i < cparams.size(); i++) {
                 addNewCParam(cparams.get(i), false);
@@ -175,17 +173,17 @@ public class SideBar extends VBox {
         });
 
 
-        hostTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(oldValue){
-                if(!hostTextField.getText().equals(module.getHost())){
-                    Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
-                    editHost.execute();
-                    CareTaker.addMemento(editHost);
-                }
-            }
-        });
+//        hostTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+//            if (oldValue) {
+//                if (!hostTextField.getText().equals(module.getHost())) {
+//                    Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
+//                    editHost.execute();
+//                    CareTaker.addMemento(editHost);
+//                }
+//            }
+//        });
         hostTextField.setOnAction(event -> {
-            if(!hostTextField.getText().equals(module.getHost())){
+            if (!hostTextField.getText().equals(module.getHost())) {
                 Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
                 editHost.execute();
                 CareTaker.addMemento(editHost);
@@ -252,9 +250,9 @@ public class SideBar extends VBox {
 
     private void setModuleAsValid() {
 
-        boolean isValid=true;
-        for (FormBox form:mandatFormBoxes ) {
-            isValid&=form.isValid();
+        boolean isValid = true;
+        for (FormBox form : mandatFormBoxes) {
+            isValid &= form.isValid();
             System.out.println("form validation: " + isValid);
         }
         System.out.println();
@@ -267,6 +265,7 @@ public class SideBar extends VBox {
         temp.setFont(Font.font("System", FontWeight.BOLD, 14));
         VBox infoBox = (VBox) this.lookup("#infoBox");
         //nameLabel.setVisible(false);
+
         infoBox.getChildren().remove(nameLabel);
         infoBox.getChildren().add(0, temp);
         temp.requestFocus();
@@ -291,7 +290,8 @@ public class SideBar extends VBox {
         }
 
         infoBox.getChildren().remove(temp);
-        infoBox.getChildren().add(0, nameLabel);
+        if (!infoBox.getChildren().contains(nameLabel))
+            infoBox.getChildren().add(0, nameLabel);
         //nameLabel.setVisible(true);
     }
 
@@ -310,7 +310,6 @@ public class SideBar extends VBox {
     }
 
     private void setParametersArea() {
-
 
 
         mandatoryBox = new VBox();
@@ -348,12 +347,12 @@ public class SideBar extends VBox {
 
         ParamBox box = new ParamBox(cParam);
         this.cparamsBox.getChildren().add(1, box);
-        if (isNew){
+        if (isNew) {
             Command addparam = new AddStringProperty(cParam, cparams);
             addparam.execute();
             CareTaker.addMemento(addparam);
         }
-            //this.cparams.add(cParam);
+        //this.cparams.add(cParam);
         paramBoxes.add(box);
         this.cparamsBox.setVgrow(box, Priority.ALWAYS);
 

@@ -62,7 +62,7 @@ public class EditorConfManager {
 
             moduleTemplate.setDescription(description);
             moduleTemplate.setType(type);
-            System.out.println("*****" + imageURL +"*********");
+            //System.out.println("*****" + imageURL +"*********");
             moduleTemplate.setImageURL(imageURL);
 
             Main.templates.put(moduleTemplate.getType(), moduleTemplate);

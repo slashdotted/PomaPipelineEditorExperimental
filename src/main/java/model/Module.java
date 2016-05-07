@@ -41,6 +41,7 @@ public class Module {
         //this.cParams = new ArrayList<>();
         this.cParams = FXCollections.observableArrayList();
         this.parameters = new HashMap<>();
+
     }
 
     public static Module getInstance(ModuleTemplate template) {

@@ -46,9 +46,8 @@ public class ModuleTemplate {
     }
 
     public void setImageURL(String imageURL) {
-        //ClassLoader.
-        //if (ClassLoader.getSystemResource(imageURL) != null)
-            if (new File(imageURL).exists())
+        //if (new File(imageURL).exists())
+        if (ClassLoader.getSystemResource(imageURL) != null)
             this.imageURL = imageURL;
     }
 
@@ -106,12 +105,12 @@ public class ModuleTemplate {
     public Map<String, Value> getParamsCopy() {
 
         Map<String, Value> paramsCopy = new HashMap<>();
-        mandatoryParameters.keySet().forEach(key ->{
+        mandatoryParameters.keySet().forEach(key -> {
             paramsCopy.put(key, new Value(mandatoryParameters.get(key)));
 
         });
 
-        optParameters.keySet().forEach(key ->{
+        optParameters.keySet().forEach(key -> {
             paramsCopy.put(key, new Value(optParameters.get(key)));
         });
 

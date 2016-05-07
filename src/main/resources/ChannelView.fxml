@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 
-<fx:root type="HBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="HBox" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField fx:id="textChannel" styleClass="text-field-channelView" stylesheets="@application.css" />
+      <TextField fx:id="textChannel" styleClass="text-field-channelView" stylesheets="@application.css">
+         <HBox.margin>
+            <Insets left="5.0" />
+         </HBox.margin></TextField>
       <ImageView fx:id="removeChannel" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/Delete.png" />
          </image>
+         <HBox.margin>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+         </HBox.margin>
       </ImageView>
    </children>
 </fx:root>

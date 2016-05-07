@@ -28,7 +28,10 @@ public class Converter {
     public static Module jsonToModule(String name, JSONObject jsonObject) {
 
         Module module = null;
-        String type = (String) jsonObject.get("type");
+
+        String type = jsonObject.getString("type");
+//        if(jsonObject.has("type"))
+//            type = jsonObject.getString("type");
 
         Point2D position = null;
         Double x = null;
@@ -43,9 +46,11 @@ public class Converter {
             position = new Point2D(x, y);
 
 
-        //System.out.println(type); // TODO remove this
 
         ModuleTemplate template = Main.templates.get(type);
+
+        if(template == null)
+            return null;
 
         module = Module.getInstance(template);
         name = BadElements.checkDuplicateModules(name, 0);
@@ -81,7 +86,6 @@ public class Converter {
             module.getcParams().forEach(param -> jsonArray.put(param.get()));
             jsonObject.put("cparams", jsonArray);
         }
-
 
         return jsonObject;
     }
@@ -125,14 +129,14 @@ public class Converter {
             channel = "default";
 
         if ((link = Main.links.get(from.getName() + "-" + to.getName())) != null) {
-            System.out.println("FromTo " + channel);
+            //System.out.println("FromTo " + channel);
             //  link.addChannel("fromTo",new SimpleStringProperty(channel));
             link.addChannel(from, to, new SimpleStringProperty(channel));
             return link;
         }
 
         if ((link = Main.links.get(to.getName() + "-" + from.getName())) != null) {
-            System.out.println("ToFrom " + channel);
+            //System.out.println("ToFrom " + channel);
 
             // link.addChannel("toFrom",new SimpleStringProperty(channel));
             link.addChannel(from, to, new SimpleStringProperty(channel));
@@ -140,7 +144,7 @@ public class Converter {
         }
 
         link = new Link(from, to, channel);
-        System.out.println("FromTo " + channel);
+        //System.out.println("FromTo " + channel);
         return link;
     }
 
@@ -191,23 +195,23 @@ public class Converter {
     public static void populateClipBoards(Map<String, Module> modules, Map<String, Link> links) {
         Main.modulesClipboard.clear();
         Main.linksClipboard.clear();
-        System.out.println("Before populating modules");
+        //System.out.println("Before populating modules");
 
         modules.keySet().forEach(key -> {
-            System.out.println("Populating module");
+          //  System.out.println("Populating module");
             Module current = modules.get(key);
-            System.out.println(current);
+            //System.out.println(current);
             Main.modulesClipboard.put(current.getName(), moduleToJSON(current));
 
         });
-        System.out.println("Before Populating links: " + links.size());
+        //System.out.println("Before Populating links: " + links.size());
 
         links.keySet().forEach(key -> {
             Link current = links.get(key);
             ArrayList<JSONObject> jsonLinks = linkToJSON(current);
-            System.out.println("json links size: " + jsonLinks.size());
+          //  System.out.println("json links size: " + jsonLinks.size());
             jsonLinks.forEach(jsonLink -> {
-                System.out.println("Populating links");
+            //    System.out.println("Populating links");
 
 
                 String channel = "default";
@@ -231,14 +235,23 @@ public class Converter {
      */
     public static String getPipelineString(JSONObject pipelineModules, JSONArray pipelineLinks) {
         StringBuffer pipelineStringBuffer = new StringBuffer();
-
-        pipelineStringBuffer.append("{\n\t\"modules\" : ");
-        pipelineStringBuffer.append(pipelineModules.toString());
-        pipelineStringBuffer.append(",\n\t\"links\" : ");
-        pipelineStringBuffer.append(pipelineLinks.toString());
+        JSONObject pipeline = new JSONObject();
+        pipeline.put("links", pipelineLinks);
+        pipeline.put("modules", pipelineModules);
+        pipelineStringBuffer.append("{\n \"modules\" : ");
+        pipelineStringBuffer.append(pipelineModules.toString(4));
+        pipelineStringBuffer.append(",\n \"links\" : ");
+        pipelineStringBuffer.append(pipelineLinks.toString(4));
         pipelineStringBuffer.append("\n}");
 
+
+//        pipelineStringBuffer.append(pipelineModules.toString());
+//        pipelineStringBuffer.append(",\n\t\"links\" : ");
+//        pipelineStringBuffer.append(pipelineLinks.toString());
+//        pipelineStringBuffer.append("\n}");
+
         return pipelineStringBuffer.toString();
+        //return pipeline.toString(4);
     }
 
 

@@ -50,7 +50,7 @@ public class Import implements Command {
         if (file != null) {
             PipelineManager pipelineLoader = new PipelineManager();
             boolean loaded = pipelineLoader.load(file);
-            if(!loaded)
+            if (!loaded)
                 return false;
             ClipboardContent clipboard = pipelineLoader.getClipboard();
             jsonModules = (org.json.JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
@@ -62,27 +62,39 @@ public class Import implements Command {
 
 
         jsonModules.keySet().forEach(key -> {
-            Module module = Converter.jsonToModule(String.valueOf(key), (JSONObject) jsonModules.get(key));
+            //System.out.println(key);
+            JSONObject jsonModule = jsonModules.getJSONObject(key);
+            Module module = Converter.jsonToModule(String.valueOf(key), jsonModule);
 
-            if ((mousePos!=null)&&(module.getPosition()!=null)){
+            if (module != null) {
+                if ((mousePos != null) && (module.getPosition() != null)) {
+
+                    //TODO
+                }
 
 
+                if (!String.valueOf(key).equals(module.getName())) {
+                    nameMappings.put(String.valueOf(key), module.getName());
+                    MainWindow.stackedLogBar.log(String.valueOf(key) + " already present, renamed in " + module.getName());
+                }
+
+
+                Command addModule = new AddModule(module);
+                allCommands.add(addModule);
+                //addModule.execute();
+                //CareTaker.addMemento(addModule);
+
+                importedElements++;
+            } else {
+                MainWindow.stackedLogBar.logAndWarning("Module " + String.valueOf(key) + " does not have a Template in conf!");
             }
-            if (!String.valueOf(key).equals(module.getName())) {
-                nameMappings.put(String.valueOf(key), module.getName());
-            }
-
-
-            Command addModule = new AddModule(module);
-            allCommands.add(addModule);
-            //addModule.execute();
-            //CareTaker.addMemento(addModule);
-            importedElements++;
         });
 
         executeAll = new ExecuteAll(allCommands);
 
         boolean success = executeAll.execute();
+
+//        System.out.println(jsonArray.toString(4));
 
         if (jsonArray != null) {
             //jsonArray.forEach(obj -> {
@@ -91,9 +103,9 @@ public class Import implements Command {
 
                 JSONObject jsonLink = jsonArray.getJSONObject(i);
                 String from = checkName(jsonLink, "from");
-                System.out.println("-------------------From: " + from);
+                //System.out.println("-------------------From: " + from);
                 String to = checkName(jsonLink, "to");
-                System.out.println("-------------------To: " + to);
+                //System.out.println("-------------------To: " + to);
                 Main.modules.keySet().forEach(s -> System.out.println(s));
                 if ((Main.modules.get(from) != null && Main.modules.get(to) != null)) {
                     Link link = Converter.jsonToLink(jsonLink, from, to);
@@ -135,10 +147,10 @@ public class Import implements Command {
         System.out.println("---------------------------reversing import");
         PipelineManager.CURRENT_PIPELINE_PATH = null;
         Platform.runLater(() -> CareTaker.redoable.setValue(false));
-//        Main.modules.keySet().forEach(s -> System.out.println(Main.modules.get(s)));
-//        Main.links.keySet().forEach(s -> System.out.println(Main.links.get(s)));
-//        MainWindow.allDraggableModule.keySet().forEach(s -> System.out.println(MainWindow.allDraggableModule.get(s)));
-//        MainWindow.allLinkView.keySet().forEach(s -> System.out.println(MainWindow.allLinkView.get(s)));
+        Main.modules.keySet().forEach(s -> System.out.println(Main.modules.get(s)));
+        Main.links.keySet().forEach(s -> System.out.println(Main.links.get(s)));
+        MainWindow.allDraggableModule.keySet().forEach(s -> System.out.println(MainWindow.allDraggableModule.get(s)));
+        MainWindow.allLinkView.keySet().forEach(s -> System.out.println(MainWindow.allLinkView.get(s)));
         return executeAll.reverse();
     }
 
