@@ -64,7 +64,7 @@ public class Paste implements Command {
 
             Command importElements = null;
             if (jsonModules != null) {
-                importElements = new Import(jsonModules.getJSONObject("modules"), jsonLinks.getJSONArray(0), mousePos);
+                importElements = new Import(jsonModules, jsonLinks, mousePos);
             } else if (systemClipboard.getFiles().size()>0) {
                 File file = systemClipboard.getFiles().get(0);
 
