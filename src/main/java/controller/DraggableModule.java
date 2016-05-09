@@ -325,7 +325,6 @@ public class DraggableModule extends Pane {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
-                System.out.println("ciaooooo");
                 Group group = (Group) mainScrollPane.getContent();
                 if (!group.getChildren().contains(mShadowLink)) {
                     group.getChildren().add(0,mShadowLink);
@@ -520,7 +519,6 @@ public class DraggableModule extends Pane {
 
 
             Command move = new Move(dm, dm.oldPosition, pos.add(subtract), dm.mOldDragOffset,dm.mDragOffset);
-
             allCommands.add(move);
 
 
