@@ -1,6 +1,7 @@
 package controller;
 
 import commands.Command;
+import commands.ExecuteAll;
 import commands.Move;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -224,14 +225,17 @@ public class DraggableModule extends Pane {
 
             if (event.getClickCount() == 2) {
                 MainWindow.openSideBar(module, false);
+            }else{
+                controllSelectAction(event);
             }
+
 
         });
 
         titleBar.setOnMouseReleased(event -> {
 
+            System.out.println("set On release");
 
-            controllSelectAction(event);
         });
 
         MainWindow.mainScrollPaneStat.setOnDragExited(new EventHandler<DragEvent>() {
@@ -364,14 +368,16 @@ public class DraggableModule extends Pane {
 
     private void controllSelectAction(MouseEvent event) {
         Map<String, Module> selectedModules = MainWindow.selectedModules;
-        if (!event.isControlDown()) {
 
+        if (!event.isControlDown()) {
+            System.out.println("control not pressed");
             if (selectedModules.size()>1) {
                 MainWindow.unselectAll();
                 select();
             }else{
                 MainWindow.unselectAll();
                 if(selected){
+
                     unselect();
                 }else{
                     select();
@@ -426,6 +432,7 @@ public class DraggableModule extends Pane {
     }
 
     public void unselect() {
+        System.out.println("unselect uno");
         MainWindow.selectedModules.remove(module.getName());
         Main.modulesClipboard.remove(module.getName());
         selected = false;
@@ -505,17 +512,22 @@ public class DraggableModule extends Pane {
     }
 
     private void setAllFinalPosition(Point2D subtract) {
+        ArrayList<Command> allCommands=new ArrayList<>();
         for (String modID:MainWindow.selectedModules.keySet() ) {
             DraggableModule dm=MainWindow.allDraggableModule.get(modID);
             Point2D pos=dm.position;
 
 
+
             Command move = new Move(dm, dm.oldPosition, pos.add(subtract), dm.mOldDragOffset,dm.mDragOffset);
-            move.execute();
-            CareTaker.addMemento(move);
+
+            allCommands.add(move);
+
 
         }
-
+        Command executeAll=new ExecuteAll(allCommands);
+        executeAll.execute();
+        CareTaker.addMemento(executeAll);
     }
 
     private void relocateSelection(Point2D subtract) {

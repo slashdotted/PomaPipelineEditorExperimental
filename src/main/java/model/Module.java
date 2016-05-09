@@ -1,7 +1,10 @@
 package model;
 
+import controller.DraggableModule;
+import controller.MainWindow;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +36,8 @@ public class Module {
 
     private String host = "localhost";
     private SimpleBooleanProperty valid=new SimpleBooleanProperty(true);
+    private SimpleDoubleProperty posX=new SimpleDoubleProperty();
+    private SimpleDoubleProperty posY=new SimpleDoubleProperty();
 
 
     private Module(ModuleTemplate template) {
@@ -167,4 +172,6 @@ public class Module {
     public boolean isValid() {
         return valid.getValue();
     }
+
+
 }
