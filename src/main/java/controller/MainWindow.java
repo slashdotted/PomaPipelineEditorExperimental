@@ -13,6 +13,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.Background;
@@ -56,7 +58,7 @@ public class MainWindow extends BorderPane {
 
     public static Button toggleSidebar = new Button();
     //SELECTION
-    private Rectangle rect = new Rectangle(0, 0, 0, 0);
+
 
     @FXML
     private VBox vBoxMenuAndTool;
@@ -104,6 +106,7 @@ public class MainWindow extends BorderPane {
     private MenuItem saveAsMenuItem;
     @FXML
     private MenuItem saveSelMenuItem;
+    private Effect oldEffectButton;
 
 
     private EventHandler<DragEvent> mModuleItemOverRoot = null;
@@ -186,22 +189,26 @@ public class MainWindow extends BorderPane {
         newButton.setTooltip(new Tooltip("New Pipeline"));
         newButton.setBackground(Background.EMPTY);
         newButton.disableProperty().bind(Main.dirty.not());
+        oldEffectButton=newButton.getEffect();
+        setOnPressedButton(newButton);
 
         // open button settings
         openButton.setGraphic(new ImageView("images/open.png"));
         openButton.setTooltip(new Tooltip("Open a Pipeline"));
         openButton.setBackground(Background.EMPTY);
-
+        setOnPressedButton(openButton);
         // import button settings
         importButton.setGraphic(new ImageView("images/import.png"));
         importButton.setTooltip(new Tooltip("Import items into current Pipeline"));
         importButton.setBackground(Background.EMPTY);
+        setOnPressedButton(importButton);
 
         // save button settings
         saveButton.setGraphic(new ImageView("images/save.png"));
         saveButton.setTooltip(new Tooltip("Save current Pipeline"));
         saveButton.setBackground(Background.EMPTY);
         saveButton.disableProperty().bind(Main.dirty.not());
+        setOnPressedButton(saveButton);
 
 
         // undo button settings
@@ -209,22 +216,26 @@ public class MainWindow extends BorderPane {
         undoButton.setTooltip(new Tooltip("Undo"));
         undoButton.disableProperty().bind(CareTaker.undoable.not());
         undoButton.setBackground(Background.EMPTY);
+        setOnPressedButton(undoButton);
 
         // redo button settings
         redoButton.setGraphic(new ImageView("images/redo.png"));
         redoButton.setTooltip(new Tooltip("Redo"));
         redoButton.disableProperty().bind(CareTaker.redoable.not());
         redoButton.setBackground(Background.EMPTY);
+        setOnPressedButton(redoButton);
 
         // copy button settings
         copyButton.setGraphic(new ImageView("images/copy.png"));
         copyButton.setTooltip(new Tooltip("Copy"));
         copyButton.setBackground(Background.EMPTY);
+        setOnPressedButton(copyButton);
 
         // paste button settings
         pasteButton.setGraphic(new ImageView("images/paste.png"));
         pasteButton.setTooltip(new Tooltip("Paste"));
         pasteButton.setBackground(Background.EMPTY);
+        setOnPressedButton(pasteButton);
 
         newMenuItem.disableProperty().bind(Main.dirty.not());
         saveMenuItem.disableProperty().bind(Main.dirty.not());
@@ -1023,4 +1034,18 @@ public class MainWindow extends BorderPane {
     }
 
 
+    public void setOnPressedButton(Button button) {
+        button.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                button.setEffect(new DropShadow());
+            }
+        });
+        button.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                button.setEffect(oldEffectButton);
+            }
+        });
+    }
 }
