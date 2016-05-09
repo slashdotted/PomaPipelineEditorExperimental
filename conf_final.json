@@ -1,0 +1,208 @@
+[
+  {
+    "type" : "BlobColor",
+    "description" : "ritorna le componenti RGB del frame",
+    "imageURL" : "images/templates/blob_color.png",
+    "optParams" : [
+
+    ],
+    "mandatoryParams" : [
+
+    ]
+  },
+  {
+  "type" : "BlobTracker",
+  "description" : "traccia oggetti in movimento",
+  "imageURL" : "images/templates/blob_tracker.png",
+  "optParams" : [
+    {"name" : "color", "type" : "Boolean", "description" : "utilizza o meno il colore per il riconoscimento"},
+    {"name" : "shadow", "type" : "Boolean", "description" : "attiva il riconoscimento delle ombre"},
+    {"name" : "minarea", "type" : "Long", "description" : "area minima per gli oggetti in movimento"},
+    {"name" : "maxarea", "type" : "Long", "description" : "area masssima per gli oggetti in movimento"},
+    {"name" : "distance", "type" : "Long", "description" : "distanza massima tra due rilevamenti"},
+    {"name" : "frames", "type" : "Long", "description" : "massimo numero di frame senza rilevamenti"},
+    {"name" : "saveinterval", "type" : "Long", "description" : "intervallo (in frames) prima di inviare l'oggetto"},
+    {"name" : "saved", "type" : "Long", "description" : "numero di salvataggi (invii al modulo successivo)"},
+    {"name" : "boundsize", "type" : "Long", "description" : "dimensione bordo per i rilevamenti"},
+    {"name" : "history", "type" : "Long", "description" : "numero di rilevamenti da memorizzare"},
+    {"name" : "resize", "type" : "Long", "description" : "fattore di ridimensionamento del frame"},
+    {"name" : "maskthreshold", "type" : "Long", "description" : "soglia per la maschera", "default" : 128},
+    {"name" : "structsize", "type" : "Long", "description" : "dimensione dello 'structuring element'", "default" : 7},
+    {"name" : "structpoint", "type" : "Long", "description" : "punti dello 'structuring element'", "default" : 3},
+    {"name" : "backsubthreshold", "type" : "Long", "description" : "soglia per la background substraction", "default" : 32}
+  ],
+  "mandatoryParams" : [
+    {"name" : "vector", "type" : "String", "description" : "punti che definiscono il margine per il rilevamento"},
+    {"name" : "debug", "type" : "Boolean", "description" : "attiva il debugging (finestre con dettaglio del tracking)"}
+  ]
+},
+  {
+    "type" : "BlobTrackerEx",
+    "description" : "traccia oggetti in movimento con supporto di un HOG detector",
+    "imageURL" : "images/templates/blob_tracker_ex.png",
+    "optParams" : [
+      {"name" : "color", "type" : "Boolean", "description" : "utilizza o meno il colore per il riconoscimento"},
+      {"name" : "shadow", "type" : "Boolean", "description" : "attiva il riconoscimento delle ombre"},
+      {"name" : "minarea", "type" : "Long", "description" : "area minima per gli oggetti in movimento"},
+      {"name" : "maxarea", "type" : "Long", "description" : "area masssima per gli oggetti in movimento"},
+      {"name" : "distance", "type" : "Long", "description" : "distanza massima tra due rilevamenti"},
+      {"name" : "frames", "type" : "Long", "description" : "massimo numero di frame senza rilevamenti"},
+      {"name" : "saveinterval", "type" : "Long", "description" : "intervallo (in frames) prima di inviare l'oggetto"},
+      {"name" : "saved", "type" : "Long", "description" : "numero di salvataggi (invii al modulo successivo)"},
+      {"name" : "boundsize", "type" : "Long", "description" : "dimensione bordo per i rilevamenti"},
+      {"name" : "history", "type" : "Long", "description" : "numero di rilevamenti da memorizzare"},
+      {"name" : "resize", "type" : "Long", "description" : "fattore di ridimensionamento del frame"},
+      {"name" : "maskthreshold", "type" : "Long", "description" : "soglia per la maschera", "default" : 128},
+      {"name" : "structsize", "type" : "Long", "description" : "dimensione dello 'structuring element'", "default" : 7},
+      {"name" : "structpoint", "type" : "Long", "description" : "punti dello 'structuring element'", "default" : 3},
+      {"name" : "backsubthreshold", "type" : "Long", "description" : "soglia per la background substraction", "default" : 32}
+    ],
+    "mandatoryParams" : [
+      {"name" : "vector", "type" : "String", "description" : "punti che definiscono il margine per il rilevamento"},
+      {"name" : "debug", "type" : "Boolean", "description" : "attiva il debugging (finestre con dettaglio del tracking)"}
+    ]
+  },
+  {
+    "type" : "BodyColorClassifierEx",
+    "description" : "classifica i colori (parte alta, parte bassa) confrontando gli istogrammi conl'algoritmo o gli algoritmi selezionati",
+    "imageURL" : "images/templates/body_color_classifier_ex.png",
+    "optParams" : [
+      {"name" : "denoise", "type" : "Boolean", "description" : "applica un filtro 'blur' prima di calcolare l'istogramma"}
+    ],
+    "mandatoryParams" : [
+      {"name" : "bodycolortemplatesdir", "type" : "String", "description" : "directory in cui trovare gli esempi di colore (perogni classe possono esserci più esempi di colore (es. red01.jpg, red02.jpg)"},
+      {"name" : "renormalize", "type" : "Boolean", "description" : "normalizza i valori dell'istogramma prima del confronto"},
+      {"name" : "correlation", "type" : "Boolean", "description" : "attiva il confronto utilizzando CV_COMP_CORREL"},
+      {"name" : "chisquare", "type" : "Boolean", "description" : " attiva il confronto utilizzando CV_COMP_CHISQR"},
+      {"name" : "intersection", "type" : "Boolean", "description" : "attiva il confronto utilizzando CV_COMP_INTERSECT"},
+      {"name" : "bhattacharyya", "type" : "Boolean", "description" : "attiva il confronto utilizzando CV_COMP_BHATTACHARYYA"}
+    ]
+  },
+    {
+    "type" : "Buffer",
+    "description" : "buffer per i blob",
+    "imageURL" : "images/templates/buffer.png",
+    "optParams" : [
+      {"name" : "dontcopy", "type" : "Boolean", "description" : "se vero non crea una copia dei blob quando sono messi in coda"},
+      {"name" : "warnsize", "type" : "Long", "description" : "numero di blob in coda prima di visualizzare messaggio di avviso"},
+      {"name" : "frameskip", "type" : "Long", "description" : "ogni quanti frame scartarne uno"}
+    ],
+    "mandatoryParams" : [
+    ]
+  },
+  {
+    "type" : "ColorClassifierEx",
+    "description" : "classifica i colori confrontando gli istogrammi con l'algoritmo o gli algoritmi selezionati",
+    "imageURL" : "images/templates/color_classifier_ex.png",
+    "optParams" : [
+
+    ],
+    "mandatoryParams" : [
+      {"name" : "colortemplatesdir", "type" : "String", "description" : "directory in cui trovare gli esempi di colore (per ogni classe possono esserci più esempi di colore (es. red01.jpg, red02.jpg)"},
+      {"name" : "renormalize", "type" : "Boolean", "description" : ""},
+      {"name" : "denoise", "type" : "Boolean", "description" : "applica un filtro 'blur' prima di calcolare l'istogramma"},
+      {"name" : "correlation", "type" : "Boolean", "description" : "attiva il confronto utilizzando CV_COMP_CORREL"},
+      {"name" : "chisquare", "type" : "Boolean", "description" : " attiva il confronto utilizzando CV_COMP_CHISQR"},
+      {"name" : "intersection", "type" : "Boolean", "description" : "attiva il confronto utilizzando CV_COMP_INTERSECT"},
+      {"name" : "bhattacharyya", "type" : "Boolean", "description" : "attiva il confronto utilizzando CV_COMP_BHATTACHARYYA"}
+    ]
+  },
+  {
+    "type" : "ColorMatcher",
+    "description" : "rileva il colore dominante (tra black, white, grey, red, orange, yellow, green, acqua, blue, purple, pink) tramite scomposizione HSV",
+    "imageURL" : "images/templates/color_matcher.png",
+    "optParams" : [
+    ],
+    "mandatoryParams" : [
+    ]
+  },
+  {
+    "type" : "DirectionEstimator",
+    "description" : "determina la direzione di spostamento del blob. Richiede i delta dx e dy determinati dal BlobTracker (o BlobTrackerEx). I valori di direzione sono (N NE E SE S SO O NO)",
+    "imageURL" : "images/templates/direction_estimator.png",
+    "optParams" : [
+
+    ],
+    "mandatoryParams" : [
+      {"name" : "camdirection", "type" : "String", "description" : "direzione in cui punta la telecamera (se non specificato usa il valore videocapture.direction inserito da StreamCapture"}
+    ]
+  },
+  {
+    "type" : "FaceDetector",
+    "description" : "rileva le facce presenti nel blob",
+    "imageURL" : "images/templates/face_detector.png",
+    "optParams" : [
+
+    ],
+    "mandatoryParams" : [
+
+    ]
+  },
+  {
+    "type" : "GenericSplitter",
+    "description" : "divide il flusso in base alla classe di un classificatore",
+    "imageURL" : "images/templates/generic_splitter.png",
+    "optParams" : [
+
+    ],
+    "mandatoryParams" : [
+
+    ]
+  },
+  {
+    "type" : "ImageWriter",
+    "description" : "salva i blob, le maschere e i metadat su disco (_blob.jpg, _mask.jpg, _data.json)",
+    "imageURL" : "images/templates/image_writer.png",
+    "optParams" : [
+
+    ],
+    "mandatoryParams" : [
+      {"name" : "imgpath", "type" : "String", "description" : "percorso in cui salvare le immagini"}
+    ]
+  },
+  {
+    "type" : "Skipper",
+    "description" : "salta dei frame",
+    "imageURL" : "images/templates/skipper.png",
+    "optParams" : [
+
+    ],
+    "mandatoryParams" : [
+      {"name" : "skipinterval", "type" : "Long"}
+    ]
+  },
+  {
+    "type" : "Stats",
+    "description" : "stampa a schermo delle statistiche della pipeline",
+    "imageURL" : "images/templates/stats.png",
+    "optParams" : [
+      {"name" : "statsinterval", "type" : "Long"}
+    ],
+    "mandatoryParams" : [
+
+    ]
+  },
+  {
+    "type" : "SpeedEstimator",
+    "description" : "determina la velocità del blob in base a quanto rilevato dal tracker (parametro del costruttore) e dalla classe rilevata (parametro del costruttore)",
+    "imageURL" : "images/templates/speed_estimator.png",
+    "optParams" : [
+
+    ],
+    "mandatoryParams" : [
+
+    ]
+  },
+  {
+    "type" : "Viewer",
+    "description" : "visualizza a schermo i blob, le maschere e i metadati",
+    "imageURL" : "images/templates/viewer.png",
+    "optParams" : [
+      {"name" : "stop", "type" : "Boolean", "description" : "attendi invio dopo ogni frame"},
+      {"name" : "noshow", "type" : "Boolean", "description" : "disattiva visualizzazione dei frame a schermo"}
+    ],
+    "mandatoryParams" : [
+
+    ]
+  }
+]
