@@ -2,6 +2,7 @@ package commands;
 
 import controller.MainWindow;
 import javafx.application.Platform;
+import javafx.geometry.Point2D;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import main.Main;
@@ -31,13 +32,13 @@ public class Import implements Command {
     private Command executeAll;
     private JSONObject jsonModules = null;
     private JSONArray jsonArray = null;
-    private MouseEvent mousePos = null;
+    private Point2D position = null;
 
     public Import(File file) {
         this.file = file;
     }
 
-    public Import(JSONObject jsonModules, JSONArray jsonArray, MouseEvent mousePos) {
+    public Import(JSONObject jsonModules, JSONArray jsonArray, Point2D position) {
         this.jsonModules = jsonModules;
         this.jsonArray = jsonArray;
     }
@@ -67,7 +68,7 @@ public class Import implements Command {
             Module module = Converter.jsonToModule(String.valueOf(key), jsonModule);
 
             if (module != null) {
-                if ((mousePos != null) && (module.getPosition() != null)) {
+                if ((position != null) && (module.getPosition() != null)) {
 
                     //TODO
 

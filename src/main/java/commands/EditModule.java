@@ -53,7 +53,6 @@ public class EditModule implements Command {
                 updateModule();
                 updateDraggableModule();
 
-
                 break;
             case Template:
                 Module newModule = createNewModule();
@@ -74,7 +73,7 @@ public class EditModule implements Command {
                 break;
         }
         debug("module = "+ module.getName()+ ", type = " + typeEdit);
-        return false;
+        return true;
     }
 
     private Module createNewModule() {

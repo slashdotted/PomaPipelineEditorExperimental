@@ -29,9 +29,9 @@ public class Converter {
 
         Module module = null;
 
+        System.out.println(jsonObject.toString(4));
         String type = jsonObject.getString("type");
-//        if(jsonObject.has("type"))
-//            type = jsonObject.getString("type");
+
 
         Point2D position = null;
         Double x = null;

@@ -33,7 +33,7 @@ public class LinkView extends Group {
     private static String channelInImageEntriesSelected = "ChannelInEntriesSelected.png";
 
 
-   private DoubleProperty channelInX = new SimpleDoubleProperty();
+    private DoubleProperty channelInX = new SimpleDoubleProperty();
     private DoubleProperty channelInY = new SimpleDoubleProperty();
     private DoubleProperty channelOutX = new SimpleDoubleProperty();
     private DoubleProperty channelOutY = new SimpleDoubleProperty();
@@ -43,7 +43,6 @@ public class LinkView extends Group {
     private Link link;
     private DraggableModule from;
     private DraggableModule to;
-
 
 
     boolean fromTo = false;
@@ -74,7 +73,7 @@ public class LinkView extends Group {
         selectedOut = false;
         selectedLink = false;
 
-        oldStyle=this.getStyle();
+        oldStyle = this.getStyle();
         this.getChildren().add(0, line);
 
 
@@ -102,34 +101,34 @@ public class LinkView extends Group {
             public void handle(MouseEvent event) {
                 if (!event.isControlDown()) {
 
-                        selectImage(orientation);
-                        selectLinkView();
-                        ChannelsManager channelsManager = new ChannelsManager(link, orientation);
+                    selectImage(orientation);
+                    select();
+                    ChannelsManager channelsManager = new ChannelsManager(link, orientation);
 
-                }else{
-                    if(!select) {
-                        selectLinkView();
-                    }else{
-                        unselectLinkView();
+                } else {
+                    if (!select) {
+                        select();
+                    } else {
+                        unselect();
                     }
                 }
             }
         });
     }
 
-    public void unselectLinkView() {
+    public void unselect() {
         this.setStyle(oldStyle);
-        this.select=false;
+        this.select = false;
         MainWindow.selectedLinks.remove(getName());
     }
 
-    private void selectLinkView() {
-        this.select=true;
+    private void select() {
+        this.select = true;
         this.setStyle("-fx-border-color: darkblue");
         this.setStyle("-fx-effect: dropshadow(three-pass-box, darkblue, 10,0, 0, 0) ");
-        MainWindow.selectedLinks.put(getName(),Main.links.get(getName()));
+        MainWindow.selectedLinks.put(getName(), Main.links.get(getName()));
 
-        System.out.println("Adding link" +MainWindow.selectedLinks.size());
+        System.out.println("Adding link" + MainWindow.selectedLinks.size());
         /*
         ArrayList<JSONObject> allJasonLinks=Converter.linkToJSON(link);
         for (JSONObject jsObj:allJasonLinks) {
@@ -310,7 +309,7 @@ public class LinkView extends Group {
 
     }
 
-    public void bindBottonChannels(String orientation) {
+    public void bindButtonChannels(String orientation) {
 
 
         channelOutX.bind((line.endXProperty().add(line.startXProperty()).divide(2.0)));
@@ -384,19 +383,18 @@ public class LinkView extends Group {
 
 
     public void select(String dragMod) {
-     if(dragMod.equals(from.getName())){
-        if(to.isSelected()){
-            selectLinkView();
+        if (dragMod.equals(from.getName())) {
+            if (to.isSelected()) {
+                select();
 
+            }
+        } else {
+            if (from.isSelected()) {
+                select();
+            }
         }
-     }   else{
-         if(from.isSelected()){
-             selectLinkView();
-         }
-     }
 
     }
-
 
 
 }

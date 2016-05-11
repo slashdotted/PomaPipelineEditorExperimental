@@ -21,7 +21,7 @@ public class Value<T> {
         this.value = val;//(val.toString().equals("0")) ? val : updateValue("") ;
         this.defaultValue = defaultValue;
         this.mandatory = mandatory;
-        this.valid = (defaultValue!=null) ? true : false;
+        this.valid = (defaultValue != null) ? true : false;
         //initialize();
     }
 
@@ -32,7 +32,6 @@ public class Value<T> {
         Object val = null;
         Constructor ctor = null;
         try {
-            //System.out.println(value.getType()); //TODO remove this
             ctor = Class.forName(value.getClassName()).getConstructor(String.class);
             val = ctor.newInstance("0");
 
@@ -66,12 +65,10 @@ public class Value<T> {
     }
 
     public boolean updateValue(String newValue) {
-        System.out.println("Updating value of type: " + getType() + " with " + newValue);
         boolean success = false;
         if (value instanceof String) {
             value = (T) newValue;
             success = true;
-            System.out.println("setting with string");
         }
         try {
             if (!success && value instanceof Long) {
@@ -94,17 +91,22 @@ public class Value<T> {
             if (newValue.equalsIgnoreCase("true") || newValue.equalsIgnoreCase("false")) {
                 value = (T) Boolean.valueOf(newValue);
                 success = true;
-            }else {
+            } else if (newValue.equals("0")) {
+                value = (T) Boolean.valueOf("false");
+                success = true;
+            } else if (newValue.equals("1")) {
+                value = (T) Boolean.valueOf("true");
+                success = true;
+            } else {
                 success = false;
             }
         }
 
-        if(!success && defaultValue!=null){
+        if (!success && defaultValue != null) {
             value = defaultValue;
 
         }
 
-        System.out.println("New value: " + value.toString() + ", success? " + success);
         valid = success;
         return success;
     }
@@ -117,6 +119,7 @@ public class Value<T> {
     public String getType() {
         return value.getClass().getSimpleName();
     }
+
     public String getClassName() {
         return value.getClass().getName();
     }

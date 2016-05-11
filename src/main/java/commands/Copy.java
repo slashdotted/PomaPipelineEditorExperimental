@@ -44,10 +44,17 @@ public class Copy implements Command {
         ClipboardContent clipboardContent = new ClipboardContent();
 
         JSONObject modulesObject = new JSONObject();
-        modulesObject.put("modules", modules);
+        //modulesObject.put("modules", modules);
+
+        modules.keySet().forEach(key -> {
+            modulesObject.put(key, modules.get(key));
+        });
 
         JSONArray linksArray = new JSONArray();
-        linksArray.put(links.values());
+        //linksArray.put(links.values());
+        links.values().forEach(link->{
+            linksArray.put(link);
+        });
 
         clipboardContent.putString(Converter.getPipelineString(modulesObject, linksArray));
 

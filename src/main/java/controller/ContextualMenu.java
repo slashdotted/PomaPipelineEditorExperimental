@@ -3,6 +3,7 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -35,7 +36,7 @@ public class ContextualMenu {
         selectAllIt.setOnAction(event -> Main.root.selectAll());
 
         pasteIt.setOnAction(e -> {
-            MainWindow.paste(mouse);
+            MainWindow.paste(new Point2D(mouse.getX(), mouse.getY()));
             //System.out.println("Arrivo a paste");
         });
 

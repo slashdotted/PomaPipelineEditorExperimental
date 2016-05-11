@@ -3,6 +3,7 @@ package controller;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import commands.Command;
 import commands.EditValue;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -68,15 +69,11 @@ public class FormBox<T> extends VBox {
     public void initialize() {
         formTextField.setText("");
         clearIcon.setImage(new Image("images/cancel.png"));
-        Tooltip.install(clearIcon, new Tooltip("Clear this value"));
+        Platform.runLater(() -> Tooltip.install(clearIcon, new Tooltip("Clear this value")));
+
 
 
         this.setSpacing(10);
-        //System.out.println("\n\n" + value + "\n");
-        ///////////test
-
-            System.out.println(value);
-
 
         formLabel.setText(value.getName());
 

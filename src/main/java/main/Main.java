@@ -66,11 +66,12 @@ public class Main extends Application {
         primaryStage.setMinHeight(500);
         primaryStage.setMinWidth(800);
         primaryStage.setScene(mScene);
+
         primaryStage.setOnCloseRequest(event -> {
             root.exitApplication();
             event.consume();
         });
-
+        root.initializeSelectionArea();
         primaryStage.show();
 
 

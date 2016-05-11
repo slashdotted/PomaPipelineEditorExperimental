@@ -24,7 +24,9 @@ public class Move implements Command {
 
     @Override
     public boolean execute() {
-        //debug("");
+        debug("\n\t\tModule: " + draggableModule.getName() + ", \n\t\tOld coords: " + oldCoords + ", Old offset: " + oldOffset+ ", \n\t\tNew coords: " + newCoords + ", new offset: " + newOffset);
+
+
         draggableModule.relocateToPoint(new Point2D(newCoords.getX(),newCoords.getY()), newOffset);
 
         draggableModule.getModule().setPosition(newCoords);

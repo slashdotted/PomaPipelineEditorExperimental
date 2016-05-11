@@ -13,6 +13,7 @@ import javafx.scene.CacheHint;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -25,10 +26,10 @@ import model.Value;
 import utils.CareTaker;
 import utils.GraphicsElementsFactory;
 import utils.ParamBox;
+import utils.ProgramUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -39,6 +40,12 @@ public class SideBar extends VBox {
 
     //private static Image addImageNormal = new Image("images/plus2.png");
     //private static Image addImageShadow = new Image("images/plus2_shadow.png");
+    private static ImageView pinImageView = ProgramUtils.getPinImage(20);
+    private static ImageView closeImageView = ProgramUtils.getCloseImage(20);
+    private static ImageView unPinImageView = ProgramUtils.getUnpinImage(20);
+
+
+
     @FXML
     private Label templateLabel;
 
@@ -66,25 +73,29 @@ public class SideBar extends VBox {
     @FXML
     private Button closeSidebar;
 
+    @FXML
+    private Button pinButton;
+
 
     private List<ParamBox> paramBoxes;
     private ObservableList<SimpleStringProperty> cparams;
-    private List<FormBox> mandatFormBoxes;
+    private List<FormBox> mandatoryFormBoxes;
     //private ArrayList<String> cparams;
     private Module module;
     private ModuleTemplate template;
     private VBox mandatoryBox;
     private VBox optionalBox;
-    private Button controlButton;
+    //private Button controlButton;
     private double expandedSize;
-    private static AtomicBoolean closing = new AtomicBoolean(false);
+    private static AtomicBoolean animated = new AtomicBoolean(false);
+    private AtomicBoolean pinned = new AtomicBoolean(false);
     private boolean creation;
 
-    public SideBar(Module module, Button controlButton, double expandedSize, boolean creation) {
+    public SideBar(Module module, double expandedSize, boolean creation) {
         this.module = module;
-        this.controlButton = controlButton;
+        //this.controlButton = controlButton;
         this.expandedSize = expandedSize;
-        closing.set(false);
+        animated.set(false);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sideBar.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -119,7 +130,7 @@ public class SideBar extends VBox {
         this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
         this.cparamsBox.setFillWidth(true);
         hostTextField.setText(module.getHost());
-        mandatFormBoxes = new ArrayList<>();
+        mandatoryFormBoxes = new ArrayList<>();
         setParametersArea();
         initializeCParams();
         setEvents();
@@ -143,24 +154,41 @@ public class SideBar extends VBox {
 
     private void setButtons() {
         //closeSidebar.setShape(new Rectangle(20,20));
-        closeSidebar.setGraphic(new ImageView("images/close.png"));
-        closeSidebar.setPadding(Insets.EMPTY);
+        closeSidebar.setGraphic(closeImageView);
+        closeSidebar.setBackground(Background.EMPTY);
+        ProgramUtils.setOnPressedButton(closeSidebar);
 
         addCParam.setShape(new Circle(10));
-        addCParam.setPadding(Insets.EMPTY);
+        addCParam.setBackground(Background.EMPTY);
         addCParam.setGraphic(new ImageView("images/plus.png"));
+        ProgramUtils.setOnPressedButton(addCParam);
 
+        pinButton.setGraphic(pinImageView);
+        pinButton.setBackground(Background.EMPTY);
+        ProgramUtils.setOnPressedButton(pinButton);
     }
 
     private void setEvents() {
 
-        closeSidebar.setOnAction(event1 -> {
-            if (closing.get()) {
-                event1.consume();
+        closeSidebar.setOnAction(event -> {
+            if (animated.get()) {
+                event.consume();
+            } else {
+                pinned.set(false);
+                hide(false);
             }
-            closing.set(true);
-            controlButton.fire();
         });
+
+        pinButton.setOnAction(event1 -> {
+            if(pinned.get()){
+                pinned.compareAndSet(true, false);
+                pinButton.setGraphic(pinImageView);
+            }else{
+                pinned.compareAndSet(false, true);
+                pinButton.setGraphic(unPinImageView);
+            }
+        });
+
 
         addCParam.setOnMouseClicked(event -> {
             addNewCParam(new SimpleStringProperty(""), true);
@@ -172,16 +200,6 @@ public class SideBar extends VBox {
             }
         });
 
-
-//        hostTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//            if (oldValue) {
-//                if (!hostTextField.getText().equals(module.getHost())) {
-//                    Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
-//                    editHost.execute();
-//                    CareTaker.addMemento(editHost);
-//                }
-//            }
-//        });
         hostTextField.setOnAction(event -> {
             if (!hostTextField.getText().equals(module.getHost())) {
                 Command editHost = new EditModule(module, EditModule.Type.Host, hostTextField.getText());
@@ -190,72 +208,94 @@ public class SideBar extends VBox {
             }
         });
 
+    }
 
-        controlButton.setOnAction(actionEvent -> {
-            if (closing.get()) {
-                actionEvent.consume();
-            }
-            closing.set(true);
+    public void show() {
+        System.out.println("Show sidebar called");
+        if (animated.get())
+            return;
+        animated.compareAndSet(false, true);
+        final Animation showPanel = showAnimation(this);
 
+        showPanel.onFinishedProperty().set(actionEvent -> {
+            if (creation)
+                editName();
+            animated.compareAndSet(true, false);
 
-            // Create an animation to hide the panel.
-            final Animation hidePanel = new Transition() {
-
-                {
-                    setCycleDuration(Duration.millis(100));
-                }
-
-                @Override
-                protected void interpolate(double frac) {
-                    final double size = getExpandedSize() * (1.0 - frac);
-                    setPrefWidth(size);
-                }
-            };
-
-
-            hidePanel.onFinishedProperty().set(actionEvent1 -> setVisible(false));
-
-            // Create an animation to show the panel.
-            final Animation showPanel = new Transition() {
-                {
-                    setCycleDuration(Duration.millis(100));
-                }
-
-                @Override
-                protected void interpolate(double frac) {
-                    final double size = getExpandedSize() * frac;
-                    setPrefWidth(size);
-                }
-            };
-
-            showPanel.onFinishedProperty().set(actionEvent1 -> {
-                if (creation)
-                    editName();
-            });
-
-            if (showPanel.statusProperty().get() == Animation.Status.STOPPED
-                    && hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
-                if (isVisible()) {
-                    setModuleAsValid();
-                    hidePanel.play();
-
-                } else {
-                    setVisible(true);
-                    showPanel.play();
-
-                }
-            }
         });
+        System.out.println("Showing");
+        setVisible(true);
+        showPanel.play();
+
+    }
+
+
+    public void hide(boolean force) {
+        System.out.println("Hide sidebar called");
+        if(force && isPinned()){
+            pinned.compareAndSet(true, false);
+        }
+        if (animated.get() || isPinned())
+            return;
+
+        //System.out.println("Sidebar hiding->>>>>>>>>>>>>>><");
+
+        animated.compareAndSet(false, true);
+        final Animation hidePanel = hideAnimation(this);
+        hidePanel.onFinishedProperty().set(actionEvent -> {
+            setVisible(false);
+            animated.compareAndSet(true, false);
+        });
+
+        //if (!animated.get()) {
+        System.out.println("Hiding");
+        //setVisible(true);
+        setModuleAsValid();
+        hidePanel.play();
+        //}
+
+    }
+
+    private static Animation hideAnimation(final SideBar sideBar) {
+
+        // Create an animated to hide the panel.
+        return new Transition() {
+
+            {
+                setCycleDuration(Duration.millis(100));
+            }
+
+            @Override
+            protected void interpolate(double frac) {
+                final double size = sideBar.getExpandedSize() * (1.0 - frac);
+                sideBar.setPrefWidth(size);
+            }
+        };
+    }
+
+    private static Animation showAnimation(final SideBar sideBar) {
+        // Create an animated to show the panel.
+        return new Transition() {
+            {
+                setCycleDuration(Duration.millis(100));
+            }
+
+            @Override
+            protected void interpolate(double frac) {
+                final double size = sideBar.getExpandedSize() * frac;
+                sideBar.setPrefWidth(size);
+            }
+        };
     }
 
     private void setModuleAsValid() {
 
         boolean isValid = true;
-        for (FormBox form : mandatFormBoxes) {
+        for (FormBox form : mandatoryFormBoxes) {
             isValid &= form.isValid();
-            System.out.println("form validation: " + isValid);
+            //System.out.println("form validation: " + isValid);
         }
-        System.out.println();
+        //System.out.println();
         module.setValid(isValid);
     }
 
@@ -281,12 +321,15 @@ public class SideBar extends VBox {
 
     private void acceptEdit(TextField temp, VBox infoBox) {
         if (!temp.getText().equals("") && !temp.getText().equals(module.getName())) {
-            System.out.println("Text changed");
+            // System.out.println("Text changed");
             Command editName = new EditModule(module, EditModule.Type.Name, temp.getText());
-            editName.execute();
-            CareTaker.addMemento(editName);
+            if(editName.execute()){
+                CareTaker.addMemento(editName);
+                nameLabel.setText(module.getName());
+                MainWindow.stackedLogBar.logAndSuccess("Name changed: " + module.getName());
+            }
 
-            nameLabel.setText(module.getName());
+
         }
 
         infoBox.getChildren().remove(temp);
@@ -324,9 +367,8 @@ public class SideBar extends VBox {
             Value value = module.getParameters().get(key);
 
 
-            //System.out.println("in sidebar drrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"+value);
             FormBox current = new FormBox(value);
-            mandatFormBoxes.add(current);
+            mandatoryFormBoxes.add(current);
             mandatoryBox.getChildren().add(current);
             //Value value = module.getParameters().get(key);
             mandatoryBox.getChildren().add(GraphicsElementsFactory.getSeparator());
@@ -346,11 +388,11 @@ public class SideBar extends VBox {
         //SimpleStringProperty newString = new SimpleStringProperty(stringProperty);
 
         ParamBox box = new ParamBox(cParam);
-        this.cparamsBox.getChildren().add(1, box);
+        this.cparamsBox.getChildren().add(box);
         if (isNew) {
-            Command addparam = new AddStringProperty(cParam, cparams);
-            addparam.execute();
-            CareTaker.addMemento(addparam);
+            Command addParam = new AddStringProperty(cParam, cparams);
+            addParam.execute();
+            CareTaker.addMemento(addParam);
         }
         //this.cparams.add(cParam);
         paramBoxes.add(box);
@@ -358,22 +400,18 @@ public class SideBar extends VBox {
 
         box.getDelete().setOnMouseClicked(event -> {
 
-            Command removeparam = new RemoveStringProperty(box.paramProperty(), cparams);
-            removeparam.execute();
-            CareTaker.addMemento(removeparam);
+            Command removeParam = new RemoveStringProperty(box.paramProperty(), cparams);
+            removeParam.execute();
+            CareTaker.addMemento(removeParam);
             //cparams.remove(box.paramProperty());
             paramBoxes.remove(box);
             //TODO call command
             Platform.runLater(() -> cparamsBox.getChildren().remove(box));
         });
-
-        box.getTextField().focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (oldValue)
-                System.out.println(Arrays.toString(cparams.toArray()));
-
-        });
-
     }
 
 
+    public boolean isPinned() {
+        return pinned.get();
+    }
 }

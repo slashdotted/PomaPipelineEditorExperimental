@@ -1,36 +1,30 @@
 package controller;
 
 import commands.*;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
-import javafx.stage.WindowEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import main.Main;
 import model.Link;
 import model.Module;
 import model.ModuleTemplate;
 import utils.*;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -43,20 +37,26 @@ public class MainWindow extends BorderPane {
     public static StackedLogBar stackedLogBar;
     public static Map<String, Link> selectedLinks = new HashMap<>();
     public static Map<String, Module> selectedModules = new HashMap<>();
-
+    public static AnchorPane dragBoard;
+    public static SelectionArea selectionArea;
     private ModuleTemplate shadowModule = null;
     private ModuleItem draggableModuleItem = null;
     public static SideBar currentSidebar; //TODO wire the visible sidebar to this static field
     public static ScrollPane mainScrollPaneStat;
     public static Group mainGroup;
-    public static double posXAssign =100;
+    public static double posXAssign = 100;
     public static double posYAssign = 100;
     double originalScaleX = 0;
     double originalScaleY = 0;
-    static boolean fileReaded=false;
+    static boolean fileReaded = false;
     static String filePath = null;
 
-    public static Button toggleSidebar = new Button();
+//    static double pressedX = 0;
+//    static double pressedY = 0;
+//    static double draggedX, draggedY;
+
+
+    //public static Button toggleSidebar = new Button();
     //SELECTION
 
 
@@ -134,7 +134,7 @@ public class MainWindow extends BorderPane {
 
 
     @FXML
-    private void initialize() {
+    public void initialize() {
 
         //AddModule one icon that will be used for the drag-drop process
         //This is added as a child to the root anchorpane so it can be visible
@@ -161,9 +161,11 @@ public class MainWindow extends BorderPane {
         }
         //Create a new group to manage all nodes in mainScrollPane
         mainGroup = new Group();
-        mainGroup.setId("mainGroup");
 
-        mainScrollPane.setContent(mainGroup);
+        mainGroup.setId("mainGroup");
+        dragBoard = new AnchorPane();
+        dragBoard.getChildren().add(mainGroup);
+        mainScrollPane.setContent(dragBoard);
 
         setMouseAndKeys();
 
@@ -177,8 +179,13 @@ public class MainWindow extends BorderPane {
         setButtons();
         stackedLogBar = new StackedLogBar();
         this.setBottom(stackedLogBar);
+        mainScrollPane.setPannable(false);
+        selectionArea = new SelectionArea(dragBoard, mainGroup, allDraggableModule);
+        //setSelection();
     }
-
+    public void initializeSelectionArea() {
+        selectionArea.initialize();
+    }
 
     /**
      *
@@ -189,26 +196,26 @@ public class MainWindow extends BorderPane {
         newButton.setTooltip(new Tooltip("New Pipeline"));
         newButton.setBackground(Background.EMPTY);
         newButton.disableProperty().bind(Main.dirty.not());
-        oldEffectButton=newButton.getEffect();
-        setOnPressedButton(newButton);
+        //oldEffectButton = newButton.getEffect();
+        ProgramUtils.setOnPressedButton(newButton);
 
         // open button settings
         openButton.setGraphic(new ImageView("images/open.png"));
         openButton.setTooltip(new Tooltip("Open a Pipeline"));
         openButton.setBackground(Background.EMPTY);
-        setOnPressedButton(openButton);
+        ProgramUtils.setOnPressedButton(openButton);
         // import button settings
         importButton.setGraphic(new ImageView("images/import.png"));
         importButton.setTooltip(new Tooltip("Import items into current Pipeline"));
         importButton.setBackground(Background.EMPTY);
-        setOnPressedButton(importButton);
+        ProgramUtils.setOnPressedButton(importButton);
 
         // save button settings
         saveButton.setGraphic(new ImageView("images/save.png"));
         saveButton.setTooltip(new Tooltip("Save current Pipeline"));
         saveButton.setBackground(Background.EMPTY);
         saveButton.disableProperty().bind(Main.dirty.not());
-        setOnPressedButton(saveButton);
+        ProgramUtils.setOnPressedButton(saveButton);
 
 
         // undo button settings
@@ -216,26 +223,26 @@ public class MainWindow extends BorderPane {
         undoButton.setTooltip(new Tooltip("Undo"));
         undoButton.disableProperty().bind(CareTaker.undoable.not());
         undoButton.setBackground(Background.EMPTY);
-        setOnPressedButton(undoButton);
+        ProgramUtils.setOnPressedButton(undoButton);
 
         // redo button settings
         redoButton.setGraphic(new ImageView("images/redo.png"));
         redoButton.setTooltip(new Tooltip("Redo"));
         redoButton.disableProperty().bind(CareTaker.redoable.not());
         redoButton.setBackground(Background.EMPTY);
-        setOnPressedButton(redoButton);
+        ProgramUtils.setOnPressedButton(redoButton);
 
         // copy button settings
         copyButton.setGraphic(new ImageView("images/copy.png"));
         copyButton.setTooltip(new Tooltip("Copy"));
         copyButton.setBackground(Background.EMPTY);
-        setOnPressedButton(copyButton);
+        ProgramUtils.setOnPressedButton(copyButton);
 
         // paste button settings
         pasteButton.setGraphic(new ImageView("images/paste.png"));
         pasteButton.setTooltip(new Tooltip("Paste"));
         pasteButton.setBackground(Background.EMPTY);
-        setOnPressedButton(pasteButton);
+        ProgramUtils.setOnPressedButton(pasteButton);
 
         newMenuItem.disableProperty().bind(Main.dirty.not());
         saveMenuItem.disableProperty().bind(Main.dirty.not());
@@ -247,7 +254,7 @@ public class MainWindow extends BorderPane {
     @FXML
     private void newPipeline() {
         if (currentSidebar != null) {
-            closeSidebar();
+            closeSidebar(true);
         }
         resetZoom();
         if (Main.dirty.getValue()) {
@@ -260,7 +267,7 @@ public class MainWindow extends BorderPane {
     @FXML
     private void openPipeline() {
         if (currentSidebar != null) {
-            closeSidebar();
+            closeSidebar(true);
         }
         resetZoom();
         if (Main.dirty.getValue()) {
@@ -278,7 +285,7 @@ public class MainWindow extends BorderPane {
     @FXML
     private void importPipeline() {
         if (currentSidebar != null) {
-            closeSidebar();
+            closeSidebar(true);
         }
         resetZoom();
         String windowTitle = "Import pipeline";
@@ -316,7 +323,7 @@ public class MainWindow extends BorderPane {
     public void savePipeline() {
 
         if (currentSidebar != null) {
-            closeSidebar();
+            closeSidebar(false);
         }
 
 
@@ -326,7 +333,7 @@ public class MainWindow extends BorderPane {
         if (Main.modulesClipboard.isEmpty() && Main.linksClipboard.isEmpty())
             Converter.populateClipBoards(Main.modules, Main.links);
 
-        if(!ProgramUtils.validateModules(Main.modulesClipboard.keySet())){
+        if (!ProgramUtils.validateModules(Main.modulesClipboard.keySet())) {
             stackedLogBar.logAndWarning("Attention, save not possible! Before saving make sure all modules are filled right.");
             return;
         }
@@ -384,7 +391,7 @@ public class MainWindow extends BorderPane {
     @FXML
     private void undo() {
         if (currentSidebar != null) {
-            closeSidebar();
+            closeSidebar(true);
         }
         CareTaker.undo();
     }
@@ -392,7 +399,7 @@ public class MainWindow extends BorderPane {
     @FXML
     private void redo() {
         if (currentSidebar != null) {
-            closeSidebar();
+            closeSidebar(true);
         }
         CareTaker.redo();
     }
@@ -405,9 +412,9 @@ public class MainWindow extends BorderPane {
     }
 
 
-    public static void paste(MouseEvent eventContextMenu) {
+    public static void paste(Point2D position) {
         //System.out.println(eventContextMenu.getX());
-        Command pasteCommand = new Paste(eventContextMenu);
+        Command pasteCommand = new Paste(position);
         pasteCommand.execute();
 
     }
@@ -415,13 +422,31 @@ public class MainWindow extends BorderPane {
     @FXML
     public void exitApplication() {
         if (currentSidebar != null) {
-            closeSidebar();
+            closeSidebar(true);
         }
         if (Main.dirty.getValue()) {
             if (!GraphicsElementsFactory.saveDialog("closing"))
                 return;
         }
         System.exit(0);
+    }
+
+
+    @FXML
+    public void parametersEditor(){
+        if(selectedModules.isEmpty()){
+            stackedLogBar.logAndWarning("Please select some modules first...");
+            return;
+        }
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(new ParametersEditor(), 600, 350);
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.initOwner(Main.mScene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.show();
+
     }
 
 
@@ -432,19 +457,23 @@ public class MainWindow extends BorderPane {
 
         mainScrollPane.setOnMouseClicked(event1 -> {
             contextualMenu.getContextMenu().hide();
-            if ((event1.getButton() != MouseButton.SECONDARY)) {
-                if (currentSidebar != null && event1.getClickCount() < 2) {
-                    closeSidebar();
+            if (!mainGroup.contains(event1.getX(), event1.getY())) {
+//                closeSidebar(false);
+//                unselectAll();
+                if ((event1.getButton() == MouseButton.SECONDARY)) {
+                    contextualMenu.setMouse(event1);
+                    contextualMenu.showContextMenu(event1);
                 }
-            } else if (!mainGroup.contains(event1.getX(), event1.getY())) {
-
-                contextualMenu.setMouse(event1);
-                contextualMenu.showContextMenu(event1);
-
-
             }
-
         });
+
+        mainScrollPane.setOnMousePressed(event1 -> {
+            if (!mainGroup.contains(event1.getX(), event1.getY())) {
+                closeSidebar(false);
+                unselectAll();
+            }
+        });
+
 
 //        Group zoomGroup = new Group();
 //        zoomGroup.getChildren().add(group);
@@ -480,8 +509,8 @@ public class MainWindow extends BorderPane {
                 savePipeline();
             }
             if (event.getCode() == KeyCode.DELETE) {
-                stackedLogBar.logAndWarning("Deleting selected elements...");
                 deleteSelected();
+
             }
             if (ProgramUtils.copyCombination.match(event)) {
                 stackedLogBar.displayMessage("Selected elements copied");
@@ -538,7 +567,8 @@ public class MainWindow extends BorderPane {
 
 
     public static void addLinkView(Link link) {
-        Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
+        //Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
+        Group group = mainGroup;
         if (!allLinkView.containsKey(link.getID())) {
 
             LinkView lv = new LinkView(link);
@@ -547,7 +577,7 @@ public class MainWindow extends BorderPane {
             lv.bindLink(allDraggableModule.get(link.getModuleA().getName()), allDraggableModule.get(link.getModuleB().getName()));
             if (link.getChannelsAToB().size() != 0) {
 
-                lv.bindBottonChannels("fromTo");
+                lv.bindButtonChannels("fromTo");
                 lv.fromTo = true;
                 lv.updateImageViews("fromTo");
 
@@ -557,7 +587,7 @@ public class MainWindow extends BorderPane {
             if (link.getChannelsBToA().size() != 0) {
 
                 lv.toFrom = true;
-                lv.bindBottonChannels("toFrom");
+                lv.bindButtonChannels("toFrom");
                 lv.updateImageViews("toFrom");
 
             }
@@ -572,7 +602,7 @@ public class MainWindow extends BorderPane {
         Point2D position = mod.getPosition();
         if (position == null) {
 
-            posYAssign=calcolateBiggerPosY();
+            posYAssign = calcolateBiggerPosY();
 
             posXAssign += 200;
             if (posXAssign > 1400) {
@@ -586,23 +616,23 @@ public class MainWindow extends BorderPane {
 
         //node.addToolTips();
         allDraggableModule.put(node.getName(), node);
-        Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
-
+        //Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
+        Group group = mainGroup;
         group.getChildren().add(node);
-        node.relocateToPoint(new Point2D(position.getX(), position.getY() ));
-        node.select();
+        node.relocateToPoint(new Point2D(position.getX(), position.getY()));
+       // node.select();
 
     }
 
     private static double calcolateBiggerPosY() {
-        double maxPosY=40;
-        for (Node node:mainGroup.getChildren() ) {
+        double maxPosY = 40;
+        for (Node node : mainGroup.getChildren()) {
 
-            if(node instanceof DraggableModule){
-                Point2D posNode=(mainGroup.localToScene(node.getLayoutX(),node.getLayoutY()));
-                if(posNode.getY()>maxPosY){
+            if (node instanceof DraggableModule) {
+                Point2D posNode = (mainGroup.localToScene(node.getLayoutX(), node.getLayoutY()));
+                if (posNode.getY() > maxPosY) {
 
-                    maxPosY=posNode.getY();
+                    maxPosY = posNode.getY();
                 }
             }
 
@@ -668,20 +698,20 @@ public class MainWindow extends BorderPane {
                 if (db.hasFiles()) {
                     success = true;
                     String filePath = db.getString();
-                    filePath = db.getFiles().get(db.getFiles().size()-1).getAbsolutePath();
+                    filePath = db.getFiles().get(db.getFiles().size() - 1).getAbsolutePath();
 
                     db.clear();
 
-                    Command importCommand=new Import(new File(filePath));
-                    boolean imported=importCommand.execute();
-                    if (imported){
+                    Command importCommand = new Import(new File(filePath));
+                    boolean imported = importCommand.execute();
+                    if (imported) {
                         CareTaker.addMemento(importCommand);
-                        stackedLogBar.logAndSuccess("Imported file: "+filePath);
-                        PipelineManager.CURRENT_PIPELINE_PATH=null;
-                    }else{
+                        stackedLogBar.logAndSuccess("Imported file: " + filePath);
+                        PipelineManager.CURRENT_PIPELINE_PATH = null;
+                    } else {
                         stackedLogBar.logAndWarning("No modules here");
                     }
-                    filePath="";
+                    filePath = "";
 
                 }
                 event.setDropCompleted(success);
@@ -725,17 +755,17 @@ public class MainWindow extends BorderPane {
             @Override
             public void handle(DragEvent event) {
 
-                    DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
-                    //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
-                    container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
+                DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
+                //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
+                container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
-                    ClipboardContent content = new ClipboardContent();
+                ClipboardContent content = new ClipboardContent();
 
-                    content.put(DragContainer.AddNode, container);
+                content.put(DragContainer.AddNode, container);
 
-                    event.getDragboard().setContent(content);
-                    event.setDropCompleted(true);
-                }
+                event.getDragboard().setContent(content);
+                event.setDropCompleted(true);
+            }
 
         };
 
@@ -863,11 +893,13 @@ public class MainWindow extends BorderPane {
 
     public static void openSideBar(Module module, boolean creation) {
         //Service
-        Task<SideBar> builder = buildSideBar(module, toggleSidebar, creation);
+        allDraggableModule.get(module.getName()).select();
+        Task<SideBar> builder = buildSideBar(module, creation);
         builder.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> {
             currentSidebar = builder.getValue();
             Main.root.setRight(currentSidebar);
-            toggleSidebar.fire();
+            currentSidebar.show();
+            //toggleSidebar.fire();
         });
         new Thread(builder).start();
 
@@ -880,13 +912,13 @@ public class MainWindow extends BorderPane {
         allDraggableModule.get(module.getName()).select();
     }
 
-    private static Task<SideBar> buildSideBar(Module module, Button toggleSidebar, boolean creation) {
+    private static Task<SideBar> buildSideBar(Module module, boolean creation) {
         return new Task<SideBar>() {
             @Override
             protected SideBar call() throws Exception {
                 if (currentSidebar != null)
-                    closeSidebar();
-                currentSidebar = new SideBar(module, toggleSidebar, 400, creation);
+                    closeSidebar(true);
+                currentSidebar = new SideBar(module, 400, creation);
                 //Main.root.setRight(currentSidebar);
                 //toggleSidebar.fire();
                 return currentSidebar;
@@ -895,10 +927,15 @@ public class MainWindow extends BorderPane {
     }
 
 
-    public static void closeSidebar() {
-        if (currentSidebar.isVisible())
-            toggleSidebar.fire();
-        currentSidebar = null;
+    public static void closeSidebar(boolean force) {
+        if (currentSidebar == null)
+            return;
+        if (!currentSidebar.isPinned() || force) {
+            currentSidebar.hide(force);
+            currentSidebar = null;
+        }
+        //toggleSidebar.fire();
+
     }
 
     private String existLink(DraggableModule from, DraggableModule to) {
@@ -938,7 +975,8 @@ public class MainWindow extends BorderPane {
         dmTo.removeLinkView(lv);
 
         allLinkView.remove(lv.getName());
-        Group group = (Group) mainScrollPaneStat.getContent();
+        //Group group = (Group) mainScrollPaneStat.getContent();
+        Group group = mainGroup;
         group.getChildren().remove(lv);
 
     }
@@ -956,14 +994,15 @@ public class MainWindow extends BorderPane {
         //CareTaker.addMemento(execAll);
 
         allDraggableModule.remove(dm.getName());
-        Group group = (Group) mainScrollPaneStat.getContent();
+        //Group group = (Group) mainScrollPaneStat.getContent();
+        Group group = mainGroup;
         group.getChildren().remove(dm);
         return execAll;
     }
 
     public static void updateLinkView(LinkView lv, String orientation) {
         lv.updateImageViews(orientation);
-        lv.bindBottonChannels(orientation);
+        lv.bindButtonChannels(orientation);
     }
 
 
@@ -976,7 +1015,6 @@ public class MainWindow extends BorderPane {
 
 
     public static void unselectAll() {
-        System.out.println("unselecting all");
         Set<String> selected = new HashSet<>(selectedModules.keySet());
         selected.forEach(key -> {
             allDraggableModule.get(key).unselect();
@@ -986,7 +1024,7 @@ public class MainWindow extends BorderPane {
 
         selected = new HashSet<>(selectedLinks.keySet());
         selected.forEach(key -> {
-            allLinkView.get(key).unselectLinkView();
+            allLinkView.get(key).unselect();
         });
         Main.linksClipboard.clear();
         selectedLinks.clear();
@@ -998,35 +1036,52 @@ public class MainWindow extends BorderPane {
 
     @FXML
     private void deleteSelected() {
-        //System.out.println("unselecting all");
-        Set<String> selected = new HashSet<>(selectedModules.keySet());
-        ArrayList<Command> allRemMod = new ArrayList<>();
-        selected.forEach(key -> {
-            allDraggableModule.get(key).unselect();
-            Command removeModule = new RemoveModule(Main.modules.get(key));
-            allRemMod.add(removeModule);
-
-        });
 
 
-        selected = new HashSet<>(selectedLinks.keySet());
-        selected.forEach(key -> {
-            allLinkView.get(key).unselectLinkView();
-            Command removeLink = new RemoveLink(Main.links.get(key));
-            allRemMod.add(removeLink);
+        //StringBuilder logLinks = null;
+        Set<String> selected = null;
+        ArrayList<Command> allRemoved = new ArrayList<>();
+        closeSidebar(true);
+
+        if (!selectedModules.isEmpty()) {
+            selected = new HashSet<>(selectedModules.keySet());
+
+            for (String key : selected) {
+                allDraggableModule.get(key).unselect();
+                Command removeModule = new RemoveModule(Main.modules.get(key));
+                allRemoved.add(removeModule);
+
+            }
+
+        }
 
 
-        });
+        if (!selectedLinks.isEmpty()) {
+            selected = new HashSet<>(selectedLinks.keySet());
 
-        Command remModAll = new ExecuteAll(allRemMod);
+            for (String key : selected) {
+                allLinkView.get(key).unselect();
+                Command removeLink = new RemoveLink(Main.links.get(key));
+                allRemoved.add(removeLink);
 
-        remModAll.execute();
-        CareTaker.addMemento(remModAll);
+            }
+
+        }
+
+
+        if (!allRemoved.isEmpty()) {
+            Command remModAll = new ExecuteAll(allRemoved);
+            remModAll.execute();
+            CareTaker.addMemento(remModAll);
+        }
 
         Main.modulesClipboard.clear();
         selectedModules.clear();
         Main.linksClipboard.clear();
         selectedLinks.clear();
+
+        stackedLogBar.logAndWarning("Deleted " + allRemoved.size() + " elements");
+
     }
 
     public static Group getMainGroup() {
@@ -1034,18 +1089,5 @@ public class MainWindow extends BorderPane {
     }
 
 
-    public void setOnPressedButton(Button button) {
-        button.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                button.setEffect(new DropShadow());
-            }
-        });
-        button.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                button.setEffect(oldEffectButton);
-            }
-        });
-    }
+
 }

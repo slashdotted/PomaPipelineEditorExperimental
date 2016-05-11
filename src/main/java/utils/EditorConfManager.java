@@ -1,12 +1,13 @@
 package utils;
 
+import controller.MainWindow;
 import main.Main;
 import model.ModuleTemplate;
 import model.Value;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,20 +26,23 @@ public class EditorConfManager {
 
     public boolean load(File input) {
         FileReader fileReader = null;
-        JSONParser parser = new JSONParser();
-        JSONArray jsonModules = new JSONArray();
+        JSONTokener parser;
+        JSONArray jsonModules = null;
 
         try {
             fileReader = new FileReader(input);
-            jsonModules = (JSONArray) parser.parse(fileReader);
+            parser = new JSONTokener(fileReader);
+            jsonModules = (JSONArray) new JSONArray(parser);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        if(jsonModules == null){
+            MainWindow.stackedLogBar.logAndWarning("There was a problem while importing conf!!!");
+            return false;
+        }
         jsonModules.forEach(obj -> {
             JSONObject object = (JSONObject) obj;
 
@@ -75,7 +79,7 @@ public class EditorConfManager {
     private void getParameters(Map<String, Value> map, JSONArray params, boolean isMandatory) {
         // TODO add to conf.json description of parameters and parse them here
 
-        for (int j = 0; j < params.size(); j++) {
+        for (int j = 0; j < params.length(); j++) {
             JSONObject param = (JSONObject) params.get(j);
             String paramName = (String) param.get("name");
             String paramType = (String) param.get("type");
@@ -99,7 +103,10 @@ public class EditorConfManager {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-            if (param.get("default") != null) {
+
+
+
+            if (param.has("default")) {
                 defaultValue = true;
                 val = param.get("default");
             }

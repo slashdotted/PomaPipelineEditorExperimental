@@ -1,13 +1,14 @@
 package commands;
 
 import controller.MainWindow;
+import javafx.geometry.Point2D;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import main.Main;
-import model.Module;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.CareTaker;
 import utils.Converter;
 import utils.PipelineManager;
 
@@ -23,10 +24,10 @@ public class Paste implements Command {
     private ClipboardContent clipboard;
     private Map<String, JSONObject> jsonModules = new HashMap<>();
     private Map<String, JSONObject> jsonLinks = new HashMap<>();
-    private MouseEvent mousePos;
+    private Point2D position;
 
-    public Paste(MouseEvent mousePos) {
-        this.mousePos = mousePos;
+    public Paste(Point2D position) {
+        this.position = position;
 
     }
 
@@ -39,8 +40,9 @@ public class Paste implements Command {
             jsonLinks = Main.linksClipboard;
 
 
-            Command importElements = new Import(getModules(), getLinks(), mousePos);
+            Command importElements = new Import(getModules(), getLinks(), position);
             importElements.execute();
+            CareTaker.addMemento(importElements);
 //            for(String key: jsonModules.keySet()){
 //                JSONObject current = jsonModules.get(key);
 //                Module module = Converter.jsonToModule(key, current);
@@ -64,7 +66,7 @@ public class Paste implements Command {
 
             Command importElements = null;
             if (jsonModules != null) {
-                importElements = new Import(jsonModules, jsonLinks, mousePos);
+                importElements = new Import(jsonModules, jsonLinks, position);
             } else if (systemClipboard.getFiles().size()>0) {
                 File file = systemClipboard.getFiles().get(0);
 
@@ -77,15 +79,6 @@ public class Paste implements Command {
             else
                 MainWindow.stackedLogBar.displayWarning("No pipeline found in clipboard!");
 
-//            if(jsonModules == null){
-//                MainWindow.stackedLogBar.displayWarning("No pipeline found in clipboard!");
-//
-//            }else{
-//                MainWindow.stackedLogBar.displaySuccess("Hurra!");
-//            }
-
-
-            //System.out.println(jsonModules.toString(4));
         }
 
 
