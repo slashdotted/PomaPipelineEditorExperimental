@@ -1,6 +1,7 @@
 package commands;
 
 import controller.DraggableModule;
+import controller.MainWindow;
 import javafx.geometry.Point2D;
 
 /**
@@ -13,8 +14,8 @@ public class Move implements Command {
     private Point2D newCoords;
     private Point2D oldOffset;
     private Point2D newOffset;
-    public Move(DraggableModule draggableModule, Point2D oldCoords, Point2D newCoords, Point2D oldOffset, Point2D newOffset) {
-        this.draggableModule = draggableModule;
+    public Move(String dragRef, Point2D oldCoords, Point2D newCoords, Point2D oldOffset, Point2D newOffset) {
+        this.draggableModule = MainWindow.allDraggableModule.get(dragRef);
         this.oldCoords = oldCoords;
         this.newCoords = newCoords;
         this.oldOffset = oldOffset;
@@ -36,7 +37,7 @@ public class Move implements Command {
     @Override
     public boolean reverse() {
 
-        Command reversMove = new Move(draggableModule, newCoords, oldCoords, newOffset, oldOffset);
+        Command reversMove = new Move(draggableModule.getName(), newCoords, oldCoords, newOffset, oldOffset);
         reversMove.execute();
         return true;
     }

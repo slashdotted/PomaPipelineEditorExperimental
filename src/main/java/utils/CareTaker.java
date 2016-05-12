@@ -25,10 +25,9 @@ public class CareTaker {
     public static BooleanProperty undoable = new SimpleBooleanProperty(false);
 
     public static void addMemento(Command command) {
-        System.out.println("Adding");
-//        System.out.println("---------In add ----------");
-//        System.out.println("Before, mementos size: " + mementos.size());
-//        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
+        System.out.println("---------In add ----------");
+        System.out.println("Before, mementos size: " + mementos.size());
+        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
         redoable.setValue(false);
         Main.dirty.setValue(true);
 
@@ -49,15 +48,15 @@ public class CareTaker {
         }
 
 
-//        System.out.println("After, mementos size: " + mementos.size());
-//        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
-//        System.out.println("--------------------------\n");
+        System.out.println("After, mementos size: " + mementos.size());
+        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
+        System.out.println("--------------------------\n");
     }
 
     public static void undo() {
-//        System.out.println("---------In undo---------");
-//        System.out.println("Before, mementos size: " + mementos.size());
-//        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
+        System.out.println("---------In undo---------");
+        System.out.println("Before, mementos size: " + mementos.size());
+        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
 
         if (counter > 0) {
             Main.dirty.setValue(true);
@@ -68,9 +67,9 @@ public class CareTaker {
             redoable.setValue(true);
         }
 
-//        System.out.println("After, mementos size: " + mementos.size());
-//        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
-//        System.out.println("--------------------------\n");
+        System.out.println("After, mementos size: " + mementos.size());
+        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
+        System.out.println("--------------------------\n");
         if (counter == 0) {
             Main.dirty.set(false);
             undoable.setValue(false);
@@ -80,10 +79,10 @@ public class CareTaker {
 
 
     public static void redo() {
-//        System.out.println("---------In redo---------");
-//
-//        System.out.println("Before, mementos size: " + mementos.size());
-//        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
+        System.out.println("---------In redo---------");
+
+        System.out.println("Before, mementos size: " + mementos.size());
+        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
 
         if (counter <= upperBound) {
             Main.dirty.setValue(true);
@@ -96,9 +95,9 @@ public class CareTaker {
         if (counter == mementos.size())
             redoable.setValue(false);
 
-//        System.out.println("After, mementos size: " + mementos.size());
-//        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
-//        System.out.println("--------------------------\n");
+        System.out.println("After, mementos size: " + mementos.size());
+        System.out.println("counter = " + counter + ", upperbound = " + upperBound);
+        System.out.println("--------------------------\n");
 
     }
 

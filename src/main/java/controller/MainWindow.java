@@ -183,6 +183,7 @@ public class MainWindow extends BorderPane {
         selectionArea = new SelectionArea(dragBoard, mainGroup, allDraggableModule);
         //setSelection();
     }
+
     public void initializeSelectionArea() {
         selectionArea.initialize();
     }
@@ -433,8 +434,8 @@ public class MainWindow extends BorderPane {
 
 
     @FXML
-    public void parametersEditor(){
-        if(selectedModules.isEmpty()){
+    public void parametersEditor() {
+        if (selectedModules.isEmpty()) {
             stackedLogBar.logAndWarning("Please select some modules first...");
             return;
         }
@@ -468,10 +469,16 @@ public class MainWindow extends BorderPane {
         });
 
         mainScrollPane.setOnMousePressed(event1 -> {
-            if (!mainGroup.contains(event1.getX(), event1.getY())) {
+            if (!mainGroup.contains(mainGroup.sceneToLocal(event1.getSceneX(), event1.getSceneY()))) {
                 closeSidebar(false);
                 unselectAll();
             }
+//            for (String key : allDraggableModule.keySet()) {
+//               if( allDraggableModule.get(key).contains(mainGroup.sceneToLocal(event1.getX(), event1.getSceneY()))){
+//                   closeSidebar(false);
+//                   unselectAll();
+//               }
+//            }
         });
 
 
@@ -619,8 +626,8 @@ public class MainWindow extends BorderPane {
         //Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
         Group group = mainGroup;
         group.getChildren().add(node);
-        node.relocateToPoint(new Point2D(position.getX(), position.getY()));
-       // node.select();
+        node.relocateToPoint(new Point2D(position.getX()-50,position.getY()-40));
+        // node.select();
 
     }
 
@@ -649,7 +656,9 @@ public class MainWindow extends BorderPane {
                 //set drag respective events
                 splitPane.setOnDragOver(mModuleItemOverRoot);
                 mainScrollPane.setOnDragOver(mModuleItemOverMainScrollPane);
-                mainScrollPane.setOnDragDropped(mModuleItemDropped);
+//                mainScrollPane.setOnDragDropped(mModuleItemDropped);
+
+                dragBoard.setOnDragDropped(mModuleItemDropped);
 
                 //get the item clicked
                 ModuleItem itemClicked = (ModuleItem) event.getSource();
@@ -754,17 +763,20 @@ public class MainWindow extends BorderPane {
         mModuleItemDropped = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-
+                System.out.println("dragging***********************************************************************");
                 DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
                 //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
-                container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
+                System.out.println("container:" + container);
+                if(container!=null) {
+                    container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
-                ClipboardContent content = new ClipboardContent();
+                    ClipboardContent content = new ClipboardContent();
 
-                content.put(DragContainer.AddNode, container);
+                    content.put(DragContainer.AddNode, container);
 
-                event.getDragboard().setContent(content);
-                event.setDropCompleted(true);
+                    event.getDragboard().setContent(content);
+                    event.setDropCompleted(true);
+                }
             }
 
         };
@@ -872,6 +884,7 @@ public class MainWindow extends BorderPane {
                         }
                     }
                 }
+
             }
         });
 
@@ -1087,7 +1100,6 @@ public class MainWindow extends BorderPane {
     public static Group getMainGroup() {
         return mainGroup;
     }
-
 
 
 }

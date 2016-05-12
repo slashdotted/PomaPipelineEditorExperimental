@@ -66,15 +66,15 @@ public class Import implements Command {
             //System.out.println(key);
             JSONObject jsonModule = jsonModules.getJSONObject(key);
             Module module = Converter.jsonToModule(String.valueOf(key), jsonModule);
-
             if (module != null) {
-                if ((position != null) && (module.getPosition() != null)) {
 
-                    //TODO
-
+                if ((position != null) && (module.getPosition() == null)) {
+                    //module.setPosition(position);
                 }
 
+                Main.modules.put(module.getName(), module);
 
+                Main.modules.put(module.getName(), module);
                 if (!String.valueOf(key).equals(module.getName())) {
                     nameMappings.put(String.valueOf(key), module.getName());
                     MainWindow.stackedLogBar.log(String.valueOf(key) + " already present, renamed in " + module.getName());
@@ -83,6 +83,8 @@ public class Import implements Command {
 
                 Command addModule = new AddModule(module);
                 allCommands.add(addModule);
+
+
                 //addModule.execute();
                 //CareTaker.addMemento(addModule);
 

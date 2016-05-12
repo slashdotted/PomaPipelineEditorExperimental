@@ -293,7 +293,7 @@ public class DraggableModule extends Pane {
                     event.consume();
 
                 }
-               // Group group = (Group) mainScrollPane.getContent();
+                // Group group = (Group) mainScrollPane.getContent();
                 Group group = MainWindow.mainGroup;
 
                 group.getChildren().remove(mShadowLink);
@@ -355,7 +355,9 @@ public class DraggableModule extends Pane {
         if (!event.isControlDown()) {
 
             if (selectedModules.size() > 1) {
-                MainWindow.unselectAll();
+                if(event.getEventType() == MouseEvent.MOUSE_RELEASED)
+                    MainWindow.unselectAll();
+
                 select();
             } else {
                 MainWindow.unselectAll();
@@ -365,9 +367,8 @@ public class DraggableModule extends Pane {
                 } else {
                     select();
                 }
-
             }
-        } else {
+        } else if(event.getEventType() != MouseEvent.MOUSE_RELEASED){
             if (selected) {
                 unselect();
             } else {
@@ -428,12 +429,27 @@ public class DraggableModule extends Pane {
 
     private void buildNodeDragHandlers() {
 
-        titleBar.setOnMouseClicked(event -> {
+        titleBar.setOnMousePressed(event -> {
 
             if (event.getClickCount() == 2) {
                 MainWindow.openSideBar(module, false);
             }
+//            if (!(isSelected() && MainWindow.selectedModules.size() > 1)) {
+//                controlSelectAction(event);
+//            }
+
+           controlSelectAction(event);
+
+        });
+
+        titleBar.setOnMouseReleased(event -> {
+
+//            if (!(isSelected() && MainWindow.selectedModules.size() > 1)) {
+//                controlSelectAction(event);
+//            }
+
             controlSelectAction(event);
+
         });
 
 
@@ -470,12 +486,12 @@ public class DraggableModule extends Pane {
             public void handle(MouseEvent event) {
                 if (MainWindow.currentSidebar != null)
                     MainWindow.closeSidebar(false);
+                    select();
 
+           //      if(MainWindow.selectedModules.size() == 1){
+                     //controlSelectAction(event);
+                 //}
 
-                // select();
-                if (MainWindow.selectedModules.size() == 1) {
-                    controlSelectAction(event);
-                }
 
                 for (String modID : MainWindow.selectedModules.keySet()) {
                     DraggableModule dm = MainWindow.allDraggableModule.get(modID);
@@ -494,12 +510,12 @@ public class DraggableModule extends Pane {
                 //for (String modID : MainWindow.selectedModules.keySet()) {
 
                 double x = event.getX() - selfie.sceneToLocal(position).getX();
-                double y = event.getY() - selfie.sceneToLocal(position).getY();
+                double y = event.getY()  - selfie.sceneToLocal(position).getY();
 
-                mDragOffset = new Point2D(event.getX() -x, event.getY() );
-                mOldDragOffset = new Point2D(event.getX() - x, event.getY());
-                //mDragOffset = new Point2D(event.getX(), event.getY());
-                //mOldDragOffset = new Point2D(event.getX(), event.getY());
+                mDragOffset = new Point2D(event.getX() - x, event.getY()-y);
+                mOldDragOffset = new Point2D(event.getX() - x, event.getY()-y);
+//                mDragOffset = new Point2D(event.getX(), event.getY());
+//                mOldDragOffset = new Point2D(event.getX(), event.getY());
                 //}
 
                 ClipboardContent content = new ClipboardContent();
@@ -527,7 +543,7 @@ public class DraggableModule extends Pane {
             Point2D pos = dm.position;
 
 
-            Command move = new Move(dm, dm.oldPosition, pos.add(subtract), dm.mOldDragOffset, dm.mDragOffset);
+            Command move = new Move(dm.getName(), dm.oldPosition, pos.add(subtract), dm.mOldDragOffset, dm.mDragOffset);
             allCommands.add(move);
 
 
