@@ -153,7 +153,7 @@ public class Converter {
         Map<String, Value> params = new HashMap<>();
         // Mandatory params extraction
 
-        //System.out.println("Converter: " + template.getType());  // TODO remove this
+
         if (!template.getMandatoryParameters().isEmpty())
             template.getMandatoryParameters().keySet().forEach(key -> {
                 boolean validValue = false;

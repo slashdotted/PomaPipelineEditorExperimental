@@ -80,6 +80,8 @@ public class FormBox<T> extends VBox {
         formTextField.setPromptText("Insert here a " + value.getType() + " value");
         if(value.isMandatory())
             valid.setValue(value.isValid());
+        else
+            valid.setValue(true);
 
 
         if (valid.getValue())
@@ -104,6 +106,7 @@ public class FormBox<T> extends VBox {
     private void setHandlers() {
         formTextField.setOnMouseClicked(event -> {
             oldString = formTextField.getText();
+            System.out.println("saving old: " + oldString);
         });
 
         formTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -120,7 +123,6 @@ public class FormBox<T> extends VBox {
 
                     if(!valid.getValue()){
                         formTextField.clear();
-                        MainWindow.stackedLogBar.displayWarning("Operation not permitted! insert a correct value");
                     }
                 }
             }

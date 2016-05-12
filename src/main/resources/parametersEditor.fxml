@@ -5,11 +5,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="600.0" spacing="10.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" spacing="10.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT">
          <children>
@@ -45,10 +47,13 @@
             <Insets left="20.0" right="20.0" />
          </VBox.margin>
       </HBox>
-      <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0">
+      <ListView fx:id="listView" prefHeight="350.0" prefWidth="200.0">
          <VBox.margin>
             <Insets left="20.0" right="20.0" />
          </VBox.margin>
+         <effect>
+            <InnerShadow />
+         </effect>
       </ListView>
       <HBox alignment="CENTER_LEFT">
          <VBox.margin>
@@ -82,4 +87,7 @@
          </VBox.margin>
       </HBox>
    </children>
+   <effect>
+      <DropShadow />
+   </effect>
 </fx:root>

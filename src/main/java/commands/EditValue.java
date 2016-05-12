@@ -21,7 +21,13 @@ public class EditValue implements Command {
 
     @Override
     public boolean execute() {
-        return value.updateValue(newValue);
+        boolean success = value.updateValue(newValue);
+
+        if(!success)
+            MainWindow.stackedLogBar.logAndWarning("Operation not permitted! insert a correct value");
+        else
+            MainWindow.stackedLogBar.logAndSuccess("Value " +value.getName() +" successful updated");
+        return success;
     }
 
     @Override

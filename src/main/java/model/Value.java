@@ -65,6 +65,7 @@ public class Value<T> {
     }
 
     public boolean updateValue(String newValue) {
+        System.out.println("try to update with " + newValue);
         boolean success = false;
         if (value instanceof String) {
             value = (T) newValue;
@@ -111,6 +112,14 @@ public class Value<T> {
         return success;
     }
 
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "name='" + name + '\'' +
+                "type= " + getType() + '\''+
+                '}';
+    }
 
     public void setValue(T value) {
         this.value = value;

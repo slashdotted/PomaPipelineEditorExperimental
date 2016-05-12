@@ -17,9 +17,9 @@
       "type": "Stats"
 
     },
-    "blob_tracker": {
+    "blobtracker_0": {
+      "debug": true,
       "type": "BlobTracker",
-      "debug": "false",
       "vector": "20,20,580,20,580,434,20,434",
       "cparams": [
         "hog/cascade.xml",
@@ -139,10 +139,10 @@
     },
     {
       "from": "stats2",
-      "to": "blob_tracker"
+      "to": "blobtracker_0"
     },
     {
-      "from": "blob_tracker",
+      "from": "blobtracker_0",
       "to": "buffer1"
     },
     {

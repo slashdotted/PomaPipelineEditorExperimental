@@ -2,11 +2,14 @@ package controller;
 
 import commands.*;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -45,11 +48,14 @@ public class MainWindow extends BorderPane {
     public static ScrollPane mainScrollPaneStat;
     public static Group mainGroup;
     public static double posXAssign = 100;
-    public static double posYAssign = 100;
+    public static double posYAssign = 0;
     double originalScaleX = 0;
     double originalScaleY = 0;
     static boolean fileReaded = false;
     static String filePath = null;
+    public static double hoffset = 0;
+    public static double voffset = 0;
+
 
 //    static double pressedX = 0;
 //    static double pressedY = 0;
@@ -412,10 +418,10 @@ public class MainWindow extends BorderPane {
         copyCommand.execute();
     }
 
-
-    public static void paste(Point2D position) {
+    @FXML
+    public void paste() {
         //System.out.println(eventContextMenu.getX());
-        Command pasteCommand = new Paste(position);
+        Command pasteCommand = new Paste(null);
         pasteCommand.execute();
 
     }
@@ -435,6 +441,7 @@ public class MainWindow extends BorderPane {
 
     @FXML
     public void parametersEditor() {
+        closeSidebar(true);
         if (selectedModules.isEmpty()) {
             stackedLogBar.logAndWarning("Please select some modules first...");
             return;
@@ -499,6 +506,36 @@ public class MainWindow extends BorderPane {
 //        });
 
 
+        ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
+            double hmin = mainScrollPane.getHmin();
+            double hmax = mainScrollPane.getHmax();
+            double hvalue = mainScrollPane.getHvalue();
+            double contentWidth = dragBoard.getLayoutBounds().getWidth();
+            double viewportWidth = mainScrollPane.getViewportBounds().getWidth();
+
+            hoffset =
+                    Math.max(0, contentWidth - viewportWidth) * (hvalue - hmin) / (hmax - hmin);
+
+            double vmin = mainScrollPane.getVmin();
+            double vmax = mainScrollPane.getVmax();
+            double vvalue = mainScrollPane.getVvalue();
+            double contentHeight = dragBoard.getLayoutBounds().getHeight();
+            double viewportHeight = mainScrollPane.getViewportBounds().getHeight();
+
+            voffset =
+                    Math.max(0, contentHeight - viewportHeight) * (vvalue - vmin) / (vmax - vmin);
+
+//            System.out.printf("Offset: [%.1f, %.1f] width: %.1f height: %.1f %n",
+//                    hoffset, voffset, viewportWidth, viewportHeight);
+
+        };
+
+
+        mainScrollPane.viewportBoundsProperty().addListener(changeListener);
+        mainScrollPane.hvalueProperty().addListener(changeListener);
+        mainScrollPane.vvalueProperty().addListener(changeListener);
+
+
         mainScrollPane.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             //System.out.println("key released " + event.getCode());
 
@@ -523,6 +560,11 @@ public class MainWindow extends BorderPane {
                 stackedLogBar.displayMessage("Selected elements copied");
                 copy();
             }
+            if (ProgramUtils.pasteCombination.match(event)) {
+                stackedLogBar.displayMessage("Selected elements copied");
+                paste();
+            }
+
             if (ProgramUtils.undoCombination.match(event)) {
                 undo();
             }
@@ -610,12 +652,14 @@ public class MainWindow extends BorderPane {
         if (position == null) {
 
             posYAssign = calcolateBiggerPosY();
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>posassignY " + posYAssign);
 
             posXAssign += 200;
-            if (posXAssign > 1400) {
+            if (posXAssign > 1400 || posYAssign<=100) {
                 posXAssign = 300;
-                posYAssign += 200;
+                posYAssign += 150;
             }
+
             position = new Point2D(posXAssign, posYAssign);
 
         }
@@ -626,9 +670,10 @@ public class MainWindow extends BorderPane {
         //Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
         Group group = mainGroup;
         group.getChildren().add(node);
-        node.relocateToPoint(new Point2D(position.getX()-50,position.getY()-40));
+        node.relocateToPoint(new Point2D(position.getX(), position.getY()));
         // node.select();
 
+        posYAssign = 100;
     }
 
     private static double calcolateBiggerPosY() {
@@ -644,6 +689,9 @@ public class MainWindow extends BorderPane {
             }
 
         }
+        if (maxPosY < posYAssign) return posYAssign;
+
+
         return maxPosY;
     }
 
@@ -717,9 +765,10 @@ public class MainWindow extends BorderPane {
                         CareTaker.addMemento(importCommand);
                         stackedLogBar.logAndSuccess("Imported file: " + filePath);
                         PipelineManager.CURRENT_PIPELINE_PATH = null;
-                    } else {
-                        stackedLogBar.logAndWarning("No modules here");
+                    }else{
+                        stackedLogBar.logAndWarning("There was an error while importing");
                     }
+
                     filePath = "";
 
                 }
@@ -767,7 +816,7 @@ public class MainWindow extends BorderPane {
                 DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
                 //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
                 System.out.println("container:" + container);
-                if(container!=null) {
+                if (container != null) {
                     container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
                     ClipboardContent content = new ClipboardContent();

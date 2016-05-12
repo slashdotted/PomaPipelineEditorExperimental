@@ -96,7 +96,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#undo" text="Undo" />
                         <MenuItem mnemonicParsing="false" onAction="#redo" text="Redo" />
                         <MenuItem mnemonicParsing="false" onAction="#copy" text="Copy" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Paste" visible="false" />
+                        <MenuItem mnemonicParsing="false" text="Paste" />
                         <MenuItem mnemonicParsing="false" text="Select All">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -177,7 +177,7 @@
                      </effect>
                   </Button>
                   <Separator orientation="VERTICAL" />
-                  <Button fx:id="pasteButton" contentDisplay="GRAPHIC_ONLY" disable="true" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="Paste" visible="false">
+                  <Button fx:id="pasteButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#paste" prefHeight="20.0" prefWidth="20.0" text="Paste">
                      <FlowPane.margin>
                         <Insets />
                      </FlowPane.margin>
@@ -201,7 +201,7 @@
                   <VBox fx:id="moduleVBox" minWidth="200.0" />
                </content>
             </ScrollPane>
-            <ScrollPane id="mainScrollPane" fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" pannable="true" />
+            <ScrollPane id="mainScrollPane" fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" hvalue="1.0" pannable="true" vvalue="1.0" />
          </items>
       </SplitPane>
    </center>

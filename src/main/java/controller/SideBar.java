@@ -101,7 +101,7 @@ public class SideBar extends VBox {
         fxmlLoader.setController(this);
         this.creation = creation;
         try {
-            fxmlLoader.load();
+           fxmlLoader.load();
 
         } catch (IOException e) {
             e.printStackTrace();

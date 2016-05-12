@@ -355,20 +355,19 @@ public class DraggableModule extends Pane {
         if (!event.isControlDown()) {
 
             if (selectedModules.size() > 1) {
-                if(event.getEventType() == MouseEvent.MOUSE_RELEASED)
+                if (event.getEventType() == MouseEvent.MOUSE_RELEASED || !isSelected())
                     MainWindow.unselectAll();
 
                 select();
             } else {
                 MainWindow.unselectAll();
                 if (selected) {
-
                     unselect();
                 } else {
                     select();
                 }
             }
-        } else if(event.getEventType() != MouseEvent.MOUSE_RELEASED){
+        } else if (event.getEventType() != MouseEvent.MOUSE_RELEASED) {
             if (selected) {
                 unselect();
             } else {
@@ -438,7 +437,7 @@ public class DraggableModule extends Pane {
 //                controlSelectAction(event);
 //            }
 
-           controlSelectAction(event);
+            controlSelectAction(event);
 
         });
 
@@ -457,8 +456,9 @@ public class DraggableModule extends Pane {
             @Override
             public void handle(DragEvent event) {
                 event.acceptTransferModes(TransferMode.ANY);
-                relocateSelection(new Point2D(event.getSceneX() - position.getX(), event.getSceneY() - position.getY()));
-                relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
+                relocateSelection(new Point2D(event.getSceneX() - position.getX() + MainWindow.hoffset, event.getSceneY() - position.getY() + MainWindow.voffset));
+
+                //relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
                 event.consume();
             }
         };
@@ -471,7 +471,7 @@ public class DraggableModule extends Pane {
 
                 mainScrollPane.setOnDragOver(null);
                 mainScrollPane.setOnDragDropped(null);
-                setAllFinalPosition(new Point2D(event.getSceneX() - position.getX(), event.getSceneY() - position.getY()));
+                setAllFinalPosition(new Point2D(event.getSceneX() - position.getX() + MainWindow.hoffset, event.getSceneY() - position.getY()+ MainWindow.voffset));
                 event.setDropCompleted(true);
                 event.consume();
 
@@ -486,11 +486,11 @@ public class DraggableModule extends Pane {
             public void handle(MouseEvent event) {
                 if (MainWindow.currentSidebar != null)
                     MainWindow.closeSidebar(false);
-                    select();
+               //select();
 
-           //      if(MainWindow.selectedModules.size() == 1){
-                     //controlSelectAction(event);
-                 //}
+                if (MainWindow.selectedModules.size() == 1) {
+                    controlSelectAction(event);
+                }
 
 
                 for (String modID : MainWindow.selectedModules.keySet()) {
@@ -510,10 +510,10 @@ public class DraggableModule extends Pane {
                 //for (String modID : MainWindow.selectedModules.keySet()) {
 
                 double x = event.getX() - selfie.sceneToLocal(position).getX();
-                double y = event.getY()  - selfie.sceneToLocal(position).getY();
+                double y = event.getY() - selfie.sceneToLocal(position).getY();
 
-                mDragOffset = new Point2D(event.getX() - x, event.getY()-y);
-                mOldDragOffset = new Point2D(event.getX() - x, event.getY()-y);
+                mDragOffset = new Point2D(event.getX() - x, event.getY() - y);
+                mOldDragOffset = new Point2D(event.getX() - x, event.getY() - y);
 //                mDragOffset = new Point2D(event.getX(), event.getY());
 //                mOldDragOffset = new Point2D(event.getX(), event.getY());
                 //}
@@ -571,7 +571,6 @@ public class DraggableModule extends Pane {
         //relocates the object to a point that has been converted to
         //scene coordinates
         Point2D localCoords;
-
         position = p;
         Group par = (Group) Main.mScene.lookup("#mainGroup");
 

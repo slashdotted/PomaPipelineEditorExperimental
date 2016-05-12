@@ -36,7 +36,7 @@ public class ContextualMenu {
         selectAllIt.setOnAction(event -> Main.root.selectAll());
 
         pasteIt.setOnAction(e -> {
-            MainWindow.paste(new Point2D(mouse.getX(), mouse.getY()));
+            Main.root.paste();
             //System.out.println("Arrivo a paste");
         });
 
