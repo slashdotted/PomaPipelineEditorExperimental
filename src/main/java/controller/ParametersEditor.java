@@ -67,7 +67,7 @@ public class ParametersEditor extends VBox {
         Module base = selectedModules.values().stream().findFirst().get();
         System.out.println("Module base:" + base.getName());
 
-        Map<String, Value> candidates = new HashMap<String, Value>(base.getParameters());
+        Map<String, Value> candidates = new HashMap<>(base.getParameters());
         ArrayList<Value> blackList = new ArrayList<>();
 
 

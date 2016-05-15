@@ -514,6 +514,12 @@ public class DraggableModule extends Pane {
 
                 mDragOffset = new Point2D(event.getX() - x, event.getY() - y);
                 mOldDragOffset = new Point2D(event.getX() - x, event.getY() - y);
+
+                for (String modID : MainWindow.selectedModules.keySet()) {
+                    DraggableModule dm = MainWindow.allDraggableModule.get(modID);
+                    dm.mDragOffset = new Point2D(mDragOffset.getX(), mDragOffset.getY());
+                    dm.mOldDragOffset = mDragOffset;
+                }
 //                mDragOffset = new Point2D(event.getX(), event.getY());
 //                mOldDragOffset = new Point2D(event.getX(), event.getY());
                 //}
@@ -597,33 +603,20 @@ public class DraggableModule extends Pane {
         //scene coordinates
 
         Point2D localCoords;
-        Point2D oldPosition;
-        oldPosition = position;
+
         position = p;
         localCoords = getParent().sceneToLocal(p);
         module.setPosition(p);
-
-        // System.out.println((int) (localCoords.getX()) - mDragOffset.getX());
-        // System.out.println((int) (localCoords.getY()) - mDragOffset.getY());
 
         this.relocate(
                 (int) localCoords.getX() - mDragOffset.getX(), (int) localCoords.getY() - mDragOffset.getY()
 
         );
-        //System.out.println("mdragoffset: " + mDragOffset.getX() + " " + mDragOffset.getY());
 
-
-        //   Command move = new Move(this, oldPosition, new Point2D(localCoords.getX() - mDragOffset.getX(), localCoords.getY() - mDragOffset.getY()));
-        //  move.execute();
-        //   CareTaker.addMemento(move);
-
-
-        //  System.out.println(links.size() + "-----------------");
         for (LinkView lv : links) {
 
             lv.updateBottonChannels();
         }
-
 
     }
 
@@ -664,4 +657,7 @@ public class DraggableModule extends Pane {
         this.module = Main.modules.get(module.getName());
     }
 
+    public void setmDragOffset(Point2D mDragOffset) {
+        this.mDragOffset = mDragOffset;
+    }
 }

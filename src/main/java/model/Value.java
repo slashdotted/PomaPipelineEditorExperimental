@@ -65,7 +65,7 @@ public class Value<T> {
     }
 
     public boolean updateValue(String newValue) {
-        System.out.println("try to update with " + newValue);
+        //System.out.println("try to update with " + newValue);
         boolean success = false;
         if (value instanceof String) {
             value = (T) newValue;
@@ -117,7 +117,11 @@ public class Value<T> {
     public String toString() {
         return "Value{" +
                 "name='" + name + '\'' +
-                "type= " + getType() + '\''+
+                " type= '" + getType() + '\''+
+                " value= '" + getValue() + '\''+
+                " defaultValue = '" + getDefaultValue() + '\''+
+                " mandatory = '" + isMandatory() + '\''+
+                " valid = '" + isValid() + '\''+
                 '}';
     }
 

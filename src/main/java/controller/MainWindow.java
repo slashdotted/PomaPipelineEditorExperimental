@@ -649,13 +649,14 @@ public class MainWindow extends BorderPane {
     public static void addDraggableModule(Module mod) {
 
         Point2D position = mod.getPosition();
+        DraggableModule node = new DraggableModule(mod);
         if (position == null) {
 
             posYAssign = calcolateBiggerPosY();
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>posassignY " + posYAssign);
 
             posXAssign += 200;
-            if (posXAssign > 1400 || posYAssign<=100) {
+            if (posXAssign > 1400 || posYAssign <= 100) {
                 posXAssign = 300;
                 posYAssign += 150;
             }
@@ -663,7 +664,9 @@ public class MainWindow extends BorderPane {
             position = new Point2D(posXAssign, posYAssign);
 
         }
-        DraggableModule node = new DraggableModule(mod);
+        position = position.add(hoffset, voffset);
+        node.setmDragOffset(new Point2D(hoffset, voffset));
+        mod.setPosition(position);
 
         //node.addToolTips();
         allDraggableModule.put(node.getName(), node);
@@ -689,7 +692,7 @@ public class MainWindow extends BorderPane {
             }
 
         }
-        if (maxPosY < posYAssign) return posYAssign;
+        if (maxPosY + 150 < posYAssign) return posYAssign;
 
 
         return maxPosY;
@@ -761,11 +764,11 @@ public class MainWindow extends BorderPane {
 
                     Command importCommand = new Import(new File(filePath));
                     boolean imported = importCommand.execute();
+                    CareTaker.addMemento(importCommand);
                     if (imported) {
-                        CareTaker.addMemento(importCommand);
                         stackedLogBar.logAndSuccess("Imported file: " + filePath);
-                        PipelineManager.CURRENT_PIPELINE_PATH = null;
-                    }else{
+                        //PipelineManager.CURRENT_PIPELINE_PATH = null;
+                    } else {
                         stackedLogBar.logAndWarning("There was an error while importing");
                     }
 
