@@ -72,9 +72,10 @@ public class Import implements Command {
                     //module.setPosition(position);
                 }
 
+                //System.out.println("Current module: " + module);
                 Main.modules.put(module.getName(), module);
 
-                Main.modules.put(module.getName(), module);
+               // Main.modules.put(module.getName(), module);
                 if (!String.valueOf(key).equals(module.getName())) {
                     nameMappings.put(String.valueOf(key), module.getName());
                     MainWindow.stackedLogBar.log(String.valueOf(key) + " already present, renamed in " + module.getName());

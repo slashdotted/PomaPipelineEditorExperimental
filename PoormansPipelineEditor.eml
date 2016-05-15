@@ -2,6 +2,7 @@
 <component LANGUAGE_LEVEL="JDK_1_8" inheritJdk="true">
 	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
 	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
 	</contentEntry>
 	<lib name="Maven: org.testfx:testfx-core:4.0.1-alpha" scope="TEST"/>
@@ -10,13 +11,13 @@
 	<lib name="Maven: org.testfx:testfx-junit:4.0.1-alpha" scope="TEST"/>
 	<lib name="Maven: junit:junit:4.12" scope="TEST"/>
 	<levels>
+		<level name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.13" value="project"/>
+		<level name="json-20160212" value="project"/>
 		<level name="Maven: org.testfx:testfx-core:4.0.1-alpha" value="project"/>
 		<level name="Maven: com.google.guava:guava:18.0" value="project"/>
 		<level name="Maven: org.hamcrest:hamcrest-all:1.3" value="project"/>
 		<level name="Maven: org.testfx:testfx-junit:4.0.1-alpha" value="project"/>
 		<level name="Maven: junit:junit:4.12" value="project"/>
-		<level name="Maven: com.googlecode.json-simple:json-simple:1.1" value="project"/>
-		<level name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.13" value="project"/>
-		<level name="json-20160212" value="project"/>
+		<level name="Maven: org.json:json:20160212" value="project"/>
 	</levels>
 </component>

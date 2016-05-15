@@ -9,7 +9,7 @@
     "stats1": {
       "type": "Stats"
     },
-    "skipper": {
+    "skipper0": {
       "type": "Skipper",
       "skipinterval": 4
     },

@@ -430,12 +430,12 @@ public class DraggableModule extends Pane {
 
         titleBar.setOnMousePressed(event -> {
 
-            if (event.getClickCount() == 2) {
+            if (event.getClickCount() == 2 && MainWindow.selectedModules.size()<=1 ) {
+
+                System.out.println(this.module.getParameters());
                 MainWindow.openSideBar(module, false);
             }
-//            if (!(isSelected() && MainWindow.selectedModules.size() > 1)) {
-//                controlSelectAction(event);
-//            }
+
 
             controlSelectAction(event);
 
@@ -443,9 +443,6 @@ public class DraggableModule extends Pane {
 
         titleBar.setOnMouseReleased(event -> {
 
-//            if (!(isSelected() && MainWindow.selectedModules.size() > 1)) {
-//                controlSelectAction(event);
-//            }
 
             controlSelectAction(event);
 
@@ -505,9 +502,7 @@ public class DraggableModule extends Pane {
                 mainScrollPane.setOnDragOver(mModuleHandlerDrag);
                 mainScrollPane.setOnDragDropped(mModuleHandlerDrop);
 
-                //set operations drag
 
-                //for (String modID : MainWindow.selectedModules.keySet()) {
 
                 double x = event.getX() - selfie.sceneToLocal(position).getX();
                 double y = event.getY() - selfie.sceneToLocal(position).getY();
@@ -520,9 +515,7 @@ public class DraggableModule extends Pane {
                     dm.mDragOffset = new Point2D(mDragOffset.getX(), mDragOffset.getY());
                     dm.mOldDragOffset = mDragOffset;
                 }
-//                mDragOffset = new Point2D(event.getX(), event.getY());
-//                mOldDragOffset = new Point2D(event.getX(), event.getY());
-                //}
+
 
                 ClipboardContent content = new ClipboardContent();
                 DragContainer container = new DragContainer();

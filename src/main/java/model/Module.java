@@ -1,8 +1,5 @@
 package model;
 
-import controller.DraggableModule;
-import controller.MainWindow;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,7 +9,6 @@ import javafx.geometry.Point2D;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,16 +104,28 @@ public class Module {
     }
 
     public void setParameters(Map<String, Value> parameters) {
-        this.parameters.clear();
+
+
+        Map<String, Value> templateParams = template.getParamsCopy();
         parameters.keySet().forEach(s -> {
-            Value mandatory = template.getMandatoryParameters().get(s);
-            Value optional =  template.getOptParameters().get(s);
+
+            Value templateValue = templateParams.get(s);
             Value current = parameters.get(s);
 
-
-            if ((mandatory != null && mandatory.getType().equals(current.getType())) ||
-                    optional !=null && optional.getType().equals(current.getType())) {
-                this.parameters.put(s, parameters.get(s));
+            if(current.getType().equals("Long") || current.getType().equals("Integer")){
+                if ((templateValue != null && (templateValue.getType().equals("Long")) ||
+                        templateValue.getType().equals("Integer"))) {
+                    this.parameters.put(s, parameters.get(s));
+                }
+            }else if(current.getType().equals("Double") || current.getType().equals("Float")){
+                if ((templateValue != null && (templateValue.getType().equals("Double")) ||
+                        templateValue.getType().equals("Float"))) {
+                    this.parameters.put(s, parameters.get(s));
+                }
+            } else{
+                if ((templateValue != null && templateValue.getType().equals(current.getType()))) {
+                    this.parameters.put(s, parameters.get(s));
+                }
             }
         });
     }
@@ -127,6 +135,7 @@ public class Module {
         return "Module{" +
                 "name='" + name + '\'' +
                 ", template=" + template.getType() +
+                ", parameters=" + parameters +
                 '}';
     }
 

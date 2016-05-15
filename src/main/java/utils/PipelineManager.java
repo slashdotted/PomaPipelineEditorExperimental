@@ -93,6 +93,7 @@ public class PipelineManager {
             jsonLinks = (JSONArray) pipeline.get("links");
 
 
+
         clipboard.put(Converter.MODULES_DATA_FORMAT, jsonModules);
         clipboard.put(Converter.LINKS_DATA_FORMAT, jsonLinks);
     }

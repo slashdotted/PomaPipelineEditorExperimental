@@ -23,13 +23,12 @@ public class Converter {
     public static DataFormat MODULES_DATA_FORMAT = new DataFormat("modules");
     public static DataFormat LINKS_DATA_FORMAT = new DataFormat("links");
 
-    //TODO check for comment parameter
 
     public static Module jsonToModule(String name, JSONObject jsonObject) {
 
         Module module = null;
 
-        System.out.println(jsonObject.toString(4));
+        //System.out.println(jsonObject.toString(4));
         String type = jsonObject.getString("type");
 
 
@@ -61,6 +60,7 @@ public class Converter {
 
         module.setParameters(extractParams(template, jsonObject));
 
+        //System.out.println("Current module: " + module);
         JSONArray jsonArray = null;
         if (jsonObject.has("cparams"))
             jsonArray = jsonObject.getJSONArray("cparams");
@@ -154,10 +154,12 @@ public class Converter {
         // Mandatory params extraction
 
 
-        if (!template.getMandatoryParameters().isEmpty())
+        if (!template.getMandatoryParameters().isEmpty()) {
+
             template.getMandatoryParameters().keySet().forEach(key -> {
                 boolean validValue = false;
                 Value value = new Value(template.getMandatoryParameters().get(key));
+
                 Object val = null;
                 if (jsonObject.has(key))
                     val = jsonObject.get(key);
@@ -166,10 +168,13 @@ public class Converter {
                     value.setValue(val);
                     validValue = true;
                 }
-                value.setValid(validValue);
-                params.put(key, value);
-            });
 
+                value.setValid(validValue);
+
+                params.put(key, value);
+
+            });
+        }
         // Optional params extraction
         if (!template.getOptParameters().isEmpty())
             // Skips parameters not present
@@ -195,23 +200,17 @@ public class Converter {
     public static void populateClipBoards(Map<String, Module> modules, Map<String, Link> links) {
         Main.modulesClipboard.clear();
         Main.linksClipboard.clear();
-        //System.out.println("Before populating modules");
 
         modules.keySet().forEach(key -> {
-          //  System.out.println("Populating module");
             Module current = modules.get(key);
-            //System.out.println(current);
             Main.modulesClipboard.put(current.getName(), moduleToJSON(current));
 
         });
-        //System.out.println("Before Populating links: " + links.size());
 
         links.keySet().forEach(key -> {
             Link current = links.get(key);
             ArrayList<JSONObject> jsonLinks = linkToJSON(current);
-          //  System.out.println("json links size: " + jsonLinks.size());
             jsonLinks.forEach(jsonLink -> {
-            //    System.out.println("Populating links");
 
 
                 String channel = "default";

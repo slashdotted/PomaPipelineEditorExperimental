@@ -653,7 +653,6 @@ public class MainWindow extends BorderPane {
         if (position == null) {
 
             posYAssign = calcolateBiggerPosY();
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>posassignY " + posYAssign);
 
             posXAssign += 200;
             if (posXAssign > 1400 || posYAssign <= 100) {
@@ -815,10 +814,8 @@ public class MainWindow extends BorderPane {
         mModuleItemDropped = new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                System.out.println("dragging***********************************************************************");
                 DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
                 //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
-                System.out.println("container:" + container);
                 if (container != null) {
                     container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
