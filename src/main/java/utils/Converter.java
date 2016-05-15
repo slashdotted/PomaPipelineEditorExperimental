@@ -253,7 +253,7 @@ public class Converter {
         //return pipeline.toString(4);
     }
 
-
+/*
     public static boolean checkMatching(JSONObject pipelineModules, JSONArray pipelineLinks) {
 
         for (Object pipelineLink : pipelineLinks) {
@@ -263,7 +263,7 @@ public class Converter {
         }
 
         return true;
-    }
+    }*/
 
 
 }

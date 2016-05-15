@@ -20,18 +20,7 @@ public class Link {
 
 
 
-    public String getJsonId(String channel) {
-        if (checkIfPresent(channel,channelsAToB) ||  checkIfPresent(channel,channelsBToA))
-            return getID() + channel;
-        else
-            return null;
-    }
 
-    public Link (boolean isShadow){
-        moduleA=null;
-        moduleB=null;
-
-    }
     public String getID() {
         return moduleA.getName() + "-" + moduleB.getName();
     }
@@ -123,15 +112,8 @@ public class Link {
         return moduleB;
     }
 
-    public Link copy(){
 
-        Link link=new Link(this.moduleA,this.moduleB,"default");
-        link.setChannelsAToB(this.channelsAToB);
-        link.setChannelsBToA(this.channelsBToA);
-        return link;
-    }
-
-    public void updateChannel (String orientation, String oldValue,String newValue) {
+  /*  public void updateChannel (String orientation, String oldValue,String newValue) {
         List<SimpleStringProperty> listChannel=getChannelList(orientation);
         SimpleStringProperty channel=new SimpleStringProperty();
         channel.set(newValue);
@@ -144,7 +126,7 @@ public class Link {
             }
         }
 
-    }
+    }*/
     public SimpleStringProperty getChannel(String name,String orientation){
         List<SimpleStringProperty> channels=getChannelList(orientation);
         for (SimpleStringProperty channel:channels ) {
