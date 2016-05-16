@@ -21,25 +21,19 @@ public class Module {
 
     // Used as id
     private String name;
-    //private String description;
-    //  private String type;
     private ModuleTemplate template;
-    // private ArrayList<String> cParams;
+
     private ObservableList<SimpleStringProperty> cParams;
 
     private Map<String, Value> parameters;
     private Point2D position;
 
     private String host = "localhost";
-    private SimpleBooleanProperty valid=new SimpleBooleanProperty(true);
-    private SimpleDoubleProperty posX=new SimpleDoubleProperty();
-    private SimpleDoubleProperty posY=new SimpleDoubleProperty();
+    private SimpleBooleanProperty valid = new SimpleBooleanProperty(true);
 
 
     private Module(ModuleTemplate template) {
         this.template = template;
-        //this.name=template.getNameInstance();
-        //this.cParams = new ArrayList<>();
         this.cParams = FXCollections.observableArrayList();
         this.parameters = new HashMap<>();
 
@@ -64,16 +58,6 @@ public class Module {
     public void setTemplate(ModuleTemplate template) {
         this.template = template;
     }
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-
-//
-
 
     public String getName() {
         return name;
@@ -91,13 +75,6 @@ public class Module {
         this.cParams = cParams;
     }
 
-    //    public ArrayList<String> getCParams() {
-//        return cParams;
-//    }
-//
-//    public void setCParams(ArrayList<String> cParams) {
-//        this.cParams = cParams;
-//    }
 
     public Map<String, Value> getParameters() {
         return parameters;
@@ -112,17 +89,17 @@ public class Module {
             Value templateValue = templateParams.get(s);
             Value current = parameters.get(s);
 
-            if(current.getType().equals("Long") || current.getType().equals("Integer")){
+            if (current.getType().equals("Long") || current.getType().equals("Integer")) {
                 if ((templateValue != null && (templateValue.getType().equals("Long")) ||
                         templateValue.getType().equals("Integer"))) {
                     this.parameters.put(s, parameters.get(s));
                 }
-            }else if(current.getType().equals("Double") || current.getType().equals("Float")){
+            } else if (current.getType().equals("Double") || current.getType().equals("Float")) {
                 if ((templateValue != null && (templateValue.getType().equals("Double")) ||
                         templateValue.getType().equals("Float"))) {
                     this.parameters.put(s, parameters.get(s));
                 }
-            } else{
+            } else {
                 if ((templateValue != null && templateValue.getType().equals(current.getType()))) {
                     this.parameters.put(s, parameters.get(s));
                 }
@@ -147,11 +124,8 @@ public class Module {
         this.position = position;
     }
 
-    public void addCParams(ArrayList<String> cparams) {
-        cparams.forEach(s -> this.cParams.add(new SimpleStringProperty(s)));
-    }
 
-    public void addCParams(JSONArray jsonparams){
+    public void addCParams(JSONArray jsonparams) {
         for (int i = 0; i < jsonparams.length(); i++) {
             this.cParams.add(new SimpleStringProperty(jsonparams.getString(i)));
         }
@@ -174,6 +148,7 @@ public class Module {
 
         this.valid.setValue(valid);
     }
+
     public SimpleBooleanProperty getValid() {
         return this.valid;
     }

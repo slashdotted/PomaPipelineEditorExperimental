@@ -38,12 +38,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class SideBar extends VBox {
 
-    //private static Image addImageNormal = new Image("images/plus2.png");
-    //private static Image addImageShadow = new Image("images/plus2_shadow.png");
+
     private static ImageView pinImageView = ProgramUtils.getPinImage(20);
     private static ImageView closeImageView = ProgramUtils.getCloseImage(20);
     private static ImageView unPinImageView = ProgramUtils.getUnpinImage(20);
-
 
 
     @FXML
@@ -93,7 +91,6 @@ public class SideBar extends VBox {
 
     public SideBar(Module module, double expandedSize, boolean creation) {
         this.module = module;
-        //this.controlButton = controlButton;
         this.expandedSize = expandedSize;
         animated.set(false);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sideBar.fxml"));
@@ -101,7 +98,7 @@ public class SideBar extends VBox {
         fxmlLoader.setController(this);
         this.creation = creation;
         try {
-           fxmlLoader.load();
+            fxmlLoader.load();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,14 +116,14 @@ public class SideBar extends VBox {
         setVisible(false);
         initPosition();
         this.template = module.getTemplate();
-        //this.cparams = FXCollections.observableList(module.getCParams());
+
         this.cparams = module.getcParams();
         nameLabel.setText(module.getName());
         templateLabel.setText(template.getType());
         moduleImage.setImage(new Image(module.getTemplate().getImageURL()));
         paramBoxes = new ArrayList<>();
         templateLabel.setTooltip(new Tooltip(template.getType()));
-        //setParametersArea();
+
         this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
         this.cparamsBox.setFillWidth(true);
         hostTextField.setText(module.getHost());
@@ -153,7 +150,7 @@ public class SideBar extends VBox {
     }
 
     private void setButtons() {
-        //closeSidebar.setShape(new Rectangle(20,20));
+
         closeSidebar.setGraphic(closeImageView);
         closeSidebar.setBackground(Background.EMPTY);
         ProgramUtils.setOnPressedButton(closeSidebar);
@@ -180,10 +177,10 @@ public class SideBar extends VBox {
         });
 
         pinButton.setOnAction(event1 -> {
-            if(pinned.get()){
+            if (pinned.get()) {
                 pinned.compareAndSet(true, false);
                 pinButton.setGraphic(pinImageView);
-            }else{
+            } else {
                 pinned.compareAndSet(false, true);
                 pinButton.setGraphic(unPinImageView);
             }
@@ -211,7 +208,7 @@ public class SideBar extends VBox {
     }
 
     public void show() {
-        System.out.println("Show sidebar called");
+
         if (animated.get())
             return;
         animated.compareAndSet(false, true);
@@ -223,7 +220,7 @@ public class SideBar extends VBox {
             animated.compareAndSet(true, false);
 
         });
-        System.out.println("Showing");
+
         setVisible(true);
         showPanel.play();
 
@@ -231,14 +228,13 @@ public class SideBar extends VBox {
 
 
     public void hide(boolean force) {
-        System.out.println("Hide sidebar called");
-        if(force && isPinned()){
+
+        if (force && isPinned()) {
             pinned.compareAndSet(true, false);
         }
         if (animated.get() || isPinned())
             return;
 
-        //System.out.println("Sidebar hiding->>>>>>>>>>>>>>><");
 
         animated.compareAndSet(false, true);
         final Animation hidePanel = hideAnimation(this);
@@ -247,12 +243,10 @@ public class SideBar extends VBox {
             animated.compareAndSet(true, false);
         });
 
-        //if (!animated.get()) {
-        System.out.println("Hiding");
-        //setVisible(true);
+
         setModuleAsValid();
         hidePanel.play();
-        //}
+
 
     }
 
@@ -293,9 +287,9 @@ public class SideBar extends VBox {
         boolean isValid = true;
         for (FormBox form : mandatoryFormBoxes) {
             isValid &= form.isValid();
-            //System.out.println("form validation: " + isValid);
+
         }
-        //System.out.println();
+
         module.setValid(isValid);
     }
 
@@ -304,7 +298,7 @@ public class SideBar extends VBox {
         temp.selectAll();
         temp.setFont(Font.font("System", FontWeight.BOLD, 14));
         VBox infoBox = (VBox) this.lookup("#infoBox");
-        //nameLabel.setVisible(false);
+
 
         infoBox.getChildren().remove(nameLabel);
         infoBox.getChildren().add(0, temp);
@@ -321,9 +315,9 @@ public class SideBar extends VBox {
 
     private void acceptEdit(TextField temp, VBox infoBox) {
         if (!temp.getText().equals("") && !temp.getText().equals(module.getName())) {
-            // System.out.println("Text changed");
+
             Command editName = new EditModule(module, EditModule.Type.Name, temp.getText());
-            if(editName.execute()){
+            if (editName.execute()) {
                 CareTaker.addMemento(editName);
                 nameLabel.setText(module.getName());
                 MainWindow.stackedLogBar.logAndSuccess("Name changed: " + module.getName());
@@ -335,7 +329,7 @@ public class SideBar extends VBox {
         infoBox.getChildren().remove(temp);
         if (!infoBox.getChildren().contains(nameLabel))
             infoBox.getChildren().add(0, nameLabel);
-        //nameLabel.setVisible(true);
+
     }
 
 
@@ -363,19 +357,17 @@ public class SideBar extends VBox {
 
         template.getMandatoryParameters().keySet().forEach(key -> {
 
-            //Value value = template.getMandatoryParameters().get(key);
-            Value value = module.getParameters().get(key);
 
+            Value value = module.getParameters().get(key);
 
             FormBox current = new FormBox(value);
             mandatoryFormBoxes.add(current);
             mandatoryBox.getChildren().add(current);
-            //Value value = module.getParameters().get(key);
             mandatoryBox.getChildren().add(GraphicsElementsFactory.getSeparator());
         });
 
         template.getOptParameters().keySet().forEach(key -> {
-            //Value value = template.getOptParameters().get(key);
+
             Value value = module.getParameters().get(key);
             VBox current = new FormBox(value);
             optionalBox.getChildren().add(current);
@@ -385,7 +377,7 @@ public class SideBar extends VBox {
     }
 
     private void addNewCParam(SimpleStringProperty cParam, boolean isNew) {
-        //SimpleStringProperty newString = new SimpleStringProperty(stringProperty);
+
 
         ParamBox box = new ParamBox(cParam);
         this.cparamsBox.getChildren().add(box);
@@ -394,7 +386,7 @@ public class SideBar extends VBox {
             addParam.execute();
             CareTaker.addMemento(addParam);
         }
-        //this.cparams.add(cParam);
+
         paramBoxes.add(box);
         this.cparamsBox.setVgrow(box, Priority.ALWAYS);
 
@@ -403,9 +395,9 @@ public class SideBar extends VBox {
             Command removeParam = new RemoveStringProperty(box.paramProperty(), cparams);
             removeParam.execute();
             CareTaker.addMemento(removeParam);
-            //cparams.remove(box.paramProperty());
+
             paramBoxes.remove(box);
-            //TODO call command
+
             Platform.runLater(() -> cparamsBox.getChildren().remove(box));
         });
     }

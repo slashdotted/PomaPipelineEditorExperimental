@@ -45,6 +45,10 @@ public class ChannelsManager extends BorderPane {
     static SimpleStringProperty currentChannel;
     private int firstSelect = -1;
 
+/*
+* Windows to manage all the channels of a link
+* */
+
     public ChannelsManager(Link link, String orientation) {
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
@@ -65,20 +69,17 @@ public class ChannelsManager extends BorderPane {
         stage.setResizable(false);
 
         stage.show();
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                (MainWindow.allLinkView.get(link.getID())).unselectImage(orientation);
-                (MainWindow.allLinkView.get(link.getID())).updateImageViews(orientation);
-                if (link.getNumberOfChannels() == 0) {
-                    Command removeLink = new RemoveLink(link);
-                    removeLink.execute();
+        stage.setOnCloseRequest(event -> {
+            (MainWindow.allLinkView.get(link.getID())).unselectImage(orientation);
+            (MainWindow.allLinkView.get(link.getID())).updateImageViews(orientation);
+            if (link.getNumberOfChannels() == 0) {
+                Command removeLink = new RemoveLink(link);
+                removeLink.execute();
 
-                    CareTaker.addMemento(removeLink);
-
-                }
+                CareTaker.addMemento(removeLink);
 
             }
+
         });
 
 
@@ -98,6 +99,9 @@ public class ChannelsManager extends BorderPane {
 
         channelsObs = link.getChannelList(orientation);
         setButtonsEvents();
+
+        //LinkView with all the channels of a link
+
         listV.setItems(channelsObs);
         listV.setCellFactory(new Callback<ListView<SimpleStringProperty>, ListCell<SimpleStringProperty>>() {
             @Override
@@ -106,6 +110,9 @@ public class ChannelsManager extends BorderPane {
 
                 ListCell<SimpleStringProperty> cell = new ListCell<SimpleStringProperty>() {
 
+                    /**
+                     * All controllers of every events handlers in the listView and Buttons of this windows
+                     * */
                     @Override
                     protected void updateItem(SimpleStringProperty t, boolean bln) {
                         super.updateItem(t, bln);
@@ -144,43 +151,43 @@ public class ChannelsManager extends BorderPane {
                         } else setGraphic(null);
                     }
 
+
+
+
                     private void addListenerHandler(TextField channelName, SimpleStringProperty t, int cell) {
 
-                        channelName.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-                            @Override
-                            public void handle(MouseEvent event) {
+                        channelName.setOnMouseClicked(event -> {
 
-                                oldValue = channelName.getText();
-                                if (event.isShiftDown()) {
+                            oldValue = channelName.getText();
+                            if (event.isShiftDown()) {
 
-                                    if (firstSelect < 0) {
-                                        firstSelect = cell;
-                                        System.out.println("setto firstselect");
-
-                                    } else {
-                                        listV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-                                        int aux = cell;
-                                        if (firstSelect > cell) {
-
-                                            aux = firstSelect;
-                                            firstSelect = cell;
-
-                                        }
-                                        listV.getSelectionModel().selectRange(firstSelect, aux + 1);
-                                    }
-
-                                } else if (event.isControlDown()) {
-                                    firstSelect = -1;
-                                    listV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-                                    listV.getSelectionModel().select(cell);
-                                } else {
+                                if (firstSelect < 0) {
                                     firstSelect = cell;
-                                    listV.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-                                    listV.getSelectionModel().clearAndSelect(cell);
+
+
+                                } else {
+                                    listV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+                                    int aux = cell;
+                                    if (firstSelect > cell) {
+
+                                        aux = firstSelect;
+                                        firstSelect = cell;
+
+                                    }
+                                    listV.getSelectionModel().selectRange(firstSelect, aux + 1);
                                 }
 
-
+                            } else if (event.isControlDown()) {
+                                firstSelect = -1;
+                                listV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+                                listV.getSelectionModel().select(cell);
+                            } else {
+                                firstSelect = cell;
+                                listV.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+                                listV.getSelectionModel().clearAndSelect(cell);
                             }
+
+
                         });
 
                         channelName.focusedProperty().addListener((observable, oldValue1, newValue) -> {
@@ -203,27 +210,21 @@ public class ChannelsManager extends BorderPane {
 
                     private void addListenerHandler(ImageView removeChanne, TextField channelName) {
 
-                        removeChanne.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-                            @Override
-                            public void handle(MouseEvent event) {
-                                System.out.println("Elimino channel");
-                                System.out.println(listV.getItems().size());
+                        removeChanne.setOnMouseClicked(event -> {
 
-                                List<SimpleStringProperty> channels = link.getChannelList(ChannelsManager.orientation);
-                                SimpleStringProperty channelToRemove = link.getChannel(channelName.getText(), ChannelsManager.orientation);
-                                System.out.println(channelToRemove.getValue());
-                                String title = "Remove channel";
-                                String msg = "Are you sure you wish remove the selected channel?";
+                            List<SimpleStringProperty> channels = link.getChannelList(ChannelsManager.orientation);
+                            SimpleStringProperty channelToRemove = link.getChannel(channelName.getText(), ChannelsManager.orientation);
+                            String title = "Remove channel";
+                            String msg = "Are you sure you wish remove the selected channel?";
 
-                                if (GraphicsElementsFactory.showWarning(title, msg)) {
-                                    Command removeChannel = new RemoveChannel(channelToRemove, channels, link, ChannelsManager.orientation);
-                                    removeChannel.execute();
+                            if (GraphicsElementsFactory.showWarning(title, msg)) {
+                                Command removeChannel1 = new RemoveChannel(channelToRemove, channels, link, ChannelsManager.orientation);
+                                removeChannel1.execute();
 
-                                    CareTaker.addMemento(removeChannel);
-                                }
-
-
+                                CareTaker.addMemento(removeChannel1);
                             }
+
+
                         });
 
                     }
@@ -245,31 +246,27 @@ public class ChannelsManager extends BorderPane {
 
 
     private void setButtonsEvents() {
-        removeChannel.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                ObservableList<SimpleStringProperty> selection = listV.getSelectionModel().getSelectedItems();
-                ObservableList<Integer> indices = listV.getSelectionModel().getSelectedIndices();
+        removeChannel.setOnAction(event -> {
+            ObservableList<SimpleStringProperty> selection = listV.getSelectionModel().getSelectedItems();
+            ObservableList<Integer> indices = listV.getSelectionModel().getSelectedIndices();
 
-                System.out.println(selection.size() + "siazeeeeeeeeee");
-                int i = indices.size();
-                String title = "Remove channels";
-                String msg = "Are you sure you wish remove the " + i + " selected channel?";
-                if (GraphicsElementsFactory.showWarning(title, msg)) {
-                    ArrayList<Command> allAdds = new ArrayList<>();
-                    for (int j = 0; j < i; j++) {
-                        SimpleStringProperty selectedItem = listV.getItems().get(indices.get(j));
-                        Command command = new RemoveChannel(selectedItem, link.getChannelList(orientation), link, orientation);
+            int i = indices.size();
+            String title = "Remove channels";
+            String msg = "Are you sure you wish remove the " + i + " selected channel?";
+            if (GraphicsElementsFactory.showWarning(title, msg)) {
+                ArrayList<Command> allAdds = new ArrayList<>();
+                for (int j = 0; j < i; j++) {
+                    SimpleStringProperty selectedItem = listV.getItems().get(indices.get(j));
+                    Command command = new RemoveChannel(selectedItem, link.getChannelList(orientation), link, orientation);
 
 
-                        allAdds.add(command);
-                    }
-                    Command executeAll = new ExecuteAll(allAdds);
-                    executeAll.execute();
-                    CareTaker.addMemento(executeAll);
+                    allAdds.add(command);
                 }
-
+                Command executeAll = new ExecuteAll(allAdds);
+                executeAll.execute();
+                CareTaker.addMemento(executeAll);
             }
+
         });
         addChannel.setOnAction(event -> {
             SimpleStringProperty newValue;

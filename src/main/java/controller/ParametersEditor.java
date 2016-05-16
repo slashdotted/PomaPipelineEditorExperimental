@@ -65,7 +65,7 @@ public class ParametersEditor extends VBox {
     public void initialize() {
         parameterLabel.setText("");
         Module base = selectedModules.values().stream().findFirst().get();
-        System.out.println("Module base:" + base.getName());
+
 
         Map<String, Value> candidates = new HashMap<>(base.getParameters());
         ArrayList<Value> blackList = new ArrayList<>();
@@ -74,28 +74,27 @@ public class ParametersEditor extends VBox {
         for (Module module : selectedModules.values()) {
             candidates.keySet().forEach(key -> {
                 if (!module.getParameters().keySet().contains(key)) {
-                    System.out.println(candidates.get(key));
+
                     blackList.add(candidates.get(key));
                 } else {
                     if (!module.getParameters().get(key).getType().equals(candidates.get(key).getType())) {
-                        System.out.println(candidates.get(key));
+
                         blackList.add(candidates.get(key));
                     }
                 }
 
             });
         }
-        System.out.println();
+
         candidates.put("Host", new Value("#module_host", new String("localhost"), "localhost", true));
         blackList.forEach(value -> {
             candidates.remove(value.getName());
         });
 
 
-
         matchesLabel.setText("" + (candidates.size() + 1));
         ObservableList<String> list = FXCollections.observableArrayList(candidates.keySet());
-        //list.add(0, "Host");
+
         listView.setItems(list);
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             valueTextField.setText("");
@@ -133,9 +132,6 @@ public class ParametersEditor extends VBox {
             this.getScene().getWindow().hide();
 
         });
-
-
-        //  System.out.println(Arrays.toString(candidates.values().toArray()));
 
 
     }

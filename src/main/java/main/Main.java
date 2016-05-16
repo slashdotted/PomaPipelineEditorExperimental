@@ -37,7 +37,6 @@ public class Main extends Application {
     public static Scene mScene;
     public static MainWindow root;
 
-    //public static String currentJSON = "";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -45,23 +44,22 @@ public class Main extends Application {
         EditorConfManager confManager = new EditorConfManager();
         File conf = new File("conf_final.json");
         confManager.load(conf);
-        
 
-        // long startTime = System.currentTimeMillis();
+
         root = new MainWindow();
-        // System.out.println(System.currentTimeMillis()-startTime);
+
 
         primaryStage.setTitle("PoorMans Pipeline Editor");
 
         dirty.addListener((observable, oldValue, newValue) -> {
-            if(observable.getValue()){
+            if (observable.getValue()) {
                 primaryStage.setTitle("*PoorMans Pipeline Editor");
-            }else{
+            } else {
                 primaryStage.setTitle("PoorMans Pipeline Editor");
             }
         });
 
-        mScene=new Scene(root, 1000, 600);
+        mScene = new Scene(root, 1000, 600);
         primaryStage.setMaximized(true);
         primaryStage.setMinHeight(500);
         primaryStage.setMinWidth(800);
@@ -80,26 +78,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
 
-    }
-
-    private static void clearData() {
-//        modules.clear();
-//        modulesClipboard.clear();
-//        links.clear();
-//        linksClipboard.clear();
-    }
-
-
-    // TODO remove this method
-    public static void testPane(Parent node){
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(mScene.getWindow());
-        stage.setTitle("Test Pane");
-        stage.setScene(new Scene(node));
-        //stage.setHeight(500);
-        //stage.setWidth(300);
-        stage.show();
     }
 
 

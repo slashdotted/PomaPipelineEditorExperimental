@@ -45,26 +45,15 @@ public class MainWindow extends BorderPane {
     public static SelectionArea selectionArea;
     private ModuleTemplate shadowModule = null;
     private ModuleItem draggableModuleItem = null;
-    public static SideBar currentSidebar; //TODO wire the visible sidebar to this static field
+    public static SideBar currentSidebar;
     public static ScrollPane mainScrollPaneStat;
     public static Group mainGroup;
     public static double posXAssign = 100;
     public static double posYAssign = 0;
     double originalScaleX = 0;
     double originalScaleY = 0;
-    static boolean fileReaded = false;
-    static String filePath = null;
     public static double hoffset = 0;
     public static double voffset = 0;
-
-
-//    static double pressedX = 0;
-//    static double pressedY = 0;
-//    static double draggedX, draggedY;
-
-
-    //public static Button toggleSidebar = new Button();
-    //SELECTION
 
 
     @FXML
@@ -139,17 +128,17 @@ public class MainWindow extends BorderPane {
 
     }
 
-
+    /*
+    *  AddModule one icon that will be used for the drag-drop process
+    *  This is added as a child to the root splitPane so it can be visible
+    *  on both sides of the split pane.
+    * */
     @FXML
     public void initialize() {
 
-        //AddModule one icon that will be used for the drag-drop process
-        //This is added as a child to the root anchorpane so it can be visible
-        //on both sides of the split pane.
+
         boolean isShadow = true;
         shadowModule = ModuleTemplate.getInstance();
-        /// shadowModule.setName("");
-
         draggableModuleItem = new ModuleItem(shadowModule.getType(), isShadow);
         draggableModuleItem.setVisible(false);
         draggableModuleItem.setOpacity(0.65);
@@ -160,12 +149,12 @@ public class MainWindow extends BorderPane {
 
         //Populate left pane with all modules
         for (ModuleTemplate template : templates) {
-            // System.out.println(template.getType());
             isShadow = false;
             ModuleItem item = new ModuleItem(template.getType(), isShadow);
             moduleVBox.getChildren().add(item);
             addDragDetection(item);
         }
+
         //Create a new group to manage all nodes in mainScrollPane
         mainGroup = new Group();
 
@@ -176,9 +165,6 @@ public class MainWindow extends BorderPane {
 
         setMouseAndKeys();
 
-
-        //TODO create true size
-        //Pane pane=new Pane();
         mainGroup.getChildren().add(new Pane());
 
 
@@ -188,23 +174,21 @@ public class MainWindow extends BorderPane {
         this.setBottom(stackedLogBar);
         mainScrollPane.setPannable(false);
         selectionArea = new SelectionArea(dragBoard, mainGroup, allDraggableModule);
-        //setSelection();
+
     }
 
     public void initializeSelectionArea() {
         selectionArea.initialize();
     }
 
-    /**
-     *
-     */
+
     private void setButtons() {
         // new button settings
         newButton.setGraphic(new ImageView("images/new.png"));
         newButton.setTooltip(new Tooltip("New Pipeline"));
         newButton.setBackground(Background.EMPTY);
         newButton.disableProperty().bind(Main.dirty.not());
-        //oldEffectButton = newButton.getEffect();
+
         ProgramUtils.setOnPressedButton(newButton);
 
         // open button settings
@@ -264,7 +248,6 @@ public class MainWindow extends BorderPane {
         if (currentSidebar != null) {
             closeSidebar(true);
         }
-        resetZoom();
         if (Main.dirty.getValue()) {
             if (!GraphicsElementsFactory.saveDialog("create new"))
                 return;
@@ -277,7 +260,6 @@ public class MainWindow extends BorderPane {
         if (currentSidebar != null) {
             closeSidebar(true);
         }
-        resetZoom();
         if (Main.dirty.getValue()) {
 
             if (!GraphicsElementsFactory.saveDialog("open another"))
@@ -295,7 +277,6 @@ public class MainWindow extends BorderPane {
         if (currentSidebar != null) {
             closeSidebar(true);
         }
-        resetZoom();
         String windowTitle = "Import pipeline";
 
         if (CareTaker.size() == 0) {
@@ -304,7 +285,6 @@ public class MainWindow extends BorderPane {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(windowTitle);
-        // fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files (*.json)"));
         File pipelineFile = fileChooser.showOpenDialog(Main.root.getScene().getWindow());
 
         if (pipelineFile != null) {
@@ -318,10 +298,6 @@ public class MainWindow extends BorderPane {
                 stackedLogBar.logAndWarning("There was an error while importing");
             }
 
-//            Main.modules.keySet().forEach(s -> System.out.println(Main.modules.get(s)));
-//            Main.links.keySet().forEach(s -> System.out.println(Main.links.get(s)));
-//            MainWindow.allDraggableModule.keySet().forEach(s -> System.out.println(MainWindow.allDraggableModule.get(s)));
-//            MainWindow.allLinkView.keySet().forEach(s -> System.out.println(MainWindow.allLinkView.get(s)));
         }
 
     }
@@ -421,7 +397,6 @@ public class MainWindow extends BorderPane {
 
     @FXML
     public void paste() {
-        //System.out.println(eventContextMenu.getX());
         Command pasteCommand = new Paste(null);
         pasteCommand.execute();
 
@@ -441,7 +416,7 @@ public class MainWindow extends BorderPane {
 
 
     @FXML
-    private void about(){
+    private void about() {
         Stage stage = new Stage();
         About about = new About();
         stage.setScene(new Scene(about));
@@ -477,8 +452,6 @@ public class MainWindow extends BorderPane {
         mainScrollPane.setOnMouseClicked(event1 -> {
             contextualMenu.getContextMenu().hide();
             if (!mainGroup.contains(event1.getX(), event1.getY())) {
-//                closeSidebar(false);
-//                unselectAll();
                 if ((event1.getButton() == MouseButton.SECONDARY)) {
                     contextualMenu.setMouse(event1);
                     contextualMenu.showContextMenu(event1);
@@ -491,32 +464,12 @@ public class MainWindow extends BorderPane {
                 closeSidebar(false);
                 unselectAll();
             }
-//            for (String key : allDraggableModule.keySet()) {
-//               if( allDraggableModule.get(key).contains(mainGroup.sceneToLocal(event1.getX(), event1.getSceneY()))){
-//                   closeSidebar(false);
-//                   unselectAll();
-//               }
-//            }
         });
 
 
-//        Group zoomGroup = new Group();
-//        zoomGroup.getChildren().add(group);
-//        mainScrollPane.setOnScroll(event -> {
-//            if (event.isControlDown()) {
-//                double zoomFactor = 1.05;
-//                double deltaY = event.getDeltaY();
-//                if (deltaY < 0) {
-//                    zoomFactor = 2.0 - zoomFactor;
-//                }
-//                System.out.println(zoomFactor);
-//                mainGroup.setScaleX(mainGroup.getScaleX() * zoomFactor);
-//                mainGroup.setScaleY(mainGroup.getScaleY() * zoomFactor);
-//                event.consume();
-//            }
-//        });
-
-
+/*
+*   Calcolate offset relatives to the cuarrent viewport
+* */
         ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
             double hmin = mainScrollPane.getHmin();
             double hmax = mainScrollPane.getHmax();
@@ -536,9 +489,6 @@ public class MainWindow extends BorderPane {
             voffset =
                     Math.max(0, contentHeight - viewportHeight) * (vvalue - vmin) / (vmax - vmin);
 
-//            System.out.printf("Offset: [%.1f, %.1f] width: %.1f height: %.1f %n",
-//                    hoffset, voffset, viewportWidth, viewportHeight);
-
         };
 
 
@@ -548,12 +498,9 @@ public class MainWindow extends BorderPane {
 
 
         mainScrollPane.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            //System.out.println("key released " + event.getCode());
-
 
             if (ProgramUtils.resetZoomCombination.match(event)) {
                 stackedLogBar.displayMessage("Zoom reset");
-                resetZoom();
             }
             if (ProgramUtils.selectAllCombination.match(event)) {
                 stackedLogBar.displayMessage("All elements selected");
@@ -583,51 +530,17 @@ public class MainWindow extends BorderPane {
                 redo();
             }
 
-//            if (ProgramUtils.pasteCombination.match(event)) {
-//                System.out.println("....");
-//                paste();
-//            }
-
         });
 
 
     }
 
-//    private ContextMenu createContextMenu() {
-//        MenuItem paste=new MenuItem("Paste");
-//        paste.setOnAction(new EventHandler<ActionEvent>() {
-//            public void handle(ActionEvent e) {
-//              /*  Clipboard clipboard = Clipboard.getSystemClipboard();
-//                ClipboardContent content = new ClipboardContent();
-//                content.putImage(pic.getImage());
-//                clipboard.setContent(content);*/
-//
-//                System.out.println("Arrivo a paste");
-//            }
-//        });
-//        final ContextMenu contextMenu = new ContextMenu();
-//        contextMenu.getItems().add(paste);
-//
-//
-//        MainWindow.mainScrollPaneStat.addEventHandler(MouseEvent.MOUSE_CLICKED,
-//                new EventHandler<MouseEvent>() {
-//                    @Override public void handle(MouseEvent e) {
-//                        if (e.getButton() == MouseButton.SECONDARY)
-//                            contextMenu.show(MainWindow.mainScrollPaneStat, e.getScreenX(), e.getScreenY());
-//                    }
-//                });
-//        return contextMenu;
-//    }
 
-    public void resetZoom() {
-        // System.out.println("reset zoom");
-        mainGroup.setScaleX(originalScaleX);
-        mainGroup.setScaleY(originalScaleY);
-    }
-
-
+    /*
+    *   Create a new LinkView and add it to the editor
+    * */
     public static void addLinkView(Link link) {
-        //Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
+
         Group group = mainGroup;
         if (!allLinkView.containsKey(link.getID())) {
 
@@ -657,10 +570,15 @@ public class MainWindow extends BorderPane {
         }
     }
 
+    /*
+   *   Create a new DraggableModule and add it to the editor
+   * */
     public static void addDraggableModule(Module mod) {
 
         Point2D position = mod.getPosition();
         DraggableModule node = new DraggableModule(mod);
+
+        //Set position to DraggableModule without a position set
         if (position == null) {
 
             posYAssign = calcolateBiggerPosY();
@@ -678,17 +596,18 @@ public class MainWindow extends BorderPane {
         node.setmDragOffset(new Point2D(hoffset, voffset));
         mod.setPosition(position);
 
-        //node.addToolTips();
         allDraggableModule.put(node.getName(), node);
-        //Group group = (Group) MainWindow.mainScrollPaneStat.getContent();
+
         Group group = mainGroup;
         group.getChildren().add(node);
         node.relocateToPoint(new Point2D(position.getX(), position.getY()));
-        // node.select();
 
         posYAssign = 100;
     }
 
+    /*
+    *  Return the biggest coordinate Y where is placed a node
+    * */
     private static double calcolateBiggerPosY() {
         double maxPosY = 40;
         for (Node node : mainGroup.getChildren()) {
@@ -708,105 +627,103 @@ public class MainWindow extends BorderPane {
         return maxPosY;
     }
 
+    /*
+    * Handlers to manage the creation of new modules from a moduleItem,
+    * Drag detect of Module item to start with Drag & drop proccess
+    * */
+
     private void addDragDetection(ModuleItem moduleItem) {
 
-        moduleItem.setOnDragDetected(new EventHandler<MouseEvent>() {
+        moduleItem.setOnDragDetected(event -> {
+            //set drag respective events
+            splitPane.setOnDragOver(mModuleItemOverRoot);
+            mainScrollPane.setOnDragOver(mModuleItemOverMainScrollPane);
 
-            @Override
-            public void handle(MouseEvent event) {
-                //set drag respective events
-                splitPane.setOnDragOver(mModuleItemOverRoot);
-                mainScrollPane.setOnDragOver(mModuleItemOverMainScrollPane);
-//                mainScrollPane.setOnDragDropped(mModuleItemDropped);
+            dragBoard.setOnDragDropped(mModuleItemDropped);
 
-                dragBoard.setOnDragDropped(mModuleItemDropped);
+            //get the item clicked
+            ModuleItem itemClicked = (ModuleItem) event.getSource();
 
-                //get the item clicked
-                ModuleItem itemClicked = (ModuleItem) event.getSource();
+            //drag operations
+            //set shadowModule of draggableModuleItem
 
-                //drag operations
-                //set shadowModule of draggableModuleItem
-
-                draggableModuleItem.setParameters(itemClicked.getTemplateType());
-                draggableModuleItem.relocate(new Point2D(event.getSceneX(), event.getSceneY()));
+            draggableModuleItem.setParameters(itemClicked.getTemplateType());
+            draggableModuleItem.relocate(new Point2D(event.getSceneX(), event.getSceneY()));
 
 
-                ClipboardContent content = new ClipboardContent();
-                DragContainer container = new DragContainer();
+            ClipboardContent content = new ClipboardContent();
+            DragContainer container = new DragContainer();
 
-                container.addData("TemplateType", draggableModuleItem.getTemplateType());
-                content.put(DragContainer.AddNode, container);
+            container.addData("TemplateType", draggableModuleItem.getTemplateType());
+            content.put(DragContainer.AddNode, container);
 
-                draggableModuleItem.startDragAndDrop(TransferMode.ANY).setContent(content);
-                draggableModuleItem.setVisible(true);
-                draggableModuleItem.setMouseTransparent(true);
-                event.consume();
+            draggableModuleItem.startDragAndDrop(TransferMode.ANY).setContent(content);
+            draggableModuleItem.setVisible(true);
+            draggableModuleItem.setMouseTransparent(true);
+            event.consume();
 
-            }
         });
 
     }
 
+
     private void buildDragHandlers() {
 
-        mainScrollPane.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                if (db.hasFiles()) {
-                    event.acceptTransferModes(TransferMode.COPY);
-                } else {
-                    event.consume();
-                }
-            }
-        });
-        this.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasFiles()) {
-                    success = true;
-                    String filePath = db.getString();
-                    filePath = db.getFiles().get(db.getFiles().size() - 1).getAbsolutePath();
+        /*
+        * Handler to start event to accept Drag and Drop of files to the mainWindows
+        * */
 
-                    db.clear();
-
-                    Command importCommand = new Import(new File(filePath));
-                    boolean imported = importCommand.execute();
-                    CareTaker.addMemento(importCommand);
-                    if (imported) {
-                        stackedLogBar.logAndSuccess("Imported file: " + filePath);
-                        //PipelineManager.CURRENT_PIPELINE_PATH = null;
-                    } else {
-                        stackedLogBar.logAndWarning("There was an error while importing");
-                    }
-
-                    filePath = "";
-
-                }
-                event.setDropCompleted(success);
+        mainScrollPane.setOnDragOver(event -> {
+            Dragboard db = event.getDragboard();
+            if (db.hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            } else {
                 event.consume();
             }
+        });
+
+        /*
+        * Manage the file dropped in MainWindows
+        * */
+        this.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasFiles()) {
+                success = true;
+                String filePath;
+                filePath = db.getFiles().get(db.getFiles().size() - 1).getAbsolutePath();
+
+                db.clear();
+
+                Command importCommand = new Import(new File(filePath));
+                boolean imported = importCommand.execute();
+                CareTaker.addMemento(importCommand);
+                if (imported) {
+                    stackedLogBar.logAndSuccess("Imported file: " + filePath);
+                } else {
+                    stackedLogBar.logAndWarning("There was an error while importing");
+                }
+
+
+            }
+            event.setDropCompleted(success);
+            event.consume();
         });
 
 
         //to manage the movement from left to right pane
-        mModuleItemOverRoot = new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
+        mModuleItemOverRoot = event -> {
 
-                Point2D point = mainScrollPane.sceneToLocal(event.getSceneX(), event.getSceneY());
-                //controls if we are in the mainScrollPane's limits
-                if (mainScrollPane.boundsInLocalProperty().get().contains(point)) {
-                    event.acceptTransferModes(TransferMode.ANY);
-                    draggableModuleItem.relocate(new Point2D(event.getSceneX(), event.getSceneY()));
-                    return;
-                }
-
-                event.consume();
-
+            Point2D point = mainScrollPane.sceneToLocal(event.getSceneX(), event.getSceneY());
+            //controls if we are in the mainScrollPane's limits
+            if (mainScrollPane.boundsInLocalProperty().get().contains(point)) {
+                event.acceptTransferModes(TransferMode.ANY);
+                draggableModuleItem.relocate(new Point2D(event.getSceneX(), event.getSceneY()));
+                return;
             }
+
+            event.consume();
+
         };
 
         mModuleItemOverMainScrollPane = event -> {
@@ -822,148 +739,130 @@ public class MainWindow extends BorderPane {
             event.consume();
 
         };
-        mModuleItemDropped = new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
-                //  System.out.println(event.getSceneX() + "--" + event.getSceneY());
-                if (container != null) {
-                    container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
-                    ClipboardContent content = new ClipboardContent();
+        mModuleItemDropped = event -> {
+            DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
+            if (container != null) {
+                container.addData("scene_coords", new Point2D(event.getSceneX(), event.getSceneY()));
 
-                    content.put(DragContainer.AddNode, container);
+                ClipboardContent content = new ClipboardContent();
 
-                    event.getDragboard().setContent(content);
-                    event.setDropCompleted(true);
+                content.put(DragContainer.AddNode, container);
+
+                event.getDragboard().setContent(content);
+                event.setDropCompleted(true);
+            }
+        };
+/*
+*   The final process of Drag&Drop than will create a DraggableModule, or a LinkView
+* */
+        this.setOnDragDone(event -> {
+
+            mainScrollPane.removeEventHandler(DragEvent.DRAG_OVER, mModuleItemOverMainScrollPane);
+            mainScrollPane.removeEventHandler(DragEvent.DRAG_DROPPED, mModuleItemDropped);
+            splitPane.removeEventHandler(DragEvent.DRAG_OVER, mModuleItemOverRoot);
+
+            draggableModuleItem.setVisible(false);
+
+            //Create node drag operation
+            DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
+
+            if (container != null) {
+                if (container.getValue("scene_coords") != null) {
+                    //creo instance of model
+
+                    Point2D mousePoint = container.getValue("scene_coords");
+                    //build module
+                    ModuleTemplate template = Main.templates.get(draggableModuleItem.getTemplateType());
+                    Module module = Module.getInstance(template);
+                    String name = template.getNameInstance();
+                    name = BadElements.checkDuplicateModules(name, 0);
+                    module.setName(name);
+                    module.setPosition(mousePoint);
+
+                    Command addModule = new AddModule(module);
+                    addModule.execute();
+                    unselectAll();
+                    allDraggableModule.get(module.getName()).select();
+                    CareTaker.addMemento(addModule);
+                    stackedLogBar.log(module.getName() + " created");
+
+                    openSideBar(module, true);
                 }
             }
+            //AddLink drag operation
+            container =
+                    (DragContainer) event.getDragboard().getContent(DragContainer.AddLink);
 
-        };
+            if (container != null) {
 
-        this.setOnDragDone(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
+                //bind the ends of our link to the nodes whose id's are stored in the drag container
 
-                mainScrollPane.removeEventHandler(DragEvent.DRAG_OVER, mModuleItemOverMainScrollPane);
-                mainScrollPane.removeEventHandler(DragEvent.DRAG_DROPPED, mModuleItemDropped);
-                splitPane.removeEventHandler(DragEvent.DRAG_OVER, mModuleItemOverRoot);
-
-                draggableModuleItem.setVisible(false);
-
-                //Create node drag operation
-                DragContainer container = (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
-
-                if (container != null) {
-                    if (container.getValue("scene_coords") != null) {
-                        //creo instance of model
-
-                        Point2D mousePoint = container.getValue("scene_coords");
-                        //build module
-                        ModuleTemplate template = Main.templates.get(draggableModuleItem.getTemplateType());
-                        Module module = Module.getInstance(template);
-                        String name = template.getNameInstance();
-                        name = BadElements.checkDuplicateModules(name, 0);
-                        module.setName(name);
-                        module.setPosition(mousePoint);
-
-                        Command addModule = new AddModule(module);
-                        addModule.execute();
-                        unselectAll();
-                        allDraggableModule.get(module.getName()).select();
-                        CareTaker.addMemento(addModule);
-                        stackedLogBar.log(module.getName() + " created");
-
-                        //Main.modules.put(module.getName(), module);
-                        openSideBar(module, true);
-                    }
-                }
-                //AddLink drag operation
-                container =
-                        (DragContainer) event.getDragboard().getContent(DragContainer.AddLink);
-
-                if (container != null) {
-
-                    //bind the ends of our link to the nodes whose id's are stored in the drag container
-
-                    String fromId = container.getValue("fromId");
-                    String toId = container.getValue("toId");
+                String fromId = container.getValue("fromId");
+                String toId = container.getValue("toId");
 
 
-                    if ((fromId != null && toId != null) && (!fromId.equals(toId))) {
+                if ((fromId != null && toId != null) && (!fromId.equals(toId))) {
 
-                        DraggableModule from = allDraggableModule.get(fromId);
-                        DraggableModule to = allDraggableModule.get(toId);
+                    DraggableModule from = allDraggableModule.get(fromId);
+                    DraggableModule to = allDraggableModule.get(toId);
 
-                        if (from != null && to != null) {
-                            String orientationLink = existLink(from, to);
+                    if (from != null && to != null) {
+                        String orientationLink = existLink(from, to);
 
-                            //didn't exist
-                            if (orientationLink == null) {
-                                Link link = new Link(Main.modules.get(from.getName()), Main.modules.get(to.getName()), "default");
-                                Command addLink = new AddLink(link);
-                                addLink.execute();
-                                CareTaker.addMemento(addLink);
+                        //didn't exist
+                        if (orientationLink == null) {
+                            Link link = new Link(Main.modules.get(from.getName()), Main.modules.get(to.getName()), "default");
+                            Command addLink = new AddLink(link);
+                            addLink.execute();
+                            CareTaker.addMemento(addLink);
 
-                            } else {
-                                //link exists can I add default channel?
+                        } else {
+                            //link exists can I add default channel?
 
-                                // System.out.println(orientationLink);
-                                String idLink;
-                                Command addChannel;
-                                SimpleStringProperty channel = new SimpleStringProperty("default");
-                                ;
-                                switch (orientationLink) {
-                                    case "fromTo":
+                            String idLink;
+                            Command addChannel;
+                            SimpleStringProperty channel = new SimpleStringProperty("default");
 
-                                        idLink = fromId + "-" + toId;
-                                        if (Main.links.get(idLink).getChannelsAToB().size() < 1) {
-                                            addChannel = new AddChannel(channel, Main.links.get(idLink).getChannelList(orientationLink), Main.links.get(idLink), orientationLink);
-                                            addChannel.execute();
-                                            //TODO elemento
+                            switch (orientationLink) {
+                                case "fromTo":
 
-                                        }
-                                        break;
-                                    case "toFrom":
-
-                                        idLink = toId + "-" + fromId;
-                                        if (Main.links.get(idLink).getChannelsBToA().size() < 1) {
-                                            LinkView linkV = allLinkView.get(idLink);
-
-                                            addChannel = new AddChannel(channel, Main.links.get(idLink).getChannelList(orientationLink), Main.links.get(idLink), orientationLink);
-                                            addChannel.execute();
-                                            CareTaker.addMemento(addChannel);
-
-                                        }
-
-                                        break;
-                                }
+                                    idLink = fromId + "-" + toId;
+                                    if (Main.links.get(idLink).getChannelsAToB().size() < 1) {
+                                        addChannel = new AddChannel(channel, Main.links.get(idLink).getChannelList(orientationLink), Main.links.get(idLink), orientationLink);
+                                        addChannel.execute();
 
 
+                                    }
+                                    break;
+                                case "toFrom":
+
+                                    idLink = toId + "-" + fromId;
+                                    if (Main.links.get(idLink).getChannelsBToA().size() < 1) {
+                                        LinkView linkV = allLinkView.get(idLink);
+
+                                        addChannel = new AddChannel(channel, Main.links.get(idLink).getChannelList(orientationLink), Main.links.get(idLink), orientationLink);
+                                        addChannel.execute();
+                                        CareTaker.addMemento(addChannel);
+
+                                    }
+
+                                    break;
                             }
+
+
                         }
                     }
                 }
-
             }
+
         });
 
     }
 
-
-    private boolean isContained(Point2D posLocal, Node node) {
-        DraggableModule dm = (DraggableModule) node;
-        if ((node.getLayoutX() < posLocal.getX()) && ((node.getLayoutX() + dm.getWidth()) > posLocal.getX())) {
-            if ((node.getLayoutY() < posLocal.getY()) && ((node.getLayoutY() + dm.getHeight()) > posLocal.getX())) {
-
-                return true;
-            }
-
-        }
-
-        return false;
-    }
-
+/*
+*   SideBar Manager
+* */
     public static void openSideBar(Module module, boolean creation) {
         //Service
         allDraggableModule.get(module.getName()).select();
@@ -972,16 +871,9 @@ public class MainWindow extends BorderPane {
             currentSidebar = builder.getValue();
             Main.root.setRight(currentSidebar);
             currentSidebar.show();
-            //toggleSidebar.fire();
         });
         new Thread(builder).start();
 
-
-//        if (currentSidebar != null)
-//            closeSidebar();
-//        currentSidebar = new SideBar(module, toggleSidebar, 400, creation);
-//        Main.root.setRight(currentSidebar);
-//        toggleSidebar.fire();
         allDraggableModule.get(module.getName()).select();
     }
 
@@ -992,8 +884,6 @@ public class MainWindow extends BorderPane {
                 if (currentSidebar != null)
                     closeSidebar(true);
                 currentSidebar = new SideBar(module, 400, creation);
-                //Main.root.setRight(currentSidebar);
-                //toggleSidebar.fire();
                 return currentSidebar;
             }
         };
@@ -1007,10 +897,13 @@ public class MainWindow extends BorderPane {
             currentSidebar.hide(force);
             currentSidebar = null;
         }
-        //toggleSidebar.fire();
+
 
     }
 
+    /*
+    * Return the orientation of an existent Link
+    * */
     private String existLink(DraggableModule from, DraggableModule to) {
 
         String idLink = from.getName() + "-" + to.getName();
@@ -1025,35 +918,24 @@ public class MainWindow extends BorderPane {
         return null;
     }
 
-    public static void update(String name, Module newValue) {
-        //TODO
-    }
-
-    public static void updateLinkView(Link oldValue, Link newValue) {
-
-        LinkView lv = allLinkView.get(oldValue.getID());
-
-        //System.out.println(lv.getLine().getEndX());
-
-
-        lv = new LinkView(newValue);
-
-
-    }
+ /*
+ * Remove a linkView
+ * */
 
     public static void removeLinkView(LinkView lv) {
         DraggableModule dmFrom = lv.getFrom();
         DraggableModule dmTo = lv.getTo();
         dmFrom.removeLinkView(lv);
         dmTo.removeLinkView(lv);
-
         allLinkView.remove(lv.getName());
-        //Group group = (Group) mainScrollPaneStat.getContent();
         Group group = mainGroup;
         group.getChildren().remove(lv);
 
     }
 
+    /*
+    * Create commands to remove a Draggablemodule, that keep up the consistence in the pipeline
+    * */
     public static Command removeDraggableModule(DraggableModule dm) {
         dm.unselect();
         ArrayList<Command> allCommands = new ArrayList<>();
@@ -1062,23 +944,23 @@ public class MainWindow extends BorderPane {
             allCommands.add(removeLV);
         }
         Command execAll = new ExecuteAll(allCommands);
-        //execAll.execute();
-
-        //CareTaker.addMemento(execAll);
-
         allDraggableModule.remove(dm.getName());
-        //Group group = (Group) mainScrollPaneStat.getContent();
         Group group = mainGroup;
         group.getChildren().remove(dm);
         return execAll;
     }
 
+    /*
+    * Calls to the update channels of a relative linkView
+    * */
     public static void updateLinkView(LinkView lv, String orientation) {
         lv.updateImageViews(orientation);
         lv.bindButtonChannels(orientation);
     }
 
-
+/*
+* Select all nodes in the mainWindows
+* */
     public void selectAll() {
         unselectAll();
         allDraggableModule.keySet().forEach(key -> {
@@ -1086,7 +968,9 @@ public class MainWindow extends BorderPane {
         });
     }
 
-
+/*
+*   Unselect all nodes in the mainWindows
+* */
     public static void unselectAll() {
         Set<String> selected = new HashSet<>(selectedModules.keySet());
         selected.forEach(key -> {
@@ -1102,8 +986,6 @@ public class MainWindow extends BorderPane {
         Main.linksClipboard.clear();
         selectedLinks.clear();
 
-
-        //TODO handle links selection
     }
 
 
@@ -1111,7 +993,6 @@ public class MainWindow extends BorderPane {
     private void deleteSelected() {
 
 
-        //StringBuilder logLinks = null;
         Set<String> selected = null;
         ArrayList<Command> allRemoved = new ArrayList<>();
         closeSidebar(true);
@@ -1155,10 +1036,6 @@ public class MainWindow extends BorderPane {
 
         stackedLogBar.logAndWarning("Deleted " + allRemoved.size() + " elements");
 
-    }
-
-    public static Group getMainGroup() {
-        return mainGroup;
     }
 
 

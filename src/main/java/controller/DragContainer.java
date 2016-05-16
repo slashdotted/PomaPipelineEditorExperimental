@@ -18,7 +18,7 @@ import javafx.util.Pair;
 public class DragContainer implements Serializable {
 
     /**
-     *
+     * Structure auxiliar to add more information to the clipboard
      */
     private static final long serialVersionUID = -1890998765646621338L;
 

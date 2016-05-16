@@ -27,8 +27,6 @@ public class ModuleItem extends Pane{
     @FXML
     private ImageView modelItemImage;
 
-    //TODO add a module reference with getter and setter (Maybe new constructor?)
-
 
 
 
@@ -60,10 +58,11 @@ public class ModuleItem extends Pane{
         }
 
     }
-
+/*
+*  Set graphics parameters in function of its type of template
+* */
     public void setParameters(String type) {
 
-        // TODO fix label with associated module not template
         this.type = type;
         ModuleTemplate template = Main.templates.get(type);
         modelItemLabel.setText(template.getType());
@@ -76,10 +75,12 @@ public class ModuleItem extends Pane{
         return this.type;
     }
 
-
+    /*
+    * relocates the object to the new coordinates (point2D)
+    * */
     public void relocate (Point2D p) {
 
-        //relocates the object to the new coordinates (point2D)
+
 
         Point2D localCoords = getParent().sceneToLocal(p);
 
@@ -88,7 +89,5 @@ public class ModuleItem extends Pane{
                 (int) (localCoords.getY() - (getBoundsInLocal().getHeight() / 2))
         );
     }
-  /*  public String getName(){
-      return  modelItemLabel.getText();
-    }*/
+
 }

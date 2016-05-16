@@ -18,11 +18,11 @@ public class Value<T> {
 
     public Value(String name, T val, T defaultValue, boolean mandatory) {
         this.name = name;
-        this.value = val;//(val.toString().equals("0")) ? val : updateValue("") ;
+        this.value = val;
         this.defaultValue = defaultValue;
         this.mandatory = mandatory;
         this.valid = (defaultValue != null) ? true : false;
-        //initialize();
+
     }
 
 
@@ -49,7 +49,7 @@ public class Value<T> {
         this.value = (T) val;
         this.defaultValue = (T) value.getDefaultValue();
         this.valid = value.isValid();
-        //initialize();
+
     }
 
     public T getValue() {
@@ -65,7 +65,7 @@ public class Value<T> {
     }
 
     public boolean updateValue(String newValue) {
-        //System.out.println("try to update with " + newValue);
+
         boolean success = false;
         if (value instanceof String) {
             value = (T) newValue;

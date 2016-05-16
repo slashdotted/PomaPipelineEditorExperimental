@@ -92,17 +92,11 @@ public class Link {
         return channelsAToB;
     }
 
-    public void setChannelsAToB(ObservableList<SimpleStringProperty> channelsAToB) {
-        this.channelsAToB = channelsAToB;
-    }
 
     public  ObservableList<SimpleStringProperty> getChannelsBToA() {
         return channelsBToA;
     }
 
-    public void setChannelsBToA(ObservableList<SimpleStringProperty> channelsBToA) {
-        this.channelsBToA = channelsBToA;
-    }
 
     public Module getModuleA() {
         return moduleA;
@@ -113,20 +107,6 @@ public class Link {
     }
 
 
-  /*  public void updateChannel (String orientation, String oldValue,String newValue) {
-        List<SimpleStringProperty> listChannel=getChannelList(orientation);
-        SimpleStringProperty channel=new SimpleStringProperty();
-        channel.set(newValue);
-
-        for(int i=0;i<listChannel.size();i++){
-
-            if(listChannel.get(i).getValue().equals(oldValue)){
-                listChannel.get(i).set(newValue);
-                break;
-            }
-        }
-
-    }*/
     public SimpleStringProperty getChannel(String name,String orientation){
         List<SimpleStringProperty> channels=getChannelList(orientation);
         for (SimpleStringProperty channel:channels ) {

@@ -11,28 +11,19 @@ import java.util.Map;
 public class ModuleTemplate {
     public static final String DEFAULT_TEMPLATE_IMAGE_URL = "moduleImage.png";
 
-    // private UUID id;
-    //  private String name;
 
     private int counter;
     private String description;
     private String type;
     private Map<String, Value> optParameters;
     private Map<String, Value> mandatoryParameters;
-    //private Map<String, Value> outputData;
-    private String imageURL = DEFAULT_TEMPLATE_IMAGE_URL;
-    //TODO: insert cparams field in the instance configuration
 
-    //public ModuleTemplate
+    private String imageURL = DEFAULT_TEMPLATE_IMAGE_URL;
 
     private ModuleTemplate() {
 
         this.counter = 0;
 
-        //  this.id = UUID.randomUUID();
-
-        //this.optParameters = new HashMap<>();
-        //this.mandatoryParameters = new HashMap<>();
     }
 
     public static ModuleTemplate getInstance() {
@@ -46,7 +37,6 @@ public class ModuleTemplate {
     }
 
     public void setImageURL(String imageURL) {
-        //if (new File(imageURL).exists())
         if (ClassLoader.getSystemResource(imageURL) != null)
             this.imageURL = imageURL;
     }
@@ -88,9 +78,6 @@ public class ModuleTemplate {
     }
 
 
-    public int getCounter() {
-        return this.counter++;
-    }
 
     @Override
     public String toString() {
@@ -105,10 +92,7 @@ public class ModuleTemplate {
     public Map<String, Value> getParamsCopy() {
 
         Map<String, Value> paramsCopy = new HashMap<>();
-        mandatoryParameters.keySet().forEach(key -> {
-            paramsCopy.put(key, new Value(mandatoryParameters.get(key)));
-
-        });
+        mandatoryParameters.keySet().forEach(key -> paramsCopy.put(key, new Value(mandatoryParameters.get(key))));
 
         optParameters.keySet().forEach(key -> {
             paramsCopy.put(key, new Value(optParameters.get(key)));

@@ -40,7 +40,6 @@ public class FormBox<T> extends VBox {
     private ImageView clearIcon;
 
 
-    private ObjectProperty<T> valueProperty;
     private Value value;
     private BooleanProperty valid = new SimpleBooleanProperty(false);
     private String oldString;
@@ -73,7 +72,7 @@ public class FormBox<T> extends VBox {
         formLabel.setText(value.getName());
 
         formTextField.setPromptText("Insert here a " + value.getType() + " value");
-        if(value.isMandatory())
+        if (value.isMandatory())
             valid.setValue(value.isValid());
         else
             valid.setValue(true);
@@ -87,6 +86,9 @@ public class FormBox<T> extends VBox {
         setInitialImage();
     }
 
+    /*
+    * Update the image near to the relative text field
+    * */
     private void setInitialImage() {
         if (!valid.getValue() && value.isMandatory()) {
             //warning
@@ -101,22 +103,25 @@ public class FormBox<T> extends VBox {
     private void setHandlers() {
         formTextField.setOnMouseClicked(event -> {
             oldString = formTextField.getText();
-            System.out.println("saving old: " + oldString);
+
         });
 
+        /*
+        * When focus is changed validate if there is a new value
+        */
         formTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue && !newValue) {
                 if (!oldString.equals(formTextField.getText())) {
-                    System.out.println("value changed");
+
                     Command editValue = new EditValue(value, formTextField.getText());
                     valid.setValue(editValue.execute());
 
-                    if (valid.getValue() || value.getDefaultValue()!=null) {
+                    if (valid.getValue() || value.getDefaultValue() != null) {
                         CareTaker.addMemento(editValue);
                         formTextField.setText(value.getValue().toString());
                     }
 
-                    if(!valid.getValue()){
+                    if (!valid.getValue()) {
                         formTextField.clear();
                     }
                 }
