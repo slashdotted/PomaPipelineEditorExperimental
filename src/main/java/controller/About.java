@@ -40,6 +40,5 @@ public class About extends VBox {
         closeButton.setOnAction(event -> {
             this.getScene().getWindow().hide();
         });
-        //this.setStyle("-fx-background-color: gre");
     }
 }

@@ -35,8 +35,6 @@ public class FormBox<T> extends VBox {
     @FXML
     private ImageView statusIcon;
 
-//    @FXML
-//    private ImageView acceptIcon;
 
     @FXML
     private ImageView clearIcon;
