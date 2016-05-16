@@ -5,14 +5,12 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import main.Main;
@@ -136,7 +134,6 @@ public class LinkView extends Group {
         this.setStyle("-fx-effect: dropshadow(three-pass-box, darkblue, 10,0, 0, 0) ");
         MainWindow.selectedLinks.put(getName(), Main.links.get(getName()));
 
-        System.out.println("Adding link" + MainWindow.selectedLinks.size());
 
     }
 

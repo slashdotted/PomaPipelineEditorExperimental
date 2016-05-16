@@ -6,7 +6,7 @@ import main.Main;
 import model.Link;
 
 /**
- * Created by Marco on 01/05/2016.
+ * Command for add a link in the current pipeline
  */
 public class AddLink implements Command {
 
@@ -20,7 +20,6 @@ public class AddLink implements Command {
     public boolean execute() {
         Main.links.put(link.getID(), link);
         Platform.runLater(() -> MainWindow.addLinkView(link));
-        //debug("");
         return true;
     }
 

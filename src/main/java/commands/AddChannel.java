@@ -8,7 +8,7 @@ import model.Link;
 import java.util.List;
 
 /**
- * Created by Marco on 02/05/2016.
+ *  Command for edit a Value
  */
 public class AddChannel implements Command {
 

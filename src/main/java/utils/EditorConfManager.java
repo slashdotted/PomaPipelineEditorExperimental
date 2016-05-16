@@ -8,18 +8,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by felipe on 10/03/16.
+ * Class for the editor conf management
+ * It performs the retrieving of templates configuration from the conf file
+ * Parameters are represented by Value items, constructed by reflection
  */
 public class EditorConfManager {
 
@@ -32,14 +32,12 @@ public class EditorConfManager {
         try {
             fileReader = new FileReader(input);
             parser = new JSONTokener(fileReader);
-            jsonModules = (JSONArray) new JSONArray(parser);
+            jsonModules = new JSONArray(parser);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if(jsonModules == null){
+        if (jsonModules == null) {
             MainWindow.stackedLogBar.logAndWarning("There was a problem while importing conf!!!");
             return false;
         }
@@ -50,7 +48,6 @@ public class EditorConfManager {
             Map<String, Value> optParameters = new HashMap<>();
             Map<String, Value> mandatoryParameters = new HashMap<>();
 
-            // String name = (String) object.get("name");
             String description = (String) object.get("description");
             String type = (String) object.get("type");
             String imageURL = (String) object.get("imageURL");
@@ -66,7 +63,6 @@ public class EditorConfManager {
 
             moduleTemplate.setDescription(description);
             moduleTemplate.setType(type);
-            //System.out.println("*****" + imageURL +"*********");
             moduleTemplate.setImageURL(imageURL);
 
             Main.templates.put(moduleTemplate.getType(), moduleTemplate);
@@ -90,8 +86,6 @@ public class EditorConfManager {
             try {
                 Constructor ctor = Class.forName("java.lang." + paramType).getConstructor(String.class);
                 val = ctor.newInstance("0");
-                //val = Class.forName("java.lang." + paramType);
-
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (NoSuchMethodException e) {
@@ -103,8 +97,6 @@ public class EditorConfManager {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-
-
 
             if (param.has("default")) {
                 defaultValue = true;

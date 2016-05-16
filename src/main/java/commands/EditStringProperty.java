@@ -3,7 +3,7 @@ package commands;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
- * Created by Marco on 30/04/2016.
+ *  Command for edit a StringProperty
  */
 public class EditStringProperty implements Command {
 

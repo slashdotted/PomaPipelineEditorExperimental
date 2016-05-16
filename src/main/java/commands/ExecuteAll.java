@@ -1,14 +1,11 @@
 package commands;
 
 
-import utils.CareTaker;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Created by felipe on 05/05/16.
+ *
  */
 public class ExecuteAll implements Command {
     ArrayList<Command> commands = new ArrayList<>();
@@ -19,9 +16,7 @@ public class ExecuteAll implements Command {
 
     @Override
     public boolean execute() {
-        commands.forEach(command -> {
-            command.execute();
-        });
+        commands.forEach(command -> command.execute());
         return true;
     }
 
@@ -33,8 +28,6 @@ public class ExecuteAll implements Command {
         for (Command command : commands) {
             executed &= command.reverse();
         }
-        System.out.println(CareTaker.caretakerStatus());
-
         return executed;
     }
 }

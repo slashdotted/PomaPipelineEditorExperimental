@@ -2,11 +2,10 @@ package commands;
 
 import javafx.beans.property.SimpleStringProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Marco on 02/05/2016.
+ * Command for add a StringProperty to a list
  */
 public class AddStringProperty implements Command {
     private SimpleStringProperty newValue;

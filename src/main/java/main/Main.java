@@ -1,23 +1,15 @@
 package main;
 
-import commands.Command;
-import commands.Import;
-import commands.Save;
 import controller.MainWindow;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Link;
 import model.Module;
 import model.ModuleTemplate;
 import org.json.JSONObject;
-import utils.Converter;
 import utils.EditorConfManager;
 
 import java.io.File;

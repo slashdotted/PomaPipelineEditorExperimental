@@ -1,16 +1,16 @@
 package utils;
 
+import controller.MainWindow;
 import javafx.scene.input.ClipboardContent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-
 import java.io.*;
 
 /**
- * Created by felipe on 02/03/16.
+ * Class for manage the persistence of a pipeline
  */
 public class PipelineManager {
 
@@ -40,7 +40,6 @@ public class PipelineManager {
 
     public boolean load(File input) {
         CURRENT_PIPELINE_PATH = input.getPath();
-        //System.err.println("Current Path: "+CURRENT_PIPELINE_PATH);
         FileReader fileReader = null;
         JSONObject root;
 
@@ -48,22 +47,17 @@ public class PipelineManager {
             fileReader = new FileReader(input);
 
 
-            // root = parser.
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        //extractPipeline(root.toJSONString());
 
-        //Modules import
-        //final JSONObject jsonModules = (JSONObject) root.get("modules");
-        //final JSONArray jsonArray = (JSONArray) root.get("links");
         JSONTokener parser = null;
         try {
             parser= new JSONTokener(fileReader);
             root = new JSONObject(parser);
             extractPipeline(root.toString());
         }catch (JSONException e){
-            System.err.println("No modules here");
+            MainWindow.stackedLogBar.logAndWarning("No modules here");
             return false;
         }
 
@@ -79,7 +73,7 @@ public class PipelineManager {
         try {
             pipeline = new org.json.JSONObject(jsonString);
         }catch (JSONException e){
-           // System.err.println("No modules here");
+            MainWindow.stackedLogBar.logAndWarning("No modules here");
         }
 
         if(pipeline == null)
@@ -91,7 +85,6 @@ public class PipelineManager {
             jsonModules = (JSONObject) pipeline.get("modules");
         if (pipeline.has("links"))
             jsonLinks = (JSONArray) pipeline.get("links");
-
 
 
         clipboard.put(Converter.MODULES_DATA_FORMAT, jsonModules);

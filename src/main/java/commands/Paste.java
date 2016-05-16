@@ -4,7 +4,6 @@ import controller.MainWindow;
 import javafx.geometry.Point2D;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.MouseEvent;
 import main.Main;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,24 +33,19 @@ public class Paste implements Command {
     @Override
     public boolean execute() {
 
+        // Paste from internal data
         if (!Main.modulesClipboard.isEmpty()) {
 
             jsonModules = Main.modulesClipboard;
             jsonLinks = Main.linksClipboard;
-
-
             Command importElements = new Import(getModules(), getLinks(), position);
             importElements.execute();
             CareTaker.addMemento(importElements);
-//            for(String key: jsonModules.keySet()){
-//                JSONObject current = jsonModules.get(key);
-//                Module module = Converter.jsonToModule(key, current);
-//            }
-
             return true;
         }
 
 
+        // Paste from external data
         Clipboard systemClipboard = Clipboard.getSystemClipboard();
         String externalJSON = systemClipboard.getString();
         if (externalJSON != null) {
@@ -59,10 +53,6 @@ public class Paste implements Command {
 
             JSONObject jsonModules = (JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
             JSONArray jsonLinks = (JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
-
-//            System.out.println(jsonModules.toString(4));
-//            System.out.println(jsonLinks.toString(4));
-
 
             Command importElements = null;
             if (jsonModules != null) {
@@ -78,7 +68,6 @@ public class Paste implements Command {
                 importElements.execute();
             else
                 MainWindow.stackedLogBar.displayWarning("No pipeline found in clipboard!");
-
         }
 
 
@@ -88,10 +77,7 @@ public class Paste implements Command {
     private JSONObject getModules() {
         JSONObject modules = new JSONObject();
 
-
-        jsonModules.keySet().forEach(key -> {
-            modules.put(key, jsonModules.get(key));
-        });
+        jsonModules.keySet().forEach(key -> modules.put(key, jsonModules.get(key)));
 
         return modules;
     }
@@ -103,9 +89,7 @@ public class Paste implements Command {
 
         JSONArray links = new JSONArray();
 
-        jsonLinks.values().forEach(jsonObject -> {
-            links.put(jsonObject);
-        });
+        jsonLinks.values().forEach(jsonObject -> links.put(jsonObject));
 
         return links;
     }

@@ -1,38 +1,18 @@
 package utils;
 
 import javafx.geometry.Insets;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import main.Main;
-import model.Module;
-import model.ModuleTemplate;
-import model.Value;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * Created by felipe on 05/04/16.
  */
 public class GraphicsElementsFactory {
-
-
-
-
-
 
     /**
      * Generates a box with an ok and a cancel Buttons
@@ -75,60 +55,6 @@ public class GraphicsElementsFactory {
 
         return box;
     }
-
-
-//    public static VBox moduleConfBox(Module module) {
-//        VBox mainBox = new VBox();
-//        mainBox.getChildren().add(new Label("Template test"));
-//        Map<String, Value> params = module.getParameters();
-//        ArrayList<String> cParams = module.getCParams();
-//
-//        ModuleTemplate template = module.getTemplate();
-//
-//        template.getMandatoryParameters().keySet().forEach(key -> {
-//            VBox current = getFormBox(key);
-//            mainBox.getChildren().add(current);
-//            mainBox.getChildren().add(getSeparator());
-//        });
-//
-//        template.getOptParameters().keySet().forEach(key -> {
-//            VBox current = getFormBox(key);
-//            mainBox.getChildren().add(current);
-//            mainBox.getChildren().add(getSeparator());
-//        });
-//
-//
-//        mainBox.getChildren().add(getOkCancelBox());
-//
-//        return mainBox;
-//    }
-
-
-//    public static VBox moduleConfBox(Module module) {
-//        VBox mainBox = new VBox();
-//        mainBox.getChildren().add(new Label("Template test"));
-//        Map<String, Value> params = module.getParameters();
-//        ArrayList<String> cParams = module.getCParams();
-//
-//        ModuleTemplate template = module.getTemplate();
-//
-//        template.getMandatoryParameters().keySet().forEach(key -> {
-//            VBox current = getFormBox(key);
-//            mainBox.getChildren().add(current);
-//            mainBox.getChildren().add(getSeparator());
-//        });
-//
-//        template.getOptParameters().keySet().forEach(key -> {
-//            VBox current = getFormBox(key);
-//            mainBox.getChildren().add(current);
-//            mainBox.getChildren().add(getSeparator());
-//        });
-//
-//
-//        mainBox.getChildren().add(getOkCancelBox());
-//
-//        return mainBox;
-//    }
 
     public static Separator getSeparator() {
         Insets insets = new Insets(2, 5, 2, 5);
@@ -173,5 +99,35 @@ public class GraphicsElementsFactory {
     }
 
 
+    /**
+     * IMAGES SECTION
+     */
 
+    public static ImageView getPinImage(double size) {
+        ImageView imageView = new ImageView("images/pin.png");
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
+        return imageView;
+    }
+
+    public static ImageView getUnpinImage(double size) {
+        ImageView imageView = new ImageView("images/unpin.png");
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
+        return imageView;
+    }
+
+    public static ImageView getCloseImage(double size) {
+        ImageView imageView = new ImageView("images/close.png");
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
+        return imageView;
+    }
+
+    public static ImageView getCloseImage2(double size) {
+        ImageView imageView = new ImageView("images/close_red.png");
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
+        return imageView;
+    }
 }

@@ -6,7 +6,7 @@ import main.Main;
 import model.Link;
 
 /**
- * Created by Marco on 01/05/2016.
+ * Command for remove a link from model
  */
 public class RemoveLink implements Command {
 
@@ -18,7 +18,6 @@ public class RemoveLink implements Command {
 
     @Override
     public boolean execute() {
-        debug("Link id: " + link.getID());
         LinkView lv = MainWindow.allLinkView.get(link.getID());
         MainWindow.removeLinkView(lv);
         if (Main.links.containsKey(link.getID())) {

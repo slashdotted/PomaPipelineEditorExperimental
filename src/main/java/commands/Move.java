@@ -5,7 +5,7 @@ import controller.MainWindow;
 import javafx.geometry.Point2D;
 
 /**
- * Created by felipe on 06/04/16.
+ * Command for move a DraggableModule on the dragboard
  */
 public class Move implements Command {
 
@@ -15,9 +15,11 @@ public class Move implements Command {
     private Point2D newCoords;
     private Point2D oldOffset;
     private Point2D newOffset;
+
+
     public Move(String dragRef, Point2D oldCoords, Point2D newCoords, Point2D oldOffset, Point2D newOffset) {
         this.draggableModule = MainWindow.allDraggableModule.get(dragRef);
-        this.dragId=dragRef;
+        this.dragId = dragRef;
         this.oldCoords = oldCoords;
         this.newCoords = newCoords;
         this.oldOffset = oldOffset;
@@ -27,10 +29,9 @@ public class Move implements Command {
 
     @Override
     public boolean execute() {
-        debug("\n\t\tModule: " + draggableModule.getName() + ", \n\t\tOld coords: " + oldCoords + ", Old offset: " + oldOffset+ ", \n\t\tNew coords: " + newCoords + ", new offset: " + newOffset);
-        this.draggableModule=MainWindow.allDraggableModule.get(dragId);
+        this.draggableModule = MainWindow.allDraggableModule.get(dragId);
 
-        draggableModule.relocateToPoint(new Point2D(newCoords.getX(),newCoords.getY()), newOffset);
+        draggableModule.relocateToPoint(new Point2D(newCoords.getX(), newCoords.getY()), newOffset);
 
         draggableModule.getModule().setPosition(newCoords);
         return true;

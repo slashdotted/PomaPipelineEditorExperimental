@@ -1,27 +1,26 @@
 package commands;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
 import controller.DraggableModule;
 import controller.LinkView;
 import controller.MainWindow;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
 import main.Main;
-import model.Link;
 import model.Module;
 import model.ModuleTemplate;
-import utils.BadElements;
+import utils.ProgramUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
- * Created by Marco on 30/04/2016.
+ * Command for module edit of:
+ * - name
+ * - template
+ * - host
  */
 public class EditModule implements Command {
 
-    public static enum Type {Name, Template, Host}
+    public enum Type {Name, Template, Host}
 
     private Type typeEdit;
     private Module oldModule;
@@ -40,15 +39,17 @@ public class EditModule implements Command {
         this.newValue = newValue;
     }
 
-    // TODO: edit name(id)? edit template? edit host?
+
     @Override
     public boolean execute() {
         switch (typeEdit) {
 
+
+
             case Name:
                 oldValue = module.getName();
                 MainWindow.allDraggableModule.get(oldValue).unselect();
-                newValue = BadElements.checkDuplicateModules(newValue, 0);
+                newValue = ProgramUtils.checkDuplicateModules(newValue, 0);
                 updateLinks();
                 updateModule();
                 updateDraggableModule();
@@ -72,10 +73,13 @@ public class EditModule implements Command {
                 dm.updateHost();
                 break;
         }
-        debug("module = "+ module.getName()+ ", type = " + typeEdit);
         return true;
     }
 
+    /**
+     * This method returns a new module from the given new template
+     * @return  a new module from the given new template
+     */
     private Module createNewModule() {
 
         ModuleTemplate template = Main.templates.get(newValue);
@@ -92,6 +96,9 @@ public class EditModule implements Command {
 
     }
 
+    /**
+     * This method updates the draggable module associated to renamed module
+     */
     private void updateDraggableModule() {
         DraggableModule dm = MainWindow.allDraggableModule.get(oldValue);
         dm.unselect();
@@ -102,6 +109,9 @@ public class EditModule implements Command {
 
     }
 
+    /**
+     * This method is necessary for update the module model structure
+     */
     private void updateModule() {
         Main.modules.remove(oldValue);
         module.setName(newValue);
@@ -112,22 +122,23 @@ public class EditModule implements Command {
         DraggableModule db = MainWindow.allDraggableModule.get(oldValue);
         ArrayList<LinkView> allLv = db.getLinks();
         for (LinkView lv : allLv) {
-            String nomeFromModule = lv.getFrom().getName();
+            String moduleName = lv.getFrom().getName();
             String nomeToModule = lv.getFrom().getName();
 
-            if (nomeFromModule.equals(oldValue)) {
+            if (moduleName.equals(oldValue)) {
                 MainWindow.allLinkView.remove(lv.getName());
                 MainWindow.allLinkView.put(newValue + "_" + nomeToModule, lv);
 
                 Main.links.remove(lv.getLink());
                 Main.links.put(newValue + "_" + nomeToModule, lv.getLink());
             }
+
             if (nomeToModule.equals(oldValue)) {
                 MainWindow.allLinkView.remove(lv.getName());
-                MainWindow.allLinkView.put(nomeFromModule + "_" + newValue, lv);
+                MainWindow.allLinkView.put(moduleName + "_" + newValue, lv);
 
                 Main.links.remove(lv.getLink());
-                Main.links.put(nomeFromModule + "_" + newValue, lv.getLink());
+                Main.links.put(moduleName + "_" + newValue, lv.getLink());
             }
         }
     }

@@ -4,11 +4,9 @@ import controller.MainWindow;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.MouseEvent;
 import main.Main;
 import model.Link;
 import model.Module;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.CareTaker;
@@ -21,7 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by felipe on 31/03/16.
+ * Command for import a pipeline from different sources.
+ * It is used for import from a file or from JSON structures already in memory.
  */
 public class Import implements Command {
 
@@ -31,23 +30,28 @@ public class Import implements Command {
     private ArrayList<Command> allCommands = new ArrayList<>();
     private Command executeAll;
     private JSONObject jsonModules = null;
-    private JSONArray jsonArray = null;
+    private JSONArray jsonLinks = null;
     private Point2D position = null;
 
     public Import(File file) {
         this.file = file;
     }
 
-    public Import(JSONObject jsonModules, JSONArray jsonArray, Point2D position) {
+    public Import(JSONObject jsonModules, JSONArray jsonLinks, Point2D position) {
         this.jsonModules = jsonModules;
-        this.jsonArray = jsonArray;
+        this.jsonLinks = jsonLinks;
     }
 
 
+    /**
+     * The execution of this command makes use of two structures: jsonModules and jsonLinks,
+     * these structures are populated from a file parsing or from a paste of copied elements.
+     * @return
+     */
     @Override
     public boolean execute() {
-//        ClipboardContent clipboard = Main.modules;
-//        clipboard.clear();
+
+        // Data from file
         if (file != null) {
             PipelineManager pipelineLoader = new PipelineManager();
             boolean loaded = pipelineLoader.load(file);
@@ -55,39 +59,30 @@ public class Import implements Command {
                 return false;
             ClipboardContent clipboard = pipelineLoader.getClipboard();
             jsonModules = (org.json.JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
-            jsonArray = (org.json.JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
+            jsonLinks = (org.json.JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
         }
 
         if (jsonModules == null)
             return false;
 
-
+        // Import of Modules
+        // Here it's produced a collection of AddModule commands, it's very important to this before the importing of links
         jsonModules.keySet().forEach(key -> {
-            //System.out.println(key);
             JSONObject jsonModule = jsonModules.getJSONObject(key);
             Module module = Converter.jsonToModule(String.valueOf(key), jsonModule);
             if (module != null) {
 
-                if ((position != null) && (module.getPosition() == null)) {
-                    //module.setPosition(position);
-                }
-
-                //System.out.println("Current module: " + module);
                 Main.modules.put(module.getName(), module);
 
-               // Main.modules.put(module.getName(), module);
+                // Here it's checked if module's name has been changed,
+                // so during the link's import, new names are managed
                 if (!String.valueOf(key).equals(module.getName())) {
                     nameMappings.put(String.valueOf(key), module.getName());
                     MainWindow.stackedLogBar.log(String.valueOf(key) + " already present, renamed in " + module.getName());
                 }
 
-
                 Command addModule = new AddModule(module);
                 allCommands.add(addModule);
-
-
-                //addModule.execute();
-                //CareTaker.addMemento(addModule);
 
                 importedElements++;
             } else {
@@ -95,48 +90,43 @@ public class Import implements Command {
             }
         });
 
+        // Adds all modules before, so in the next phase links can find their modules
         executeAll = new ExecuteAll(allCommands);
 
         boolean success = executeAll.execute();
 
-//        System.out.println(jsonArray.toString(4));
+        // Import of links
+        if (jsonLinks != null) {
 
-        if (jsonArray != null) {
-            //jsonArray.forEach(obj -> {
-            //System.out.println(jsonArray.get(0));
-            for (int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonLinks.length(); i++) {
 
-                JSONObject jsonLink = jsonArray.getJSONObject(i);
+                JSONObject jsonLink = jsonLinks.getJSONObject(i);
                 String from = checkName(jsonLink, "from");
-                //System.out.println("-------------------From: " + from);
                 String to = checkName(jsonLink, "to");
-                //System.out.println("-------------------To: " + to);
-                Main.modules.keySet().forEach(s -> System.out.println(s));
                 if ((Main.modules.get(from) != null && Main.modules.get(to) != null)) {
                     Link link = Converter.jsonToLink(jsonLink, from, to);
-                    System.out.println(link.getID());
                     Command addLink = new AddLink(link);
                     addLink.execute();
                 } else {
                     success = false;
-                    System.out.println("");
                     MainWindow.stackedLogBar.logAndWarning("One or more modules not found for link: from " + from + " to " + to);
                 }
             }
-            //CareTaker.addMemento(addLink);
-            //importedElements++;
-            //  });
-            // Main.modules.putAll(clipboard);
+
         }
-        //CareTaker.addMemento(executeAll);
         return success;
     }
 
+
+    /**
+     * This method returns the correct module's name associated to the given link
+     * @param jsonLink
+     * @param key
+     * @return
+     */
     private String checkName(JSONObject jsonLink, String key) {
         String oldName = (String) jsonLink.get(key);
         String mapped = nameMappings.get(oldName);
-        //System.out.println("Key " + key + " old " +oldName + " new " + mapped + " channel " + jsonLink.get("channel"));
-
         if (mapped == null)
             return oldName;
         else
@@ -146,16 +136,8 @@ public class Import implements Command {
 
     @Override
     public boolean reverse() {
-//        for (int i = 0; i < importedElements; i++) {
-//            CareTaker.undo();
-//        }
-        System.out.println("---------------------------reversing import");
         PipelineManager.CURRENT_PIPELINE_PATH = null;
         Platform.runLater(() -> CareTaker.redoable.setValue(false));
-        Main.modules.keySet().forEach(s -> System.out.println(Main.modules.get(s)));
-        Main.links.keySet().forEach(s -> System.out.println(Main.links.get(s)));
-        MainWindow.allDraggableModule.keySet().forEach(s -> System.out.println(MainWindow.allDraggableModule.get(s)));
-        MainWindow.allLinkView.keySet().forEach(s -> System.out.println(MainWindow.allLinkView.get(s)));
         return executeAll.reverse();
     }
 

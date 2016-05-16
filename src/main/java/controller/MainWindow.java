@@ -3,13 +3,11 @@ package controller;
 import commands.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -28,7 +26,6 @@ import model.Link;
 import model.Module;
 import model.ModuleTemplate;
 import utils.*;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -776,7 +773,7 @@ public class MainWindow extends BorderPane {
                     ModuleTemplate template = Main.templates.get(draggableModuleItem.getTemplateType());
                     Module module = Module.getInstance(template);
                     String name = template.getNameInstance();
-                    name = BadElements.checkDuplicateModules(name, 0);
+                    name = ProgramUtils.checkDuplicateModules(name, 0);
                     module.setName(name);
                     module.setPosition(mousePoint);
 

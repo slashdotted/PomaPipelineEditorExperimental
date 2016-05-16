@@ -1,6 +1,5 @@
 package utils;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -107,15 +106,10 @@ public class StackedLogBar extends VBox {
         logBarText.setFill(Color.BLACK);
     }
 
-    public LogBar getLogBar() {
-        return logBar;
-    }
 
     public static class LogBar extends ScrollPane {
 
         private ArrayList<Text> messages = new ArrayList();
-        //private Deque<Text> msg = new ArrayDeque<>();
-        //private Text externalText;
 
         public LogBar() {
             this.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
@@ -123,13 +117,8 @@ public class StackedLogBar extends VBox {
             this.setPrefHeight(200);
             this.setMinHeight(30);
             this.setMaxHeight(200);
-            Date date = new Date();
-            //this.externalText = externalText;
-
-            //messages.add(new Text(date.toString() + ": Begin session"));
             this.setStyle("-fx-background: rgb(255,255,255);");
             addMessage("Begin session");
-            //displayMessages();
         }
 
 
@@ -144,7 +133,6 @@ public class StackedLogBar extends VBox {
         }
 
         public void addMessage(String msg) {
-            //externalText.setText(msg);
             Date date = new Date();
             messages.add(new Text(date.toString() + ": " + msg));
             displayMessages();

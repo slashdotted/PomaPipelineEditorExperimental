@@ -5,12 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
-import utils.ProgramUtils;
+import utils.GraphicsElementsFactory;
 
 import java.io.IOException;
 
 /**
- * Created by felipe on 16/05/16.
+ * About Class
  */
 public class About extends VBox {
 
@@ -35,7 +35,7 @@ public class About extends VBox {
 
     @FXML
     public void initialize() {
-        closeButton.setGraphic(ProgramUtils.getCloseImage2(20));
+        closeButton.setGraphic(GraphicsElementsFactory.getCloseImage2(20));
         closeButton.setBackground(Background.EMPTY);
         closeButton.setOnAction(event -> {
             this.getScene().getWindow().hide();

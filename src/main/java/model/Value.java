@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Created by Marco on 03/03/2016.
+ * Value Class
  */
 public class Value<T> {
 
@@ -21,7 +21,7 @@ public class Value<T> {
         this.value = val;
         this.defaultValue = defaultValue;
         this.mandatory = mandatory;
-        this.valid = (defaultValue != null) ? true : false;
+        this.valid = (defaultValue != null);
 
     }
 

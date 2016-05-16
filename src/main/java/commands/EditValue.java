@@ -1,11 +1,10 @@
 package commands;
 
 import controller.MainWindow;
-import model.Module;
 import model.Value;
 
 /**
- * Created by felipe on 28/04/16.
+ *  Command for edit a Value
  */
 public class EditValue implements Command {
 

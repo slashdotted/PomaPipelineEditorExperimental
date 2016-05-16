@@ -3,7 +3,6 @@ package commands;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import main.Main;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.Converter;
@@ -12,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by felipe on 23/03/16.
+ * Command for copy the current selection to System Clipboard
  */
 public class Copy implements Command {
 
@@ -44,17 +43,13 @@ public class Copy implements Command {
         ClipboardContent clipboardContent = new ClipboardContent();
 
         JSONObject modulesObject = new JSONObject();
-        //modulesObject.put("modules", modules);
 
         modules.keySet().forEach(key -> {
             modulesObject.put(key, modules.get(key));
         });
 
         JSONArray linksArray = new JSONArray();
-        //linksArray.put(links.values());
-        links.values().forEach(link->{
-            linksArray.put(link);
-        });
+        links.values().forEach(link-> linksArray.put(link));
 
         clipboardContent.putString(Converter.getPipelineString(modulesObject, linksArray));
 

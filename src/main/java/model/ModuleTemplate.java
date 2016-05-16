@@ -1,12 +1,11 @@
 package model;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 
 /**
- * Created by felipe on 08/03/16.
+ * Module Template Class
  */
 public class ModuleTemplate {
     public static final String DEFAULT_TEMPLATE_IMAGE_URL = "moduleImage.png";
@@ -94,9 +93,7 @@ public class ModuleTemplate {
         Map<String, Value> paramsCopy = new HashMap<>();
         mandatoryParameters.keySet().forEach(key -> paramsCopy.put(key, new Value(mandatoryParameters.get(key))));
 
-        optParameters.keySet().forEach(key -> {
-            paramsCopy.put(key, new Value(optParameters.get(key)));
-        });
+        optParameters.keySet().forEach(key -> paramsCopy.put(key, new Value(optParameters.get(key))));
 
         return paramsCopy;
     }

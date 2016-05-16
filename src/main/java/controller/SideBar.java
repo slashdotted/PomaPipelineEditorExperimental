@@ -1,6 +1,9 @@
 package controller;
 
-import commands.*;
+import commands.AddStringProperty;
+import commands.Command;
+import commands.EditModule;
+import commands.RemoveStringProperty;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.application.Platform;
@@ -8,7 +11,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.CacheHint;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -34,14 +36,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by felipe on 13/04/16.
+ * SideBar Class, this component is used for edit a module from GUI
  */
 public class SideBar extends VBox {
 
 
-    private static ImageView pinImageView = ProgramUtils.getPinImage(20);
-    private static ImageView closeImageView = ProgramUtils.getCloseImage(20);
-    private static ImageView unPinImageView = ProgramUtils.getUnpinImage(20);
+    private static ImageView pinImageView = GraphicsElementsFactory.getPinImage(20);
+    private static ImageView closeImageView = GraphicsElementsFactory.getCloseImage(20);
+    private static ImageView unPinImageView = GraphicsElementsFactory.getUnpinImage(20);
 
 
     @FXML

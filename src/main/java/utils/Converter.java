@@ -11,13 +11,12 @@ import model.Value;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by felipe on 23/03/16.
+ * Class for data conversion, mainly between internal model and JSON structures
  */
 public class Converter {
     public static DataFormat MODULES_DATA_FORMAT = new DataFormat("modules");
@@ -28,7 +27,6 @@ public class Converter {
 
         Module module = null;
 
-        //System.out.println(jsonObject.toString(4));
         String type = jsonObject.getString("type");
 
 
@@ -52,7 +50,7 @@ public class Converter {
             return null;
 
         module = Module.getInstance(template);
-        name = BadElements.checkDuplicateModules(name, 0);
+        name = ProgramUtils.checkDuplicateModules(name, 0);
         module.setName(name);
         if (position != null)
             module.setPosition(position);
@@ -60,7 +58,6 @@ public class Converter {
 
         module.setParameters(extractParams(template, jsonObject));
 
-        //System.out.println("Current module: " + module);
         JSONArray jsonArray = null;
         if (jsonObject.has("cparams"))
             jsonArray = jsonObject.getJSONArray("cparams");
@@ -129,26 +126,27 @@ public class Converter {
             channel = "default";
 
         if ((link = Main.links.get(from.getName() + "-" + to.getName())) != null) {
-            //System.out.println("FromTo " + channel);
-            //  link.addChannel("fromTo",new SimpleStringProperty(channel));
+
             link.addChannel(from, to, new SimpleStringProperty(channel));
             return link;
         }
 
         if ((link = Main.links.get(to.getName() + "-" + from.getName())) != null) {
-            //System.out.println("ToFrom " + channel);
-
-            // link.addChannel("toFrom",new SimpleStringProperty(channel));
             link.addChannel(from, to, new SimpleStringProperty(channel));
             return link;
         }
 
         link = new Link(from, to, channel);
-        //System.out.println("FromTo " + channel);
         return link;
     }
 
 
+    /**
+     * This method is used for the extraction of parameters from a JSONObject
+     * @param template
+     * @param jsonObject
+     * @return
+     */
     private static Map<String, Value> extractParams(ModuleTemplate template, JSONObject jsonObject) {
         Map<String, Value> params = new HashMap<>();
         // Mandatory params extraction
@@ -197,6 +195,11 @@ public class Converter {
         return params;
     }
 
+    /**
+     * Method for populate our clipboards from portions of model
+     * @param modules
+     * @param links
+     */
     public static void populateClipBoards(Map<String, Module> modules, Map<String, Link> links) {
         Main.modulesClipboard.clear();
         Main.linksClipboard.clear();
@@ -244,26 +247,8 @@ public class Converter {
         pipelineStringBuffer.append("\n}");
 
 
-//        pipelineStringBuffer.append(pipelineModules.toString());
-//        pipelineStringBuffer.append(",\n\t\"links\" : ");
-//        pipelineStringBuffer.append(pipelineLinks.toString());
-//        pipelineStringBuffer.append("\n}");
-
         return pipelineStringBuffer.toString();
-        //return pipeline.toString(4);
     }
-
-/*
-    public static boolean checkMatching(JSONObject pipelineModules, JSONArray pipelineLinks) {
-
-        for (Object pipelineLink : pipelineLinks) {
-            JSONObject link = (JSONObject) pipelineLink;
-            if (!(pipelineModules.has(link.get("from").toString()) && pipelineModules.has(link.get("to").toString()))) ;
-            return false;
-        }
-
-        return true;
-    }*/
 
 
 }

@@ -7,14 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import javafx.scene.input.DataFormat;
-import javafx.util.Pair;
-
 public class DragContainer implements Serializable {
 
     /**

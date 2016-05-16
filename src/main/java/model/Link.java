@@ -1,17 +1,15 @@
 package model;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.util.List;
 
 /**
- * Created by Marco on 18/03/2016.
+ * Link class
  */
 public class Link {
-//TODO control changes simplestringproperties
     private final Module moduleA;
     private final Module moduleB;
 
@@ -83,9 +81,7 @@ public class Link {
 
     public static boolean checkIfPresent(String string, ObservableList<SimpleStringProperty> list){
         long match = list.stream().filter(stringProperty -> stringProperty.getValue().equals(string)).count();
-        if(match>0)
-            return true;
-        return false;
+        return match > 0;
     }
 
     public ObservableList<SimpleStringProperty> getChannelsAToB() {

@@ -1,13 +1,11 @@
 package commands;
 
 import controller.MainWindow;
-import javafx.application.Platform;
 import main.Main;
 import model.Module;
-import model.ModuleTemplate;
 
 /**
- * Created by felipe on 06/04/16.
+ * Command for add a module to the current pipeline
  */
 public class AddModule implements Command{
     private Module module;
@@ -18,10 +16,7 @@ public class AddModule implements Command{
 
     @Override
     public boolean execute() {
-        //debug("module = " + module.toString());
-
         Main.modules.put(module.getName(), module);
-        //Platform.runLater(() ->MainWindow.addDraggableModule(module) );
         MainWindow.addDraggableModule(module);
         return true;
     }

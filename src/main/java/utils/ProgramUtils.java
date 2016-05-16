@@ -1,11 +1,8 @@
 package utils;
 
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -38,12 +35,8 @@ public class ProgramUtils {
     }
 
     /**
-     * Buttons Section
-     */
-
-
-    /**
-     *
+     *  Method used for the application of dropshadow effect to a button, when pressed.
+     *  Useful for give a pressed feedback to the user
      * @param button
      */
     public static void setOnPressedButton(Button button) {
@@ -54,40 +47,21 @@ public class ProgramUtils {
     }
 
 
-    /**
-     * IMAGES SECTION
-     */
+    public static String checkDuplicateModules(String name, int counter) {
 
-    public static ImageView getPinImage(double size) {
-        ImageView imageView = new ImageView("images/pin.png");
-        imageView.setFitWidth(size);
-        imageView.setFitHeight(size);
-        return imageView;
+        for (String nameMod: Main.modules.keySet() ) {
+
+
+            if(nameMod.equals(name)){
+                if (counter==0){
+                    name+= "_";
+                }
+                String[] split =name.toString().split("_");
+                name = split[0] + "_" + counter++;
+                return checkDuplicateModules(name.toString(), counter);
+            }
+
+        }
+        return name;
     }
-
-    public static ImageView getUnpinImage(double size) {
-        ImageView imageView = new ImageView("images/unpin.png");
-        imageView.setFitWidth(size);
-        imageView.setFitHeight(size);
-        return imageView;
-    }
-
-    public static ImageView getCloseImage(double size) {
-        ImageView imageView = new ImageView("images/close.png");
-        imageView.setFitWidth(size);
-        imageView.setFitHeight(size);
-        return imageView;
-    }
-
-    public static ImageView getCloseImage2(double size) {
-        ImageView imageView = new ImageView("images/close_red.png");
-        imageView.setFitWidth(size);
-        imageView.setFitHeight(size);
-        return imageView;
-    }
-
-    public static Image getPlusImage() {
-        return new Image("images/plus.png");
-    }
-
 }

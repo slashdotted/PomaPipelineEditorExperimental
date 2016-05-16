@@ -4,18 +4,15 @@ import controller.DraggableModule;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-import main.Main;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Created by felipe on 11/05/16.
+ * Class used for perform a selection with a selection rectangle
  */
 public class SelectionArea {
     private Group selectionGroup = new Group();
@@ -27,11 +24,9 @@ public class SelectionArea {
     private Map<String, DraggableModule> draggableModules;
     private double startingY;
     private double startingX;
-    private ArrayList<DraggableModule> selectionBuffer = new ArrayList<>();
 
 
     public SelectionArea(AnchorPane pane, Group intersectionGroup, Map<String, DraggableModule> draggableModules) {
-        //this.selectionGroup = selectionGroup;
         this.pane = pane;
         this.intersectionGroup = intersectionGroup;
         this.draggableModules = draggableModules;
@@ -42,15 +37,11 @@ public class SelectionArea {
 
     private void setHandlers() {
         pane.setOnMousePressed((MouseEvent event) -> {
-
             Point2D actualPosition = new Point2D(event.getX(), event.getY());
             if (pane.contains(actualPosition) && !drawing && !intersectionGroup.contains(actualPosition)) {
                 startingX = event.getX();
                 startingY = event.getY();
-
                 selectionShape = new Rectangle();
-
-                // A non-finished rectangle has always the same color.
                 selectionShape.setOpacity(0.3);
                 selectionShape.setFill(color); // almost white color
                 selectionShape.setStroke(Color.DARKBLUE);
@@ -61,8 +52,6 @@ public class SelectionArea {
                 drawing = true;
             }
         });
-
-
         pane.setOnMouseDragged((MouseEvent event) -> {
             if (drawing == true) {
                 double currentMouseX = event.getX();
@@ -79,22 +68,13 @@ public class SelectionArea {
                     DraggableModule current = draggableModules.get(key);
                     if (selectionShape.getBoundsInLocal().intersects(current.getBoundsInParent())) {
                         current.select();
-                        // selectionBuffer.add(current);
 
                     } else if (current.isSelected()) {
                         current.unselect();
-                        //selectionBuffer.remove(current);
                     }
-
-
                 });
-
-
             }
-
-
         });
-
         pane.setOnMouseReleased((MouseEvent event) -> {
             if (drawing == true) {
                 selectionShape.setFill(color);

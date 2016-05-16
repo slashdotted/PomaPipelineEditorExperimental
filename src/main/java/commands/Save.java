@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * Created by felipe on 23/03/16.
+ * Command for writing a pipeline in a JSON file
  */
 public class Save implements Command {
 
@@ -45,17 +45,12 @@ public class Save implements Command {
     public boolean execute() {
         PipelineManager.CURRENT_PIPELINE_PATH = output.getPath();
 
-        //debug("Modules size:  " + modules.size() + " links size: " + links.size());
         JSONObject pipelineModules = new JSONObject();
         JSONArray pipelineLinks = new JSONArray();
 
-        modules.keySet().forEach(key -> {
-            pipelineModules.put(key, modules.get(key));
-        });
+        modules.keySet().forEach(key -> pipelineModules.put(key, modules.get(key)));
 
-        links.values().forEach(jsonObject -> {
-            pipelineLinks.put(jsonObject);
-        });
+        links.values().forEach(jsonObject -> pipelineLinks.put(jsonObject));
 
         PipelineManager pipelineManager = new PipelineManager();
         if(pipelineManager.save(output, pipelineModules, pipelineLinks)) {
