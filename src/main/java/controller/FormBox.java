@@ -71,10 +71,7 @@ public class FormBox<T> extends VBox {
         clearIcon.setImage(new Image("images/cancel.png"));
         Platform.runLater(() -> Tooltip.install(clearIcon, new Tooltip("Clear this value")));
 
-
-
         this.setSpacing(10);
-        System.out.println(value+"****************************************");
         formLabel.setText(value.getName());
 
         formTextField.setPromptText("Insert here a " + value.getType() + " value");
