@@ -22,6 +22,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import main.Main;
 import model.Link;
 import model.Module;
@@ -438,6 +439,16 @@ public class MainWindow extends BorderPane {
         System.exit(0);
     }
 
+
+    @FXML
+    private void about(){
+        Stage stage = new Stage();
+        About about = new About();
+        stage.setScene(new Scene(about));
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.show();
+    }
 
     @FXML
     public void parametersEditor() {

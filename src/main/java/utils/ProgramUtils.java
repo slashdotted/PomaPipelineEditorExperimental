@@ -79,6 +79,13 @@ public class ProgramUtils {
         return imageView;
     }
 
+    public static ImageView getCloseImage2(double size) {
+        ImageView imageView = new ImageView("images/close_red.png");
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
+        return imageView;
+    }
+
     public static Image getPlusImage() {
         return new Image("images/plus.png");
     }
