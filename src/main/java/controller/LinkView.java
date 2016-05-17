@@ -265,15 +265,15 @@ public class LinkView extends Group {
     public void bindLink(DraggableModule from, DraggableModule to) {
 
 
-        line.startXProperty().bind(from.layoutXProperty().add(from.getWidth() / 2.0));
+        line.startXProperty().bind(from.layoutXProperty().add(100 / 2.0));
 
 
-        line.startYProperty().bind(from.layoutYProperty().add(to.getHeight() / 2.0));
+        line.startYProperty().bind(from.layoutYProperty().add(80 / 2.0));
 
 
-        line.endXProperty().bind(to.layoutXProperty().add(from.getWidth() / 2.0));
+        line.endXProperty().bind(to.layoutXProperty().add(100 / 2.0));
 
-        line.endYProperty().bind(to.layoutYProperty().add(to.getHeight() / 2.0));
+        line.endYProperty().bind(to.layoutYProperty().add(80 / 2.0));
 
 
         from.addLink(link.getID());

@@ -105,27 +105,29 @@ public class ParametersEditor extends VBox {
         });
 
         acceptButton.setOnAction(event -> {
-            ArrayList<Command> allEdits = new ArrayList<>();
-            if (parameterLabel.getText().equals("Host")) {
-                selectedModules.keySet().forEach(key -> {
-                    Command editHost = new EditModule(selectedModules.get(key), EditModule.Type.Host, valueTextField.getText());
-                    allEdits.add(editHost);
-                });
+            if(valueTextField.getText()!=null&& !parameterLabel.getText().isEmpty()) {
+                ArrayList<Command> allEdits = new ArrayList<>();
+                if (parameterLabel.getText().equals("Host")) {
+                    selectedModules.keySet().forEach(key -> {
+                        Command editHost = new EditModule(selectedModules.get(key), EditModule.Type.Host, valueTextField.getText());
+                        allEdits.add(editHost);
+                    });
 
-            } else {
-                selectedModules.keySet().forEach(key -> {
-                    Value current = selectedModules.get(key).getParameters().get(parameterLabel.getText());
-                    Command currentEdit = new EditValue(current, valueTextField.getText());
-                    allEdits.add(currentEdit);
-                });
+                } else {
+                    selectedModules.keySet().forEach(key -> {
+                        Value current = selectedModules.get(key).getParameters().get(parameterLabel.getText());
+                        Command currentEdit = new EditValue(current, valueTextField.getText());
+                        allEdits.add(currentEdit);
+                    });
 
+                }
+
+                Command executeAll = new ExecuteAll(allEdits);
+                executeAll.execute();
+                CareTaker.addMemento(executeAll);
+
+                this.getScene().getWindow().hide();
             }
-
-            Command executeAll = new ExecuteAll(allEdits);
-            executeAll.execute();
-            CareTaker.addMemento(executeAll);
-
-            this.getScene().getWindow().hide();
         });
 
 
