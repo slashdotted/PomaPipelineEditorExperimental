@@ -153,6 +153,12 @@ public class Module {
     public boolean isValid() {
         return valid.getValue();
     }
-
+    public void validate(){
+        boolean valid=true;
+        for (String key:parameters.keySet()) {
+            valid&=parameters.get(key).isValid();
+        }
+        this.setValid(valid);
+    }
 
 }

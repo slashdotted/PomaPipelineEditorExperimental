@@ -286,13 +286,7 @@ public class SideBar extends VBox {
 
     private void setModuleAsValid() {
 
-        boolean isValid = true;
-        for (FormBox form : mandatoryFormBoxes) {
-            isValid &= form.isValid();
-
-        }
-
-        module.setValid(isValid);
+        module.validate();
     }
 
     private void editName() {
@@ -363,6 +357,7 @@ public class SideBar extends VBox {
             Value value = module.getParameters().get(key);
 
             FormBox current = new FormBox(value);
+
             mandatoryFormBoxes.add(current);
             mandatoryBox.getChildren().add(current);
             mandatoryBox.getChildren().add(GraphicsElementsFactory.getSeparator());

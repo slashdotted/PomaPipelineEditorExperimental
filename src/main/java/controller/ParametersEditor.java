@@ -126,6 +126,9 @@ public class ParametersEditor extends VBox {
                 executeAll.execute();
                 CareTaker.addMemento(executeAll);
 
+                selectedModules.keySet().forEach(s -> {
+                    selectedModules.get(s).validate();
+                });
                 this.getScene().getWindow().hide();
             }
         });
