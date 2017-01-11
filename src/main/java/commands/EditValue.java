@@ -20,13 +20,15 @@ public class EditValue implements Command {
 
     @Override
     public boolean execute() {
-        boolean success = value.updateValue(newValue);
-
-        if(!success)
+        String updatedValue = value.updateValue(newValue);
+        value.validate();
+        if(!updatedValue.equals(newValue)) {
             MainWindow.stackedLogBar.logAndWarning("Operation not permitted! insert a correct value");
-        else
+            return false;
+        } else {
             MainWindow.stackedLogBar.logAndSuccess("Value " +value.getName() +" successful updated");
-        return success;
+            return true;
+        }
     }
 
     @Override

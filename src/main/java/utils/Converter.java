@@ -1,5 +1,6 @@
 package utils;
 
+import controller.MainWindow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.input.DataFormat;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class Converter {
     public static DataFormat MODULES_DATA_FORMAT = new DataFormat("modules");
     public static DataFormat LINKS_DATA_FORMAT = new DataFormat("links");
+    public static DataFormat SOURCE_DATA_FORMAT = new DataFormat("source");
 
 
     public static Module jsonToModule(String name, JSONObject jsonObject) {
@@ -203,6 +205,8 @@ public class Converter {
     public static void populateClipBoards(Map<String, Module> modules, Map<String, Link> links) {
         Main.modulesClipboard.clear();
         Main.linksClipboard.clear();
+        
+        Main.sourceClipBoard = MainWindow.getSource();
 
         modules.keySet().forEach(key -> {
             Module current = modules.get(key);
@@ -235,15 +239,19 @@ public class Converter {
      * @param pipelineLinks
      * @return
      */
-    public static String getPipelineString(JSONObject pipelineModules, JSONArray pipelineLinks) {
+    public static String getPipelineString(JSONObject pipelineModules, JSONArray pipelineLinks, String source) {
         StringBuffer pipelineStringBuffer = new StringBuffer();
         JSONObject pipeline = new JSONObject();
+        pipeline.put("source", source);
         pipeline.put("links", pipelineLinks);
         pipeline.put("modules", pipelineModules);
         pipelineStringBuffer.append("{\n \"modules\" : ");
         pipelineStringBuffer.append(pipelineModules.toString(4));
         pipelineStringBuffer.append(",\n \"links\" : ");
         pipelineStringBuffer.append(pipelineLinks.toString(4));
+        if (source != null) {
+            pipelineStringBuffer.append(",\n \"source\" : \"").append(source).append("\"");
+        }
         pipelineStringBuffer.append("\n}");
 
 

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
+import org.json.JSONString;
 
 /**
  * Class for manage the persistence of a pipeline
@@ -19,7 +20,7 @@ public class PipelineManager {
     private static ClipboardContent clipboard = new ClipboardContent();
 
 
-    public boolean save(File output, JSONObject pipelineModules, JSONArray pipelineLinks) {
+    public boolean save(File output, JSONObject pipelineModules, JSONArray pipelineLinks, String source) {
 
         FileWriter writer = null;
         try {
@@ -28,7 +29,7 @@ public class PipelineManager {
             e.printStackTrace();
         }
         try {
-            writer.write(Converter.getPipelineString(pipelineModules, pipelineLinks));
+            writer.write(Converter.getPipelineString(pipelineModules, pipelineLinks, source));
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,14 +82,23 @@ public class PipelineManager {
 
         JSONObject jsonModules = null;
         JSONArray jsonLinks = null;
+        String jsonSource = MainWindow.getSource();
+
+        if (pipeline.has("source")) {
+            jsonSource = (String) pipeline.get("source");
+        }
         if (pipeline.has("modules"))
             jsonModules = (JSONObject) pipeline.get("modules");
+            if (jsonSource == null && !jsonModules.keySet().isEmpty()) {
+                jsonSource = jsonModules.names().getString(0);
+            }
         if (pipeline.has("links"))
             jsonLinks = (JSONArray) pipeline.get("links");
-
+        
 
         clipboard.put(Converter.MODULES_DATA_FORMAT, jsonModules);
         clipboard.put(Converter.LINKS_DATA_FORMAT, jsonLinks);
+        clipboard.put(Converter.SOURCE_DATA_FORMAT, jsonSource);
     }
 
     public static ClipboardContent getClipboard(String jsonString) {

@@ -34,17 +34,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 /**
  * SideBar Class, this component is used for edit a module from GUI
  */
 public class SideBar extends VBox {
 
-
     private static ImageView pinImageView = GraphicsElementsFactory.getPinImage(20);
     private static ImageView closeImageView = GraphicsElementsFactory.getCloseImage(20);
     private static ImageView unPinImageView = GraphicsElementsFactory.getUnpinImage(20);
-
 
     @FXML
     private Label templateLabel;
@@ -76,25 +76,21 @@ public class SideBar extends VBox {
     @FXML
     private Button pinButton;
 
+    @FXML
+    private CheckBox sourceCheckBox;
 
     private List<ParamBox> paramBoxes;
     private ObservableList<SimpleStringProperty> cparams;
     private List<FormBox> mandatoryFormBoxes;
-    //private ArrayList<String> cparams;
     private Module module;
     private ModuleTemplate template;
     private VBox mandatoryBox;
     private VBox optionalBox;
-    //private Button controlButton;
-    private double expandedSize;
-    private static AtomicBoolean animated = new AtomicBoolean(false);
-    private AtomicBoolean pinned = new AtomicBoolean(false);
+
     private boolean creation;
 
     public SideBar(Module module, double expandedSize, boolean creation) {
         this.module = module;
-        this.expandedSize = expandedSize;
-        animated.set(false);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sideBar.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -110,14 +106,21 @@ public class SideBar extends VBox {
         this.setCacheHint(CacheHint.SPEED);
     }
 
-
     @FXML
     public void initialize() {
-
-        setExpandedSize(expandedSize);
-        setVisible(false);
-        initPosition();
         this.template = module.getTemplate();
+        sourceCheckBox.setVisible(module.getCanBeSource());
+        sourceCheckBox.setSelected(MainWindow.isSource(module.getName()));
+        sourceCheckBox.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            String newSource = newValue.booleanValue() ? module.getName() : null;
+            Command editSource = new EditModule(module, EditModule.Type.Source, newSource);
+            if (editSource.execute()) {
+                CareTaker.addMemento(editSource);
+                MainWindow.stackedLogBar.logAndSuccess("Source changed to " + MainWindow.getSource());
+            } else {
+                MainWindow.stackedLogBar.logAndWarning("Failed to set source");
+            }
+        });
 
         this.cparams = module.getcParams();
         nameLabel.setText(module.getName());
@@ -134,8 +137,6 @@ public class SideBar extends VBox {
         initializeCParams();
         setEvents();
         setButtons();
-
-
     }
 
     private void initializeCParams() {
@@ -162,7 +163,12 @@ public class SideBar extends VBox {
         addCParam.setGraphic(new ImageView("images/plus.png"));
         ProgramUtils.setOnPressedButton(addCParam);
 
-        pinButton.setGraphic(pinImageView);
+        if (MainWindow.pinnedSidebar.get()) {
+            pinButton.setGraphic(pinImageView);
+        } else {
+            pinButton.setGraphic(unPinImageView);
+        }
+
         pinButton.setBackground(Background.EMPTY);
         ProgramUtils.setOnPressedButton(pinButton);
     }
@@ -170,24 +176,18 @@ public class SideBar extends VBox {
     private void setEvents() {
 
         closeSidebar.setOnAction(event -> {
-            if (animated.get()) {
-                event.consume();
-            } else {
-                pinned.set(false);
-                hide(false);
-            }
+            hide(true);
         });
 
         pinButton.setOnAction(event1 -> {
-            if (pinned.get()) {
-                pinned.compareAndSet(true, false);
-                pinButton.setGraphic(pinImageView);
-            } else {
-                pinned.compareAndSet(false, true);
+            if (MainWindow.pinnedSidebar.get()) {
+                MainWindow.pinnedSidebar.set(false);
                 pinButton.setGraphic(unPinImageView);
+            } else {
+                MainWindow.pinnedSidebar.set(true);
+                pinButton.setGraphic(pinImageView);
             }
         });
-
 
         addCParam.setOnMouseClicked(event -> {
             addNewCParam(new SimpleStringProperty(""), true);
@@ -210,78 +210,17 @@ public class SideBar extends VBox {
     }
 
     public void show() {
-
-        if (animated.get())
-            return;
-        animated.compareAndSet(false, true);
-        final Animation showPanel = showAnimation(this);
-
-        showPanel.onFinishedProperty().set(actionEvent -> {
-            if (creation)
-                editName();
-            animated.compareAndSet(true, false);
-
-        });
-
         setVisible(true);
-        showPanel.play();
-
     }
-
 
     public void hide(boolean force) {
 
-        if (force && isPinned()) {
-            pinned.compareAndSet(true, false);
-        }
-        if (animated.get() || isPinned())
+        if (!force && isPinned()) {
             return;
-
-
-        animated.compareAndSet(false, true);
-        final Animation hidePanel = hideAnimation(this);
-        hidePanel.onFinishedProperty().set(actionEvent -> {
-            setVisible(false);
-            animated.compareAndSet(true, false);
-        });
-
+        }
 
         setModuleAsValid();
-        hidePanel.play();
-
-
-    }
-
-    private static Animation hideAnimation(final SideBar sideBar) {
-
-        // Create an animated to hide the panel.
-        return new Transition() {
-
-            {
-                setCycleDuration(Duration.millis(100));
-            }
-
-            @Override
-            protected void interpolate(double frac) {
-                final double size = sideBar.getExpandedSize() * (1.0 - frac);
-                sideBar.setPrefWidth(size);
-            }
-        };
-    }
-
-    private static Animation showAnimation(final SideBar sideBar) {
-        // Create an animated to show the panel.
-        return new Transition() {
-            {
-                setCycleDuration(Duration.millis(100));
-            }
-
-            @Override
-            protected void interpolate(double frac) {
-                final double size = sideBar.getExpandedSize() * frac;
-                sideBar.setPrefWidth(size);
-            }
-        };
+        setVisible(false);
     }
 
     private void setModuleAsValid() {
@@ -294,7 +233,6 @@ public class SideBar extends VBox {
         temp.selectAll();
         temp.setFont(Font.font("System", FontWeight.BOLD, 14));
         VBox infoBox = (VBox) this.lookup("#infoBox");
-
 
         infoBox.getChildren().remove(nameLabel);
         infoBox.getChildren().add(0, temp);
@@ -319,31 +257,16 @@ public class SideBar extends VBox {
                 MainWindow.stackedLogBar.logAndSuccess("Name changed: " + module.getName());
             }
 
-
         }
 
         infoBox.getChildren().remove(temp);
-        if (!infoBox.getChildren().contains(nameLabel))
+        if (!infoBox.getChildren().contains(nameLabel)) {
             infoBox.getChildren().add(0, nameLabel);
+        }
 
-    }
-
-
-    private void setExpandedSize(double expandedSize) {
-        this.expandedSize = expandedSize;
-    }
-
-    public double getExpandedSize() {
-        return expandedSize;
-    }
-
-    private void initPosition() {
-        setPrefWidth(0);
-        setMinWidth(0);
     }
 
     private void setParametersArea() {
-
 
         mandatoryBox = new VBox();
         optionalBox = new VBox();
@@ -352,7 +275,6 @@ public class SideBar extends VBox {
         optionalParamsPane.setContent(optionalBox);
 
         template.getMandatoryParameters().keySet().forEach(key -> {
-
 
             Value value = module.getParameters().get(key);
 
@@ -374,7 +296,6 @@ public class SideBar extends VBox {
     }
 
     private void addNewCParam(SimpleStringProperty cParam, boolean isNew) {
-
 
         ParamBox box = new ParamBox(cParam);
         this.cparamsBox.getChildren().add(box);
@@ -399,8 +320,7 @@ public class SideBar extends VBox {
         });
     }
 
-
     public boolean isPinned() {
-        return pinned.get();
+        return MainWindow.pinnedSidebar.get();
     }
 }

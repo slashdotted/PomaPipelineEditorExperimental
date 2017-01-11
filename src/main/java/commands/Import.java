@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONString;
 
 /**
  * Command for import a pipeline from different sources.
@@ -31,15 +32,17 @@ public class Import implements Command {
     private Command executeAll;
     private JSONObject jsonModules = null;
     private JSONArray jsonLinks = null;
+    private String jsonSource = null;
     private Point2D position = null;
 
     public Import(File file) {
         this.file = file;
     }
 
-    public Import(JSONObject jsonModules, JSONArray jsonLinks, Point2D position) {
+    public Import(JSONObject jsonModules, JSONArray jsonLinks, String source, Point2D position) {
         this.jsonModules = jsonModules;
         this.jsonLinks = jsonLinks;
+        this.jsonSource = source;
     }
 
 
@@ -50,7 +53,6 @@ public class Import implements Command {
      */
     @Override
     public boolean execute() {
-
         // Data from file
         if (file != null) {
             PipelineManager pipelineLoader = new PipelineManager();
@@ -60,6 +62,7 @@ public class Import implements Command {
             ClipboardContent clipboard = pipelineLoader.getClipboard();
             jsonModules = (org.json.JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
             jsonLinks = (org.json.JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
+            jsonSource = (String) clipboard.get(Converter.SOURCE_DATA_FORMAT);
         }
 
         if (jsonModules == null)
@@ -71,7 +74,6 @@ public class Import implements Command {
             JSONObject jsonModule = jsonModules.getJSONObject(key);
             Module module = Converter.jsonToModule(String.valueOf(key), jsonModule);
             if (module != null) {
-
                 Main.modules.put(module.getName(), module);
 
                 // Here it's checked if module's name has been changed,
@@ -113,6 +115,13 @@ public class Import implements Command {
                 }
             }
 
+        }
+        
+        if (jsonSource != null) {
+            Command editSource = new EditModule(Main.modules.get(jsonSource), EditModule.Type.Source, jsonSource.toString());
+            if (editSource.execute()) {
+                CareTaker.addMemento(editSource);
+            }
         }
         return success;
     }

@@ -16,6 +16,7 @@ public class ModuleTemplate {
     private String type;
     private Map<String, Value> optParameters;
     private Map<String, Value> mandatoryParameters;
+    private boolean cansource;
 
     private String imageURL = DEFAULT_TEMPLATE_IMAGE_URL;
 
@@ -23,6 +24,10 @@ public class ModuleTemplate {
 
         this.counter = 0;
 
+    }
+    
+    public void setCanBeSource(boolean value) {
+        cansource = value;
     }
 
     public static ModuleTemplate getInstance() {
@@ -96,5 +101,9 @@ public class ModuleTemplate {
         optParameters.keySet().forEach(key -> paramsCopy.put(key, new Value(optParameters.get(key))));
 
         return paramsCopy;
+    }
+
+    boolean getCanBeSource() {
+        return cansource;
     }
 }

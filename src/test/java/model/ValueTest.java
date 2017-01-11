@@ -24,17 +24,17 @@ public class ValueTest {
     @Before
     public void setUp() {
         //logger.info("Values initialized for tests");
-        longValue = new Value<>("longValue", new Long(0), 0L, true);
-        stringValue = new Value<>("stringValue", new String("0"), "0", true);
-        booleanValue = new Value<>("booleanValue", new Boolean("0"), false, true);
-        doubleValue = new Value<>("doubleValue", new Double("0"), 0.0, true);
+        longValue = new Value<>("longValue", "", new Long(0), 0L, true);
+        stringValue = new Value<>("stringValue", "", new String("0"), "0", true);
+        booleanValue = new Value<>("booleanValue", "", new Boolean("0"), false, true);
+        doubleValue = new Value<>("doubleValue", "", new Double("0"), 0.0, true);
     }
 
     private static void initializeNoDefaultValue() {
-        longValue = new Value<>("longValue", new Long(0), null, true);
-        stringValue = new Value<>("stringValue", new String("0"), null, true);
-        booleanValue = new Value<>("booleanValue", new Boolean("0"), null, true);
-        doubleValue = new Value<>("doubleValue", new Double("0"), null, true);
+        longValue = new Value<>("longValue","",  new Long(0), null, true);
+        stringValue = new Value<>("stringValue", "", new String("0"), null, true);
+        booleanValue = new Value<>("booleanValue", "", new Boolean("0"), null, true);
+        doubleValue = new Value<>("doubleValue", "", new Double("0"), null, true);
     }
 
 
@@ -67,22 +67,22 @@ public class ValueTest {
     public void testUpdateValue() throws Exception {
         initializeNoDefaultValue();
         // Long
-        assertTrue(longValue.updateValue("1234"));
-        assertFalse(longValue.updateValue("notALong"));
+        assertEquals(longValue.updateValue("1234"), 1234);
+        assertEquals(longValue.updateValue("notALong"), 0);
 
         // String
-        assertTrue(stringValue.updateValue("myString"));
+        assertEquals(stringValue.updateValue("myString"), "myString" );
 
         //Boolean
-        assertTrue(booleanValue.updateValue("true"));
-        assertTrue(booleanValue.updateValue("false"));
-        assertTrue(booleanValue.updateValue("0"));
-        assertTrue(booleanValue.updateValue("1"));
-        assertFalse(booleanValue.updateValue("notABoolean"));
+        assertEquals(booleanValue.updateValue("true"), true);
+        assertEquals(booleanValue.updateValue("false"), false);
+        assertEquals(booleanValue.updateValue("0"), false);
+        assertEquals(booleanValue.updateValue("1"), true);
+        assertEquals(booleanValue.updateValue("notABoolean"), false);
 
         // Double
-        assertTrue(doubleValue.updateValue("1234.0"));
-        assertFalse(doubleValue.updateValue("notADouble"));
+        assertEquals(doubleValue.updateValue("1234.0"), 1234.0);
+        assertEquals(doubleValue.updateValue("notADouble"), 0.0);
 
     }
 

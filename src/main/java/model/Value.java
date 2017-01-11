@@ -12,19 +12,19 @@ public class Value<T> {
     private final T defaultValue;
     private boolean valid = true;
     private String name;
-
+    private String description;
 
     T value;
 
-    public Value(String name, T val, T defaultValue, boolean mandatory) {
+    public Value(String name, String description, T val, T defaultValue, boolean mandatory) {
         this.name = name;
         this.value = val;
         this.defaultValue = defaultValue;
         this.mandatory = mandatory;
         this.valid = (defaultValue != null);
+        this.description = description;
 
     }
-
 
     public Value(Value value) {
         this.name = value.getName();
@@ -49,6 +49,7 @@ public class Value<T> {
         this.value = (T) val;
         this.defaultValue = (T) value.getDefaultValue();
         this.valid = value.isValid();
+        this.description = value.description;
 
     }
 
@@ -60,69 +61,85 @@ public class Value<T> {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public T getDefaultValue() {
         return defaultValue;
     }
-
-    public boolean updateValue(String newValue) {
-
-        boolean success = false;
+    
+    public void validate() {
         if (value instanceof String) {
-            value = (T) newValue;
-            success = true;
-        }
-        try {
-            if (!success && value instanceof Long) {
-                value = (T) Long.valueOf(newValue);
-                success = true;
-            }
-            if (!success && value instanceof Double) {
-                value = (T) Double.valueOf(newValue);
-                success = true;
-            }
-            if (!success && value instanceof Integer) {
-                value = (T) Integer.valueOf(newValue);
-                success = true;
-            }
-        } catch (NumberFormatException e) {
-
-            success = false;
-        }
-        if (!success && value instanceof Boolean) {
-            if (newValue.equalsIgnoreCase("true") || newValue.equalsIgnoreCase("false")) {
-                value = (T) Boolean.valueOf(newValue);
-                success = true;
-            } else if (newValue.equals("0")) {
-                value = (T) Boolean.valueOf("false");
-                success = true;
-            } else if (newValue.equals("1")) {
-                value = (T) Boolean.valueOf("true");
-                success = true;
-            } else {
-                success = false;
+            if (mandatory && ((String) value).isEmpty()) {
+                setValid(false);
+                return;
             }
         }
-
-        if (!success && defaultValue != null) {
-            value = defaultValue;
-
-        }
-
-        valid = success;
-        return success;
+        setValid(true);
     }
 
+    public String updateValue(String newValue) {
+        if (mandatory && newValue.isEmpty()) {
+                return ""+value;
+        }
+        if (value instanceof String) {
+            value = (T) newValue;
+            return newValue;
+        } else if (value instanceof Long) {
+            try {
+                value = (T) Long.valueOf(newValue);
+                return newValue;
+            } catch(NumberFormatException e) {
+                return ""+value;
+            }
+        } else if (value instanceof Double) {
+            try {
+                value = (T) Double.valueOf(newValue);
+                return newValue;
+            } catch(NumberFormatException e) {
+                return ""+value;
+            }
+        } else if (value instanceof Integer) {
+            try {
+                value = (T) Integer.valueOf(newValue);
+                return newValue;
+            } catch(NumberFormatException e) {
+                return ""+value;
+            }
+        } else if (value instanceof Boolean) {
+            if (newValue.equalsIgnoreCase("true") || newValue.equalsIgnoreCase("false")) {
+                    value = (T) Boolean.valueOf(newValue);
+                    return newValue;
+                } else if (newValue.equals("0")) {
+                    value = (T) Boolean.valueOf("false");
+                    return newValue;
+                } else if (newValue.equals("1")) {
+                    value = (T) Boolean.valueOf("true");
+                    return newValue;
+                } else {
+                    return value.toString();
+                }
+        } else {
+            return newValue;
+        }
+    }
 
     @Override
     public String toString() {
-        return "Value{" +
-                "name='" + name + '\'' +
-                " type= '" + getType() + '\''+
-                " value= '" + getValue() + '\''+
-                " defaultValue = '" + getDefaultValue() + '\''+
-                " mandatory = '" + isMandatory() + '\''+
-                " valid = '" + isValid() + '\''+
-                '}';
+        return "Value{"
+                + "name='" + name + '\''
+                + " description='" + description + '\''
+                + " type= '" + getType() + '\''
+                + " value= '" + getValue() + '\''
+                + " defaultValue = '" + getDefaultValue() + '\''
+                + " mandatory = '" + isMandatory() + '\''
+                + " valid = '" + isValid() + '\''
+                + '}';
     }
 
     public void setValue(T value) {
@@ -142,6 +159,7 @@ public class Value<T> {
     }
 
     public boolean isValid() {
+        validate();
         return valid;
     }
 

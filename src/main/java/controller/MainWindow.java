@@ -30,6 +30,7 @@ import utils.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainWindow extends BorderPane {
 
@@ -42,6 +43,7 @@ public class MainWindow extends BorderPane {
     public static SelectionArea selectionArea;
     private ModuleTemplate shadowModule = null;
     private ModuleItem draggableModuleItem = null;
+    public static AtomicBoolean pinnedSidebar = new AtomicBoolean(false);
     public static SideBar currentSidebar;
     public static ScrollPane mainScrollPaneStat;
     public static Group mainGroup;
@@ -52,6 +54,30 @@ public class MainWindow extends BorderPane {
     public static double hoffset = 0;
     public static double voffset = 0;
 
+    private static String sourceModule;
+    
+    public static void setSource(String source) {
+        if (source == null) {
+            sourceModule = null;
+        } else {
+            sourceModule = source;
+        }
+    }
+    
+    public static boolean isSource(String source) {
+        if (sourceModule == null) return false;
+        return sourceModule.equals(source);
+    }
+    
+    public static String getSource() {
+        return sourceModule;
+    }
+    
+    public static void validateSelectedModules() {
+        for (Module m : selectedModules.values()) {
+            m.validate();
+        }
+    }
 
     @FXML
     private VBox vBoxMenuAndTool;
@@ -171,6 +197,7 @@ public class MainWindow extends BorderPane {
         this.setBottom(stackedLogBar);
         mainScrollPane.setPannable(false);
         selectionArea = new SelectionArea(dragBoard, mainGroup, allDraggableModule);
+        sourceModule = null;
 
     }
 
@@ -263,6 +290,7 @@ public class MainWindow extends BorderPane {
                 return;
         }
         CareTaker.removeAllElements();
+        sourceModule = null;
         importPipeline();
 
         Main.dirty.setValue(false);
@@ -314,10 +342,10 @@ public class MainWindow extends BorderPane {
         if (Main.modulesClipboard.isEmpty() && Main.linksClipboard.isEmpty())
             Converter.populateClipBoards(Main.modules, Main.links);
 
-        if (!ProgramUtils.validateModules(Main.modulesClipboard.keySet())) {
+        /*if (!ProgramUtils.validateModules(Main.modulesClipboard.keySet())) {
             stackedLogBar.logAndWarning("Attention, save not possible! Before saving make sure all modules are filled right.");
             return;
-        }
+        }*/
 
         File destination = null;
         if (PipelineManager.CURRENT_PIPELINE_PATH != null) {

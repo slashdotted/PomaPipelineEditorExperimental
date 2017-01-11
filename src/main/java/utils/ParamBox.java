@@ -9,6 +9,7 @@ import javafx.scene.CacheHint;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
@@ -35,8 +36,9 @@ public class ParamBox extends HBox {
 
         textField.setMaxWidth(Double.MAX_VALUE);
         this.setHgrow(textField, Priority.ALWAYS);
-        delete.setShape(new Circle(10));
+        //delete.setShape(new Circle(10));
         delete.setPadding(Insets.EMPTY);
+        delete.setBackground(Background.EMPTY);
         textField.setEditable(true);
 
         textField.setOnMouseClicked(event -> {

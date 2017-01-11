@@ -69,6 +69,9 @@ public class DraggableModule extends Pane {
 
     @FXML
     private ImageView modelItemImage;
+    
+    @FXML
+    private ImageView sourceIcon;
 
 
     //handlers to drag and drop of modules
@@ -116,9 +119,14 @@ public class DraggableModule extends Pane {
         addToolTips();
         setLabels();
         validImage.setImage(new Image("/images/high_Priority.png"));
+        
 
         validImage.setFitHeight(30);
         validImage.setFitWidth(30);
+        
+        
+        sourceIcon.setImage(new Image("/images/source.png"));
+        updateSourceIcon();
 
 
         //Monitoring if the module has all the mandatory parameters
@@ -131,7 +139,6 @@ public class DraggableModule extends Pane {
         module.getValid().addListener((observable, oldValue, newValue) -> {
 
             if (!newValue) {
-
                 validImage.setVisible(true);
             } else {
 
@@ -186,6 +193,15 @@ public class DraggableModule extends Pane {
 
     public void updateType() {
         this.labelTemplate.setText(module.getType());
+    }
+    
+    public void updateSourceIcon() {
+        if (MainWindow.isSource(module.getName())) {
+            sourceIcon.setVisible(true);
+        } else {
+            sourceIcon.setVisible(false);
+        }
+
     }
 
 
@@ -314,11 +330,9 @@ public class DraggableModule extends Pane {
         Map<String, Module> selectedModules = MainWindow.selectedModules;
 
         if (!event.isControlDown()) {
-
             if (selectedModules.size() > 1) {
                 if (event.getEventType() == MouseEvent.MOUSE_RELEASED || !isSelected())
                     MainWindow.unselectAll();
-
                 select();
             } else {
                 MainWindow.unselectAll();
@@ -332,7 +346,6 @@ public class DraggableModule extends Pane {
             if (selected) {
                 unselect();
             } else {
-
                 select();
             }
         }
@@ -386,15 +399,11 @@ public class DraggableModule extends Pane {
     private void buildNodeDragHandlers() {
 
         titleBar.setOnMousePressed(event -> {
-
-            if (event.getClickCount() == 2 && MainWindow.selectedModules.size() <= 1) {
-
+            controlSelectAction(event);
+            if (event.getClickCount() == 1 && MainWindow.selectedModules.size() <= 1) {
                 MainWindow.openSideBar(module, false);
             }
-
-
-            controlSelectAction(event);
-
+            
         });
 
         titleBar.setOnMouseReleased(this::controlSelectAction);
@@ -409,22 +418,17 @@ public class DraggableModule extends Pane {
 
         //dropping of node
         mModuleHandlerDrop = event -> {
-
             mainScrollPane.setOnDragOver(null);
             mainScrollPane.setOnDragDropped(null);
             setAllFinalPosition(new Point2D(event.getSceneX() - position.getX() + MainWindow.hoffset, event.getSceneY() - position.getY() + MainWindow.voffset));
             event.setDropCompleted(true);
             event.consume();
-
         };
 
         //controller of event drag
 
 
         titleBar.setOnDragDetected(event -> {
-            if (MainWindow.currentSidebar != null)
-                MainWindow.closeSidebar(false);
-
             if (MainWindow.selectedModules.size() == 1) {
                 controlSelectAction(event);
             }

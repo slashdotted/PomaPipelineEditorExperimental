@@ -33,7 +33,7 @@ public class Module {
         this.template = template;
         this.cParams = FXCollections.observableArrayList();
         this.parameters = new HashMap<>();
-
+        
     }
 
     public static Module getInstance(ModuleTemplate template) {
@@ -43,6 +43,9 @@ public class Module {
         return module;
     }
 
+    public boolean getCanBeSource() {
+        return template.getCanBeSource();
+    }
 
     public String getType() {
         return template.getType();
@@ -102,6 +105,7 @@ public class Module {
                 }
             }
         });
+        validate();
     }
 
     @Override
@@ -142,7 +146,6 @@ public class Module {
     }
 
     public void setValid(boolean valid) {
-
         this.valid.setValue(valid);
     }
 

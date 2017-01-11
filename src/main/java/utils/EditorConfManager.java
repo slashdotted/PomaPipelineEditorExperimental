@@ -1,6 +1,7 @@
 package utils;
 
 import controller.MainWindow;
+import java.io.BufferedReader;
 import main.Main;
 import model.ModuleTemplate;
 import model.Value;
@@ -11,6 +12,8 @@ import org.json.JSONTokener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -28,14 +31,16 @@ public class EditorConfManager {
         FileReader fileReader = null;
         JSONTokener parser;
         JSONArray jsonModules = null;
+        
+        InputStream is;
+        is = ClassLoader.getSystemResourceAsStream("data/conf_final.json");
+        InputStreamReader isr;
+        isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
 
-        try {
-            fileReader = new FileReader(input);
-            parser = new JSONTokener(fileReader);
-            jsonModules = new JSONArray(parser);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        //fileReader = new FileReader(input);
+        parser = new JSONTokener(br);
+        jsonModules = new JSONArray(parser);
 
         if (jsonModules == null) {
             MainWindow.stackedLogBar.logAndWarning("There was a problem while importing conf!!!");
@@ -51,6 +56,8 @@ public class EditorConfManager {
             String description = (String) object.get("description");
             String type = (String) object.get("type");
             String imageURL = (String) object.get("imageURL");
+            
+           
 
             JSONArray jsonOptParams = (JSONArray) object.get("optParams");
             getParameters(optParameters, jsonOptParams, false);
@@ -64,6 +71,8 @@ public class EditorConfManager {
             moduleTemplate.setDescription(description);
             moduleTemplate.setType(type);
             moduleTemplate.setImageURL(imageURL);
+            
+            moduleTemplate.setCanBeSource(object.optBoolean("canBeSource"));
 
             Main.templates.put(moduleTemplate.getType(), moduleTemplate);
 
@@ -79,6 +88,7 @@ public class EditorConfManager {
             JSONObject param = (JSONObject) params.get(j);
             String paramName = (String) param.get("name");
             String paramType = (String) param.get("type");
+            String paramDesc = (String) param.get("description");
             Value value;
             boolean defaultValue = false;
             Object val = null;
@@ -104,9 +114,9 @@ public class EditorConfManager {
             }
 
             if (defaultValue)
-                value = new Value(paramName, val, val, isMandatory);
+                value = new Value(paramName, paramDesc, val, val, isMandatory);
             else
-                value = new Value(paramName, val, null, isMandatory);
+                value = new Value(paramName, paramDesc, val, null, isMandatory);
 
             map.put(paramName, value);
         }

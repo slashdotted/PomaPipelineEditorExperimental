@@ -7,6 +7,7 @@ import utils.PipelineManager;
 
 import java.io.File;
 import java.util.Map;
+import org.json.JSONString;
 
 /**
  * Command for writing a pipeline in a JSON file
@@ -16,6 +17,7 @@ public class Save implements Command {
     private File output;
     private Map<String, JSONObject> modules;
     private Map<String, JSONObject> links;
+    private String source;
 
     /**
      * Constructor for selected items
@@ -24,10 +26,11 @@ public class Save implements Command {
      * @param modules
      * @param links
      */
-    public Save(File output, Map<String, JSONObject> modules, Map<String, JSONObject> links) {
+    public Save(File output, Map<String, JSONObject> modules, Map<String, JSONObject> links, String source) {
         this.output = output;
         this.modules = modules;
         this.links = links;
+        this.source = source;
     }
 
     /**
@@ -39,6 +42,7 @@ public class Save implements Command {
         this.output = output;
         this.modules = Main.modulesClipboard;
         this.links = Main.linksClipboard;
+        this.source = Main.sourceClipBoard;
     }
 
     @Override
@@ -53,7 +57,7 @@ public class Save implements Command {
         links.values().forEach(jsonObject -> pipelineLinks.put(jsonObject));
 
         PipelineManager pipelineManager = new PipelineManager();
-        if(pipelineManager.save(output, pipelineModules, pipelineLinks)) {
+        if(pipelineManager.save(output, pipelineModules, pipelineLinks, source)) {
             Main.dirty.setValue(false);
             return true;
         }else{

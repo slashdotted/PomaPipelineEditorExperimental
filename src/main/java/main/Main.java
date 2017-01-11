@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import javafx.scene.image.Image;
 
 public class Main extends Application {
     public static BooleanProperty dirty = new SimpleBooleanProperty(false);
@@ -26,6 +27,7 @@ public class Main extends Application {
 
     public static Map<String, JSONObject> modulesClipboard = new HashMap<>();
     public static Map<String, JSONObject> linksClipboard = new HashMap<>();
+    public static String sourceClipBoard = null;
     public static Scene mScene;
     public static MainWindow root;
 
@@ -41,21 +43,22 @@ public class Main extends Application {
         root = new MainWindow();
 
 
-        primaryStage.setTitle("PoorMans Pipeline Editor");
+        primaryStage.setTitle("Poma Pipeline Editor");
 
         dirty.addListener((observable, oldValue, newValue) -> {
             if (observable.getValue()) {
-                primaryStage.setTitle("*PoorMans Pipeline Editor");
+                primaryStage.setTitle("*Poma Pipeline Editor");
             } else {
-                primaryStage.setTitle("PoorMans Pipeline Editor");
+                primaryStage.setTitle("Poma Pipeline Editor");
             }
         });
 
         mScene = new Scene(root, 1000, 600);
-        primaryStage.setMaximized(true);
+        //primaryStage.setMaximized(true);
         primaryStage.setMinHeight(500);
         primaryStage.setMinWidth(800);
         primaryStage.setScene(mScene);
+        primaryStage.getIcons().add(new Image("images/poma_logo.png"));
 
         primaryStage.setOnCloseRequest(event -> {
             root.exitApplication();

@@ -23,6 +23,7 @@ public class Paste implements Command {
     private ClipboardContent clipboard;
     private Map<String, JSONObject> jsonModules = new HashMap<>();
     private Map<String, JSONObject> jsonLinks = new HashMap<>();
+    private String source;
     private Point2D position;
 
     public Paste(Point2D position) {
@@ -38,7 +39,8 @@ public class Paste implements Command {
 
             jsonModules = Main.modulesClipboard;
             jsonLinks = Main.linksClipboard;
-            Command importElements = new Import(getModules(), getLinks(), position);
+            source = Main.sourceClipBoard;
+            Command importElements = new Import(getModules(), getLinks(), source, position);
             importElements.execute();
             CareTaker.addMemento(importElements);
             return true;
@@ -53,10 +55,11 @@ public class Paste implements Command {
 
             JSONObject jsonModules = (JSONObject) clipboard.get(Converter.MODULES_DATA_FORMAT);
             JSONArray jsonLinks = (JSONArray) clipboard.get(Converter.LINKS_DATA_FORMAT);
-
+            String source = (String) clipboard.get(Converter.SOURCE_DATA_FORMAT);
+            
             Command importElements = null;
             if (jsonModules != null) {
-                importElements = new Import(jsonModules, jsonLinks, position);
+                importElements = new Import(jsonModules, jsonLinks, source, position);
             } else if (systemClipboard.getFiles().size()>0) {
                 File file = systemClipboard.getFiles().get(0);
 

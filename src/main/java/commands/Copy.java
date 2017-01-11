@@ -17,7 +17,7 @@ public class Copy implements Command {
 
     public Map<String, JSONObject> modules = new HashMap<>();
     public Map<String, JSONObject> links = new HashMap<>();
-
+    public String source = null;
 
     /**
      * Constructor for all items
@@ -25,6 +25,7 @@ public class Copy implements Command {
     public Copy() {
         this.modules = Main.modulesClipboard;
         this.links = Main.linksClipboard;
+        this.source = Main.sourceClipBoard;
     }
 
     /**
@@ -33,9 +34,10 @@ public class Copy implements Command {
      * @param modules
      * @param links
      */
-    public Copy(Map<String, JSONObject> modules, Map<String, JSONObject> links) {
+    public Copy(Map<String, JSONObject> modules, Map<String, JSONObject> links, String source) {
         this.modules = modules;
         this.links = links;
+        this.source = source;
     }
 
     @Override
@@ -51,7 +53,7 @@ public class Copy implements Command {
         JSONArray linksArray = new JSONArray();
         links.values().forEach(link-> linksArray.put(link));
 
-        clipboardContent.putString(Converter.getPipelineString(modulesObject, linksArray));
+        clipboardContent.putString(Converter.getPipelineString(modulesObject, linksArray, source));
 
         Clipboard systemClipboard = Clipboard.getSystemClipboard();
 

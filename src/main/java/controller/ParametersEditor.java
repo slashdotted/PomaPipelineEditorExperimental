@@ -87,7 +87,7 @@ public class ParametersEditor extends VBox {
             });
         }
 
-        candidates.put("Host", new Value("#module_host", new String("localhost"), "localhost", true));
+        candidates.put("Host", new Value("#module_host", new String("Hostname"), new String("localhost"), "localhost", true));
         blackList.forEach(value -> {
             candidates.remove(value.getName());
         });

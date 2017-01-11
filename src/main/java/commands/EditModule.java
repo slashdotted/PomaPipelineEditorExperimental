@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class EditModule implements Command {
 
-    public enum Type {Name, Template, Host}
+    public enum Type {Name, Template, Host, Source}
 
     private Type typeEdit;
     private Module oldModule;
@@ -43,17 +43,23 @@ public class EditModule implements Command {
     @Override
     public boolean execute() {
         switch (typeEdit) {
-
-
-
+            case Source:
+                oldValue = MainWindow.getSource();
+                DraggableModule dms = MainWindow.allDraggableModule.get(module.getName());
+                MainWindow.setSource(newValue);
+                dms.updateSourceIcon();
+                break;
             case Name:
                 oldValue = module.getName();
                 MainWindow.allDraggableModule.get(oldValue).unselect();
                 newValue = ProgramUtils.checkDuplicateModules(newValue, 0);
+                MainWindow.allDraggableModule.get(oldValue).unselect();
+                if (MainWindow.isSource(oldValue)) {
+                    MainWindow.setSource(newValue);
+                }
                 updateLinks();
                 updateModule();
                 updateDraggableModule();
-
                 break;
             case Template:
                 Module newModule = createNewModule();
@@ -106,7 +112,6 @@ public class EditModule implements Command {
         MainWindow.allDraggableModule.put(module.getName(), dm);
         dm.updateName();
         dm.select();
-
     }
 
     /**
