@@ -24,9 +24,9 @@
 	"description" : "Track blobs",
 	"imageURL" : "images/templates/search.png",
 	"optParams" : [
-		{"name" : "color", "type" : "Long", "description" : "use color information", "default" : "0"},
-		{"name" : "shadow", "type" : "Long", "description" : "detect shadow", "default" : "1"},
-		{"name" : "fulltrack", "type" : "Long", "description" : "full tracking mode (forward only when", "default" : "0"},
+		{"name" : "color", "type" : "Boolean", "description" : "use color information", "default" : false},
+		{"name" : "shadow", "type" : "Boolean", "description" : "detect shadow", "default" : true},
+		{"name" : "fulltrack", "type" : "Boolean", "description" : "full tracking mode (forward only when", "default" : false},
 		{"name" : "minarea", "type" : "Long", "description" : "minimum zone area", "default" : "2000"},
 		{"name" : "maxarea", "type" : "Long", "description" : "maximum zone area", "default" : "40000"},
 		{"name" : "distance", "type" : "Long", "description" : "distance between zones", "default" : "400"},
@@ -41,7 +41,7 @@
 		{"name" : "structpoint", "type" : "Long", "description" : "structuring element point", "default" : "3"},
 		{"name" : "backsubthreshold", "type" : "Long", "description" : "background substractor threshold", "default" : "32"},
 		{"name" : "vector", "type" : "String", "description" : "(=20,20,580,20,580,434,20,434)", "default" : "20,20,580,20,580,434,20,434"},
-		{"name" : "debug", "type" : "Long", "description" : "enable debug", "default" : "0"}
+		{"name" : "debug", "type" : "Boolean", "description" : "enable debug", "default" : false}
 	],
 	"mandatoryParams" : [
 	]
@@ -51,8 +51,8 @@
 	"description" : "Track blobs",
 	"imageURL" : "images/templates/search.png",
 	"optParams" : [
-		{"name" : "color", "type" : "Long", "description" : "use color information", "default" : "0"},
-		{"name" : "shadow", "type" : "Long", "description" : "detect shadow", "default" : "1"},
+		{"name" : "color", "type" : "Boolean", "description" : "use color information", "default" : false},
+		{"name" : "shadow", "type" : "Boolean", "description" : "detect shadow", "default" : true},
 		{"name" : "minarea", "type" : "Long", "description" : "minimum zone area", "default" : "2000"},
 		{"name" : "maxarea", "type" : "Long", "description" : "maximum zone area", "default" : "40000"},
 		{"name" : "distance", "type" : "Long", "description" : "distance between zones", "default" : "400"},
@@ -67,7 +67,7 @@
 		{"name" : "structpoint", "type" : "Long", "description" : "structuring element point", "default" : "3"},
 		{"name" : "backsubthreshold", "type" : "Long", "description" : "background substractor threshold", "default" : "32"},
 		{"name" : "vector", "type" : "String", "description" : "(=20,20,580,20,580,434,20,434)", "default" : "20,20,580,20,580,434,20,434"},
-		{"name" : "debug", "type" : "Long", "description" : "enable debug", "default" : "0"}
+		{"name" : "debug", "type" : "Boolean", "description" : "enable debug", "default" : false}
 	],
 	"mandatoryParams" : [
 	]
@@ -87,12 +87,12 @@
 	"description" : "Classifies upper and lower body colors",
 	"imageURL" : "images/templates/color.png",
 	"optParams" : [
-		{"name" : "renormalize", "type" : "Long", "description" : "normalize histogram before comparison", "default" : "0"},
-		{"name" : "denoise", "type" : "Long", "description" : "denoise image before comparison", "default" : "0"},
-		{"name" : "correlation", "type" : "Long", "description" : "enable correlation", "default" : "0"},
-		{"name" : "chisquare", "type" : "Long", "description" : "enable chi-square", "default" : "0"},
-		{"name" : "intersection", "type" : "Long", "description" : "enable intersection", "default" : "0"},
-		{"name" : "bhattacharyya", "type" : "Long", "description" : "enable bhattacharyya", "default" : "0"}
+		{"name" : "renormalize", "type" : "Boolean", "description" : "normalize histogram before comparison", "default" : false},
+		{"name" : "denoise", "type" : "Boolean", "description" : "denoise image before comparison", "default" : false},
+		{"name" : "correlation", "type" : "Boolean", "description" : "enable correlation", "default" : false},
+		{"name" : "chisquare", "type" : "Boolean", "description" : "enable chi-square", "default" : false},
+		{"name" : "intersection", "type" : "Boolean", "description" : "enable intersection", "default" : false},
+		{"name" : "bhattacharyya", "type" : "Boolean", "description" : "enable bhattacharyya", "default" : false}
 	],
 	"mandatoryParams" : [
 		{"name" : "bodycolortemplatesdir", "type" : "String", "description" : "body color classes template directory"}
@@ -112,7 +112,7 @@
 	"description" : "Data packet buffer",
 	"imageURL" : "images/templates/record.png",
 	"optParams" : [
-		{"name" : "dontcopy", "type" : "Long", "description" : "do not copy frames", "default" : "0"},
+		{"name" : "dontcopy", "type" : "Boolean", "description" : "do not copy frames", "default" : false},
 		{"name" : "warnsize", "type" : "Long", "description" : "buffer warn size", "default" : "1024"},
 		{"name" : "frameskip", "type" : "Long", "description" : "number of skip frames", "default" : "1"}
 	],
@@ -134,12 +134,12 @@
 	"description" : "Blob color classifier",
 	"imageURL" : "images/templates/color.png",
 	"optParams" : [
-		{"name" : "renormalize", "type" : "Long", "description" : "normalize histogram before comparison", "default" : "0"},
-		{"name" : "denoise", "type" : "Long", "description" : "denoise image before comparison", "default" : "0"},
-		{"name" : "correlation", "type" : "Long", "description" : "enable correlation", "default" : "0"},
-		{"name" : "chisquare", "type" : "Long", "description" : "enable chi-square", "default" : "0"},
-		{"name" : "intersection", "type" : "Long", "description" : "enable intersection", "default" : "0"},
-		{"name" : "bhattacharyya", "type" : "Long", "description" : "enable bhattacharyya", "default" : "0"}
+		{"name" : "renormalize", "type" : "Boolean", "description" : "normalize histogram before comparison", "default" : false},
+		{"name" : "denoise", "type" : "Boolean", "description" : "denoise image before comparison", "default" : false},
+		{"name" : "correlation", "type" : "Boolean", "description" : "enable correlation", "default" : false},
+		{"name" : "chisquare", "type" : "Boolean", "description" : "enable chi-square", "default" : false},
+		{"name" : "intersection", "type" : "Boolean", "description" : "enable intersection", "default" : false},
+		{"name" : "bhattacharyya", "type" : "Boolean", "description" : "enable bhattacharyya", "default" : false}
 	],
 	"mandatoryParams" : [
 		{"name" : "colortemplatesdir", "type" : "String", "description" : "color classes template directory"}
@@ -169,7 +169,7 @@
 	"imageURL" : "images/templates/camera.png",
         "canBeSource" : true,
 	"optParams" : [
-		{"name" : "retry", "type" : "Long", "description" : "retry when stream closes", "default" : "0"},
+		{"name" : "retry", "type" : "Boolean", "description" : "retry when stream closes", "default" : false},
 		{"name" : "retryinterval", "type" : "Long", "description" : "retry interval (ms)", "default" : "60000"},
 		{"name" : "devid", "type" : "Long", "description" : "set device id", "default" : "0"},
 		{"name" : "height", "type" : "Long", "description" : "set capture height", "default" : "-1"},
@@ -205,7 +205,7 @@
 	"description" : "Filters blob depending on image entropy",
 	"imageURL" : "images/templates/idea.png",
 	"optParams" : [
-		{"name" : "threshold", "type" : "Long", "description" : "threshold level (2.0)", "default" : "2"}
+		{"name" : "threshold", "type" : "Double", "description" : "threshold level (2.0)", "default" : "2"}
 	],
 	"mandatoryParams" : [
 	]
@@ -215,7 +215,7 @@
 	"description" : "Detects faces in the frame",
 	"imageURL" : "images/templates/face.png",
 	"optParams" : [
-		{"name" : "expansion", "type" : "Long", "description" : "expansion ratio", "default" : "0"}
+		{"name" : "expansion", "type" : "Double", "description" : "expansion ratio", "default" : "0"}
 	],
 	"mandatoryParams" : [
 	]
@@ -245,7 +245,7 @@
 	"description" : "Generic Caffe based classifier",
 	"imageURL" : "images/templates/classifier.png",
 	"optParams" : [
-		{"name" : "cpuonly", "type" : "Long", "description" : "use only CPU", "default" : "0"}
+		{"name" : "cpuonly", "type" : "Boolean", "description" : "use only CPU", "default" : false}
 	],
 	"mandatoryParams" : [
 	]
@@ -306,7 +306,7 @@
 	"description" : "Balances incoming blobs on multiple output paths",
 	"imageURL" : "images/templates/processing.png",
 	"optParams" : [
-		{"name" : "random", "type" : "Long", "description" : "use random selection instead of round robin", "default" : "0"},
+		{"name" : "random", "type" : "Boolean", "description" : "use random selection instead of round robin", "default" : false},
 		{"name" : "sinks", "type" : "Long", "description" : "number of sinks", "default" : "0"}
 	],
 	"mandatoryParams" : [
@@ -424,7 +424,7 @@
 	"imageURL" : "images/templates/movie.png",
         "canBeSource" : true,
 	"optParams" : [
-		{"name" : "retry", "type" : "Long", "description" : "retry when stream closes", "default" : "0"},
+		{"name" : "retry", "type" : "Boolean", "description" : "retry when stream closes", "default" : false},
 		{"name" : "retryinterval", "type" : "Long", "description" : "retry interval (ms)", "default" : "60000"}
 	],
 	"mandatoryParams" : [
@@ -446,12 +446,23 @@
 	]
 } ,
 {
+	"type" : "drive::PipeConfigurator",
+	"description" : "Enables live configuration of some module parameters",
+	"imageURL" : "images/templates/idea.png",
+	"optParams" : [
+		{"name" : "inputpipe", "type" : "String", "description" : "FIFO input (command) path", "default" : "pomaconfigurator.input"},
+		{"name" : "outputpipe", "type" : "String", "description" : "FIFO output (result) path", "default" : "pomaconfigurator.output"}
+	],
+	"mandatoryParams" : [
+	]
+} ,
+{
 	"type" : "drive::Viewer",
 	"description" : "Displays incoming frames",
 	"imageURL" : "images/templates/display.png",
 	"optParams" : [
-		{"name" : "noshow", "type" : "Long", "description" : "don't show frames", "default" : "0"},
-		{"name" : "stop", "type" : "Long", "description" : "stop after each frame", "default" : "0"}
+		{"name" : "noshow", "type" : "Boolean", "description" : "don't show frames", "default" : false},
+		{"name" : "stop", "type" : "Boolean", "description" : "stop after each frame", "default" : false}
 	],
 	"mandatoryParams" : [
 	]
