@@ -74,6 +74,7 @@ public class FormBox<T> extends VBox {
         formDescription.setTooltip(new Tooltip(value.getDescription()));
 
         formTextField.setPromptText("Insert here a " + value.getType() + " value");
+        formTextField.setTooltip(new Tooltip("Default value:" + value.getDefaultValue()));
         if (value.isMandatory()) {
             valid.setValue(value.isValid());
         } else {
@@ -126,7 +127,9 @@ public class FormBox<T> extends VBox {
                         valid.set(value.isValid());
                     }
                     formTextField.setText(value.getValue().toString());
-                    MainWindow.validateSelectedModules();
+                    for (DraggableModule dm : MainWindow.instance().getSelectedModules()) {
+                        dm.getModule().validate();
+                    }
                 }
             }
         });
@@ -142,7 +145,9 @@ public class FormBox<T> extends VBox {
                     valid.set(value.isValid());
                 }
                 formTextField.setText(value.getValue().toString());
-                MainWindow.validateSelectedModules();
+                for (DraggableModule dm : MainWindow.instance().getSelectedModules()) {
+                    dm.getModule().validate();
+                }
             }
         });
 

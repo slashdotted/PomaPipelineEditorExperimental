@@ -17,16 +17,15 @@
                <children>
                   <HBox maxWidth="120.0" prefHeight="80.0" prefWidth="120.0">
                      <children>
-                        <ImageView fx:id="modelItemImage" fitHeight="35.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true" />
-                        <Label fx:id="modelItemLabel" alignment="CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER">
+                        <ImageView fx:id="modelItemImage" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="modelItemLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="85.0" text="Label" textAlignment="CENTER">
                            <HBox.margin>
                               <Insets top="10.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="System Bold" size="11.0" />
+                              <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
-                        <ImageView fx:id="sourceIcon" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </HBox>
                </children>
@@ -44,14 +43,25 @@
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
                               </Label>
-                              <Label fx:id="labelHost" maxWidth="120.0" text="Label" />
+                              <Label fx:id="labelHost" maxWidth="120.0" text="Label">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font></Label>
                            </children>
                            <padding>
                               <Insets left="5.0" />
                            </padding>
                         </VBox>
-                        <ImageView fx:id="validImage" fitHeight="39.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true" />
+                        <VBox prefHeight="44.0" prefWidth="13.0">
+                           <children>
+                              <ImageView fx:id="validImage" fitHeight="20.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fx:id="sourceIcon" fitHeight="20.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
                </children>

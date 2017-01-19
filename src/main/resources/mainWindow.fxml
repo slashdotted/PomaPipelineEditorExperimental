@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <VBox fx:id="vBoxMenuAndTool" prefHeight="66.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -106,7 +106,9 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="Tools">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#parametersEditor" text="Edit common parameters" />
+                      <MenuItem fx:id="editCommonParametersMenuItem" mnemonicParsing="false" onAction="#parametersEditor" text="Edit common parameters" />
+                      <MenuItem fx:id="alignVerticallyMenuItem" mnemonicParsing="false" onAction="#alignVertically" text="Align vertically" />
+                      <MenuItem fx:id="alignHorizontallyMenuItem" mnemonicParsing="false" onAction="#alignHorizontally" text="Align horizontally" />
                     </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Help">

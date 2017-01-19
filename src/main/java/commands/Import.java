@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONString;
+import utils.StackedLogBar;
 
 /**
  * Command for import a pipeline from different sources.
@@ -80,7 +81,7 @@ public class Import implements Command {
                 // so during the link's import, new names are managed
                 if (!String.valueOf(key).equals(module.getName())) {
                     nameMappings.put(String.valueOf(key), module.getName());
-                    MainWindow.stackedLogBar.log(String.valueOf(key) + " already present, renamed in " + module.getName());
+                    StackedLogBar.instance().log(String.valueOf(key) + " already present, renamed in " + module.getName());
                 }
 
                 Command addModule = new AddModule(module);
@@ -88,7 +89,7 @@ public class Import implements Command {
 
                 importedElements++;
             } else {
-                MainWindow.stackedLogBar.logAndWarning("Module " + String.valueOf(key) + " does not have a Template in conf!");
+                StackedLogBar.instance().logAndWarning("Module " + String.valueOf(key) + " does not have a Template in conf!");
             }
         });
 
@@ -111,7 +112,7 @@ public class Import implements Command {
                     addLink.execute();
                 } else {
                     success = false;
-                    MainWindow.stackedLogBar.logAndWarning("One or more modules not found for link: from " + from + " to " + to);
+                    StackedLogBar.instance().logAndWarning("One or more modules not found for link: from " + from + " to " + to);
                 }
             }
 

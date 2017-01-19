@@ -14,8 +14,6 @@ import java.util.Map;
  * Module Class
  */
 public class Module {
-
-
     // Used as id
     private String name;
     private ModuleTemplate template;
@@ -27,6 +25,8 @@ public class Module {
 
     private String host = "localhost";
     private SimpleBooleanProperty valid = new SimpleBooleanProperty(true);
+    
+    private static String sourceModule;
 
 
     private Module(ModuleTemplate template) {
@@ -162,6 +162,25 @@ public class Module {
             valid&=parameters.get(key).isValid();
         }
         this.setValid(valid);
+    }
+    
+    public static void setSource(String source) {
+        if (source == null) {
+            sourceModule = null;
+        } else {
+            sourceModule = source;
+        }
+    }
+
+    public static boolean isSource(String source) {
+        if (sourceModule == null) {
+            return false;
+        }
+        return sourceModule.equals(source);
+    }
+
+    public static String getSource() {
+        return sourceModule;
     }
 
 }

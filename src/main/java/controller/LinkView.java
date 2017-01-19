@@ -61,8 +61,8 @@ public class LinkView extends Group {
     * */
     public LinkView(Link link) {
         initImages();
-        this.from = MainWindow.allDraggableModule.get(link.getModuleA().getName());
-        this.to = MainWindow.allDraggableModule.get(link.getModuleB().getName());
+        this.from = MainWindow.instance().getModuleByName(link.getModuleA().getName());
+        this.to = MainWindow.instance().getModuleByName(link.getModuleB().getName());
 
         this.link = link;
 
@@ -124,17 +124,13 @@ public class LinkView extends Group {
     * */
     public void unselect() {
         this.setStyle(oldStyle);
-        this.select = false;
-        MainWindow.selectedLinks.remove(getName());
+        this.select = false;        
     }
 
-    private void select() {
+    public void select() {
         this.select = true;
         this.setStyle("-fx-border-color: darkblue");
-        this.setStyle("-fx-effect: dropshadow(three-pass-box, darkblue, 10,0, 0, 0) ");
-        MainWindow.selectedLinks.put(getName(), Main.links.get(getName()));
-
-
+        this.setStyle("-fx-effect: dropshadow(three-pass-box, darkblue, 10,0, 0, 0) ");       
     }
 
 
@@ -420,6 +416,10 @@ public class LinkView extends Group {
 
     public Link getLink() {
         return link;
+    }
+
+    boolean isSelected() {
+        return select;
     }
 
 

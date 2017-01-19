@@ -27,7 +27,7 @@ public class RemoveChannel implements Command {
 
     @Override
     public boolean execute() {
-        LinkView lv = MainWindow.allLinkView.get(link.getID());
+        LinkView lv = MainWindow.instance().getLinkByName(link.getID());
         boolean success = link.removeChannel(orientation, valueToRemove);
         Platform.runLater(() -> lv.updateImageViews(orientation));
 

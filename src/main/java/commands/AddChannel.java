@@ -27,9 +27,9 @@ public class AddChannel implements Command {
 
     @Override
     public boolean execute() {
-        LinkView lv = MainWindow.allLinkView.get(link.getID());
+        LinkView lv = MainWindow.instance().getLinkByName(link.getID());
         boolean success = link.addChannel(orientation, newValue);
-        MainWindow.updateLinkView(lv, orientation);
+        MainWindow.instance().updateLinkView(lv, orientation);
         return success;
     }
 

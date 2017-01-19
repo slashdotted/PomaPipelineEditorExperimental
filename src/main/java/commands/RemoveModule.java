@@ -17,7 +17,7 @@ public class RemoveModule implements Command {
 
     @Override
     public boolean execute() {
-        removeLinks = MainWindow.removeDraggableModule(MainWindow.allDraggableModule.get(module.getName()));
+        removeLinks = MainWindow.instance().removeDraggableModule(MainWindow.instance().getModuleByName(module.getName()));
         removeLinks.execute();
         Main.modules.remove(module.getName());
         return false;

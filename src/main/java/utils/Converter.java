@@ -74,8 +74,13 @@ public class Converter {
         JSONObject jsonObject = new JSONObject();
 
         jsonObject.put("type", module.getType());
-        module.getParameters().keySet().forEach(key ->
-                jsonObject.put(key, module.getParameters().get(key).getValue()));
+        module.getParameters().keySet().forEach(key -> {
+            if (module.getParameters().get(key).isMandatory()
+                    || !module.getParameters().get(key).getValue().equals(module.getParameters().get(key).getDefaultValue())) {
+                jsonObject.put(key, module.getParameters().get(key).getValue());
+            }
+        });
+                
 
         jsonObject.put("#x", module.getPosition().getX());
         jsonObject.put("#y", module.getPosition().getY());
@@ -206,7 +211,7 @@ public class Converter {
         Main.modulesClipboard.clear();
         Main.linksClipboard.clear();
         
-        Main.sourceClipBoard = MainWindow.getSource();
+        Main.sourceClipBoard = Module.getSource();
 
         modules.keySet().forEach(key -> {
             Module current = modules.get(key);

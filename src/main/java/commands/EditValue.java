@@ -2,6 +2,7 @@ package commands;
 
 import controller.MainWindow;
 import model.Value;
+import utils.StackedLogBar;
 
 /**
  *  Command for edit a Value
@@ -23,10 +24,10 @@ public class EditValue implements Command {
         String updatedValue = value.updateValue(newValue);
         value.validate();
         if(!updatedValue.equals(newValue)) {
-            MainWindow.stackedLogBar.logAndWarning("Operation not permitted! insert a correct value");
+            StackedLogBar.instance().logAndWarning("Operation not permitted! insert a correct value");
             return false;
         } else {
-            MainWindow.stackedLogBar.logAndSuccess("Value " +value.getName() +" successful updated");
+            StackedLogBar.instance().logAndSuccess("Value " +value.getName() +" successful updated");
             return true;
         }
     }

@@ -87,7 +87,7 @@ public class Value<T> {
         if (mandatory && newValue.isEmpty()) {
                 return ""+value;
         }
-        if (value instanceof String) {
+        if (value instanceof String || newValue.isEmpty()) {
             value = (T) newValue;
             return newValue;
         } else if (value instanceof Long) {

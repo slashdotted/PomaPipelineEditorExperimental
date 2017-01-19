@@ -43,7 +43,7 @@ public class EditorConfManager {
         jsonModules = new JSONArray(parser);
 
         if (jsonModules == null) {
-            MainWindow.stackedLogBar.logAndWarning("There was a problem while importing conf!!!");
+            StackedLogBar.instance().logAndWarning("There was a problem while importing conf!!!");
             return false;
         }
         jsonModules.forEach(obj -> {
@@ -96,6 +96,9 @@ public class EditorConfManager {
             try {
                 Constructor ctor = Class.forName("java.lang." + paramType).getConstructor(String.class);
                 val = ctor.newInstance("0");
+                if (val instanceof String) {
+                    val = "";
+                }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (NoSuchMethodException e) {

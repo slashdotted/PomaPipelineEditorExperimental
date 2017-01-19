@@ -44,18 +44,17 @@ public class EditModule implements Command {
     public boolean execute() {
         switch (typeEdit) {
             case Source:
-                oldValue = MainWindow.getSource();
-                DraggableModule dms = MainWindow.allDraggableModule.get(module.getName());
-                MainWindow.setSource(newValue);
+                oldValue = Module.getSource();
+                DraggableModule dms = MainWindow.instance().getModuleByName(module.getName());
+                Module.setSource(newValue);
                 dms.updateSourceIcon();
                 break;
             case Name:
                 oldValue = module.getName();
-                MainWindow.allDraggableModule.get(oldValue).unselect();
+                MainWindow.instance().getModuleByName(oldValue).unselect();
                 newValue = ProgramUtils.checkDuplicateModules(newValue, 0);
-                MainWindow.allDraggableModule.get(oldValue).unselect();
-                if (MainWindow.isSource(oldValue)) {
-                    MainWindow.setSource(newValue);
+                if (Module.isSource(oldValue)) {
+                    Module.setSource(newValue);
                 }
                 updateLinks();
                 updateModule();
@@ -66,17 +65,18 @@ public class EditModule implements Command {
                 if (newModule == null)
                     return false;
                 Main.modules.put(module.getName(), newModule);
-                MainWindow.allDraggableModule.get(module.getName()).updateModule();
-                MainWindow.allDraggableModule.get(module.getName()).updateName();
-                MainWindow.allDraggableModule.get(module.getName()).updateType();
+                DraggableModule dm = MainWindow.instance().getModuleByName(module.getName());
+                dm.updateModule();
+                dm.updateName();
+                dm.updateType();
                 this.module = newModule;
 
                 break;
             case Host:
                 oldValue = module.getHost();
                 module.setHost(newValue);
-                DraggableModule dm = MainWindow.allDraggableModule.get(module.getName());
-                dm.updateHost();
+                DraggableModule dm2 = MainWindow.instance().getModuleByName(module.getName());
+                dm2.updateHost();
                 break;
         }
         return true;
@@ -106,10 +106,8 @@ public class EditModule implements Command {
      * This method updates the draggable module associated to renamed module
      */
     private void updateDraggableModule() {
-        DraggableModule dm = MainWindow.allDraggableModule.get(oldValue);
+        DraggableModule dm = MainWindow.instance().getModuleByName(oldValue);
         dm.unselect();
-        MainWindow.allDraggableModule.remove(oldValue);
-        MainWindow.allDraggableModule.put(module.getName(), dm);
         dm.updateName();
         dm.select();
     }
@@ -124,24 +122,18 @@ public class EditModule implements Command {
     }
 
     private void updateLinks() {
-        DraggableModule db = MainWindow.allDraggableModule.get(oldValue);
+        DraggableModule db = MainWindow.instance().getModuleByName(oldValue);
         ArrayList<LinkView> allLv = db.getLinks();
         for (LinkView lv : allLv) {
             String moduleName = lv.getFrom().getName();
             String nomeToModule = lv.getFrom().getName();
 
             if (moduleName.equals(oldValue)) {
-                MainWindow.allLinkView.remove(lv.getName());
-                MainWindow.allLinkView.put(newValue + "_" + nomeToModule, lv);
-
                 Main.links.remove(lv.getLink());
                 Main.links.put(newValue + "_" + nomeToModule, lv.getLink());
             }
 
             if (nomeToModule.equals(oldValue)) {
-                MainWindow.allLinkView.remove(lv.getName());
-                MainWindow.allLinkView.put(moduleName + "_" + newValue, lv);
-
                 Main.links.remove(lv.getLink());
                 Main.links.put(moduleName + "_" + newValue, lv.getLink());
             }

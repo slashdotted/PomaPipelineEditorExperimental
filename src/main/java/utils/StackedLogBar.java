@@ -22,13 +22,13 @@ public class StackedLogBar extends VBox {
     public static final int CREATED = 200;
     public static final int DELETED = 300;
     private LogBar logBar;
-    ToolBar logToolbar = new ToolBar();
-    Text logBarText = new Text("Event Log");
-    Button clear = new Button();
-    Button toggleVisibility = new Button();
+    private ToolBar logToolbar = new ToolBar();
+    private Text logBarText = new Text("Event Log");
+    private Button clear = new Button();
+    private Button toggleVisibility = new Button();
+    private static StackedLogBar instance;
 
-    public StackedLogBar() {
-
+    private StackedLogBar() {
         this.setPrefHeight(200);
         this.setMinHeight(30);
         this.setMaxHeight(200);
@@ -74,6 +74,13 @@ public class StackedLogBar extends VBox {
         logBar = new LogBar();
         this.getChildren().addAll(logToolbar, logBar);
         toggleVisibility.fire();
+    }
+    
+    public static StackedLogBar instance() {
+        if (instance == null) {
+            instance = new StackedLogBar();
+        }
+        return instance;
     }
 
     public void log(String message) {

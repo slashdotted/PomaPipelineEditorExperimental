@@ -19,7 +19,7 @@ public class AddLink implements Command {
     @Override
     public boolean execute() {
         Main.links.put(link.getID(), link);
-        Platform.runLater(() -> MainWindow.addLinkView(link));
+        MainWindow.instance().addLinkView(link);
         return true;
     }
 

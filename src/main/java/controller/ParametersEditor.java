@@ -30,8 +30,6 @@ public class ParametersEditor extends VBox {
     @FXML
     private ListView<String> listView;
 
-    private Map<String, Module> selectedModules = MainWindow.selectedModules;
-
     @FXML
     private Label matchesLabel;
 
@@ -65,14 +63,15 @@ public class ParametersEditor extends VBox {
     @FXML
     public void initialize() {
         parameterLabel.setText("");
-        Module base = selectedModules.values().stream().findFirst().get();
+        Module base = MainWindow.instance().getSelectedModules().get(0).getModule();
 
 
         Map<String, Value> candidates = new HashMap<>(base.getParameters());
         ArrayList<Value> blackList = new ArrayList<>();
 
 
-        for (Module module : selectedModules.values()) {
+        for (DraggableModule dm : MainWindow.instance().getSelectedModules()) {
+            Module module = dm.getModule();
             candidates.keySet().forEach(key -> {
                 if (!module.getParameters().keySet().contains(key)) {
 
@@ -108,27 +107,25 @@ public class ParametersEditor extends VBox {
             if(valueTextField.getText()!=null&& !parameterLabel.getText().isEmpty()) {
                 ArrayList<Command> allEdits = new ArrayList<>();
                 if (parameterLabel.getText().equals("Host")) {
-                    selectedModules.keySet().forEach(key -> {
-                        Command editHost = new EditModule(selectedModules.get(key), EditModule.Type.Host, valueTextField.getText());
+                    for (DraggableModule dm : MainWindow.instance().getSelectedModules()) {
+                        Command editHost = new EditModule(dm.getModule(), EditModule.Type.Host, valueTextField.getText());
                         allEdits.add(editHost);
-                    });
-
+                    }
                 } else {
-                    selectedModules.keySet().forEach(key -> {
-                        Value current = selectedModules.get(key).getParameters().get(parameterLabel.getText());
+                    for (DraggableModule dm : MainWindow.instance().getSelectedModules()) {
+                        Value current = dm.getModule().getParameters().get(parameterLabel.getText());
                         Command currentEdit = new EditValue(current, valueTextField.getText());
                         allEdits.add(currentEdit);
-                    });
-
+                    }
                 }
 
                 Command executeAll = new ExecuteAll(allEdits);
                 executeAll.execute();
                 CareTaker.addMemento(executeAll);
 
-                selectedModules.keySet().forEach(s -> {
-                    selectedModules.get(s).validate();
-                });
+                for (DraggableModule dm : MainWindow.instance().getSelectedModules()) {
+                    dm.getModule().validate();
+                }
                 this.getScene().getWindow().hide();
             }
         });

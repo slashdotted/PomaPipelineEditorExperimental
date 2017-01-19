@@ -26,7 +26,9 @@ import utils.CareTaker;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * Created by Marco on 10/03/2016.
@@ -42,7 +44,6 @@ public class DraggableModule extends Pane {
 
     private Module module;
     private ArrayList<LinkView> links = new ArrayList<>();
-    private DraggableModule selfie;
     private boolean selected;
 
 
@@ -77,38 +78,30 @@ public class DraggableModule extends Pane {
     //handlers to drag and drop of modules
     private EventHandler<DragEvent> mModuleHandlerDrag;
     private EventHandler<DragEvent> mModuleHandlerDrop;
-
-
-    //handlers and vars to create links through drag and drop
-    public static LinkView mShadowLink = new LinkView(true);
-    private ScrollPane mainScrollPane = null;
-
-
     private EventHandler<MouseEvent> mLinkHandleDragDetected;
     private EventHandler<DragEvent> mLinkHandleDragDropped;
     private EventHandler<DragEvent> mContextLinkDragOver;
-    private EventHandler<DragEvent> mContextLinkDragDropped;
+    private EventHandler<DragEvent> mContextLinkDragDropped;    
+
+
+    //handlers and vars to create links through drag and drop
+    //public static LinkView mShadowLink = new LinkView(true);
+    private ScrollPane mainScrollPane = null;
+
+
+
 
 
     public DraggableModule(Module module) {
-
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/moduleDraggable.fxml"));
-
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
-
-
         try {
             fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         this.module = module;
-        this.selfie = this;
-
-
         ModuleTemplate temp = Main.templates.get(module.getType());
         this.modelItemImage.setImage(new Image(temp.getImageURL()));
         position = new Point2D(0, 0);
@@ -165,17 +158,15 @@ public class DraggableModule extends Pane {
 
     @FXML
     public void initialize() {
-
-
-        buildNodeDragHandlers();
+        /*buildNodeDragHandlers();
         buildLinkDragHandlers();
 
         paneItemImage.setOnDragDetected(mLinkHandleDragDetected);
-        paneItemImage.setOnDragDropped(mLinkHandleDragDropped);
+        paneItemImage.setOnDragDropped(mLinkHandleDragDropped);*/
 
-        boolean isShadow = true;
+        //boolean isShadow = true;
 
-        mShadowLink.setVisible(false);
+        //mShadowLink.setVisible(false);
 
     }
     /*
@@ -196,12 +187,11 @@ public class DraggableModule extends Pane {
     }
     
     public void updateSourceIcon() {
-        if (MainWindow.isSource(module.getName())) {
+        if (Module.isSource(module.getName())) {
             sourceIcon.setVisible(true);
         } else {
             sourceIcon.setVisible(false);
         }
-
     }
 
 
@@ -211,15 +201,6 @@ public class DraggableModule extends Pane {
     * */
 
     private void buildLinkDragHandlers() {
-
-
-        MainWindow.mainScrollPaneStat.setOnDragExited(event -> {
-            Group group = MainWindow.mainGroup;
-            group.getChildren().remove(mShadowLink);
-            mShadowLink.setVisible(false);
-
-        });
-
         mLinkHandleDragDetected = event -> {
 
             mainScrollPane.setOnDragOver(null);
@@ -229,20 +210,20 @@ public class DraggableModule extends Pane {
             mainScrollPane.setOnDragDropped(mContextLinkDragDropped);
 
             //Set up user-draggable link
-            Group group = MainWindow.mainGroup;
+           // Group group = MainWindow.mainGroup;
 
-            if (!group.getChildren().contains(mShadowLink)) {
-                group.getChildren().add(0, mShadowLink);
-            }
+           // if (!group.getChildren().contains(mShadowLink)) {
+               // group.getChildren().add(0, mShadowLink);
+           // }
 
 
-            mShadowLink.setVisible(false);
+            //mShadowLink.setVisible(false);
 
             Point2D p = new Point2D(
                     getLayoutX() + (getWidth() / 2),
                     getLayoutY() + (getHeight() / 2)
             );
-            mShadowLink.setStart(p);
+            //mShadowLink.setStart(p);
             //Drag content code
             ClipboardContent content = new ClipboardContent();
             DragContainer container = new DragContainer();
@@ -268,7 +249,7 @@ public class DraggableModule extends Pane {
             if (container != null) {
                 //stop using shadowlink
 
-                mShadowLink.setVisible(false);
+               // mShadowLink.setVisible(false);
 
 
                 ClipboardContent content = new ClipboardContent();
@@ -281,26 +262,26 @@ public class DraggableModule extends Pane {
 
             }
 
-            Group group = MainWindow.mainGroup;
+            //Group group = MainWindow.mainGroup;
 
-            group.getChildren().remove(mShadowLink);
+            //group.getChildren().remove(mShadowLink);
 
         };
         mContextLinkDragOver = event -> {
             event.acceptTransferModes(TransferMode.ANY);
-            Group group = MainWindow.mainGroup;
+            /*Group group = MainWindow.mainGroup;
 
             if (!group.getChildren().contains(mShadowLink)) {
                 group.getChildren().add(0, mShadowLink);
 
-            }
+            }*/
             //update end position of shadowLink
-            if (!mShadowLink.isVisible()) {
+           /* if (!mShadowLink.isVisible()) {
                 mShadowLink.setVisible(true);
-            }
-            Group mainGroup = MainWindow.mainGroup;
+            }*/
+           // Group mainGroup = MainWindow.mainGroup;
 
-            mShadowLink.setEnd(mainGroup.sceneToLocal(event.getSceneX(), event.getSceneY()));
+          //  mShadowLink.setEnd(mainGroup.sceneToLocal(event.getSceneX(), event.getSceneY()));
         };
         //creation of link
 
@@ -310,11 +291,13 @@ public class DraggableModule extends Pane {
             mainScrollPane.setOnDragDropped(null);
 
             //remove shodow
-            mShadowLink.setVisible(false);
+         //   mShadowLink.setVisible(false);
+            
+            
 
-            Group group = MainWindow.mainGroup;
+           // Group group = MainWindow.mainGroup;
 
-            group.getChildren().remove(mShadowLink);
+         //   group.getChildren().remove(mShadowLink);
 
             event.setDropCompleted(true);
             event.consume();
@@ -327,15 +310,14 @@ public class DraggableModule extends Pane {
     * Controls all the selections actions, and the results of them
     * */
     private void controlSelectAction(MouseEvent event) {
-        Map<String, Module> selectedModules = MainWindow.selectedModules;
-
+        List<DraggableModule> smodules = MainWindow.instance().getSelectedModules();
         if (!event.isControlDown()) {
-            if (selectedModules.size() > 1) {
+            if (smodules.size() > 1) {
                 if (event.getEventType() == MouseEvent.MOUSE_RELEASED || !isSelected())
-                    MainWindow.unselectAll();
+                    MainWindow.instance().unselectAll();
                 select();
             } else {
-                MainWindow.unselectAll();
+                MainWindow.instance().unselectAll();
                 if (selected) {
                     unselect();
                 } else {
@@ -355,7 +337,7 @@ public class DraggableModule extends Pane {
     public void select() {
         selected = true;
         //if(selected) {
-        MainWindow.selectedModules.put(module.getName(), module);
+        MainWindow.instance().updateSelection();
         this.toFront();
 
         //  dragging=true;
@@ -384,8 +366,7 @@ public class DraggableModule extends Pane {
     }
 
     public void unselect() {
-
-        MainWindow.selectedModules.remove(module.getName());
+        MainWindow.instance().updateSelection();
         Main.modulesClipboard.remove(module.getName());
         selected = false;
         this.setStyle("-fx-border-color:rgba(119,85,51,255)");
@@ -393,25 +374,20 @@ public class DraggableModule extends Pane {
         unselectLinks();
     }
 
-    /*
-    * Event Handlers to control de selection of nodes, and drag and Drop
-    * */
+
     private void buildNodeDragHandlers() {
-
-        titleBar.setOnMousePressed(event -> {
+           
+        setOnMouseClicked(event -> {
             controlSelectAction(event);
-            if (event.getClickCount() == 1 && MainWindow.selectedModules.size() <= 1) {
-                MainWindow.openSideBar(module, false);
+            if (event.getClickCount() == 1 && MainWindow.instance().getSelectedModules().size() <= 1) {
+                MainWindow.instance().openSideBar(module);
             }
-            
+            event.consume();
         });
-
-        titleBar.setOnMouseReleased(this::controlSelectAction);
-
 
         mModuleHandlerDrag = event -> {
             event.acceptTransferModes(TransferMode.ANY);
-            relocateSelection(new Point2D(event.getSceneX() - position.getX() + MainWindow.hoffset, event.getSceneY() - position.getY() + MainWindow.voffset));
+            relocateSelection(new Point2D(event.getSceneX() - position.getX(), event.getSceneY() - position.getY()));
             event.consume();
         };
 
@@ -420,7 +396,7 @@ public class DraggableModule extends Pane {
         mModuleHandlerDrop = event -> {
             mainScrollPane.setOnDragOver(null);
             mainScrollPane.setOnDragDropped(null);
-            setAllFinalPosition(new Point2D(event.getSceneX() - position.getX() + MainWindow.hoffset, event.getSceneY() - position.getY() + MainWindow.voffset));
+            setAllFinalPosition(new Point2D(event.getSceneX() - position.getX(), event.getSceneY() - position.getY()));
             event.setDropCompleted(true);
             event.consume();
         };
@@ -429,13 +405,13 @@ public class DraggableModule extends Pane {
 
 
         titleBar.setOnDragDetected(event -> {
-            if (MainWindow.selectedModules.size() == 1) {
+            List<DraggableModule> smodules = MainWindow.instance().getSelectedModules();
+            if (smodules.size() == 1) {
                 controlSelectAction(event);
             }
 
 
-            for (String modID : MainWindow.selectedModules.keySet()) {
-                DraggableModule dm = MainWindow.allDraggableModule.get(modID);
+            for (DraggableModule dm : smodules) {
                 dm.setOldPosition(dm.getPosition());
 
             }
@@ -447,14 +423,13 @@ public class DraggableModule extends Pane {
             mainScrollPane.setOnDragDropped(mModuleHandlerDrop);
 
 
-            double x = event.getX() - selfie.sceneToLocal(position).getX();
-            double y = event.getY() - selfie.sceneToLocal(position).getY();
+            double x = event.getX() - sceneToLocal(position).getX();
+            double y = event.getY() - sceneToLocal(position).getY();
 
             mDragOffset = new Point2D(event.getX() - x, event.getY() - y);
             mOldDragOffset = new Point2D(event.getX() - x, event.getY() - y);
 
-            for (String modID : MainWindow.selectedModules.keySet()) {
-                DraggableModule dm = MainWindow.allDraggableModule.get(modID);
+            for (DraggableModule dm : smodules) {
                 dm.mDragOffset = new Point2D(mDragOffset.getX(), mDragOffset.getY());
                 dm.mOldDragOffset = mDragOffset;
             }
@@ -479,15 +454,11 @@ public class DraggableModule extends Pane {
     * scene coordinates
     * */
     private void relocateSelection(Point2D subtract) {
-
-        for (String modID : MainWindow.selectedModules.keySet()) {
-            DraggableModule current = MainWindow.allDraggableModule.get(modID);
-            Point2D oldPos = current.position;
-            current.relocateToPoint(oldPos.add(subtract));
-
+        List<DraggableModule> smodules = MainWindow.instance().getSelectedModules();
+        for (DraggableModule dm : smodules) {
+            Point2D oldPos = dm.position;
+            dm.relocateToPoint(oldPos.add(subtract));
         }
-
-
     }
 
     /*
@@ -498,7 +469,7 @@ public class DraggableModule extends Pane {
 
         Point2D localCoords;
         position = p;
-        Group par = (Group) Main.mScene.lookup("#mainGroup");
+        AnchorPane par = (AnchorPane) Main.mScene.lookup("#mainGroup");
 
         localCoords = par.sceneToLocal(p);
 
@@ -536,18 +507,15 @@ public class DraggableModule extends Pane {
 
 
     public void addLink(String id) {
-        if (!links.contains(MainWindow.allLinkView.get(id))) {
-
-            links.add(MainWindow.allLinkView.get(id));
+        LinkView ln = MainWindow.instance().getLinkByName(id);
+        if (!links.contains(id)) {
+            links.add(ln);
         }
     }
 
 
     public void removeLinkView(LinkView lvToDel) {
-
         links.remove(lvToDel);
-
-
     }
 
     public void updateModule() {
@@ -559,6 +527,10 @@ public class DraggableModule extends Pane {
     * */
     public void setmDragOffset(Point2D mDragOffset) {
         this.mDragOffset = mDragOffset;
+    }
+    
+    public Point2D getmDragOffset() {
+        return mDragOffset;
     }
 
     public Point2D getPosition() {
@@ -576,9 +548,9 @@ public class DraggableModule extends Pane {
 
     }
 
-    public LinkView getShadow() {
+    /*public LinkView getShadow() {
         return mShadowLink;
-    }
+    }*/
 
     public Module getModule() {
         return module;
@@ -599,15 +571,10 @@ public class DraggableModule extends Pane {
     * */
     private void setAllFinalPosition(Point2D subtract) {
         ArrayList<Command> allCommands = new ArrayList<>();
-        for (String modID : MainWindow.selectedModules.keySet()) {
-            DraggableModule dm = MainWindow.allDraggableModule.get(modID);
+        for (DraggableModule dm : MainWindow.instance().getSelectedModules()) {
             Point2D pos = dm.position;
-
-
             Command move = new Move(dm.getName(), dm.oldPosition, pos.add(subtract), dm.mOldDragOffset, dm.mDragOffset);
             allCommands.add(move);
-
-
         }
         Command executeAll = new ExecuteAll(allCommands);
         executeAll.execute();

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
+import model.Module;
 import org.json.JSONString;
 
 /**
@@ -58,7 +59,7 @@ public class PipelineManager {
             root = new JSONObject(parser);
             extractPipeline(root.toString());
         }catch (JSONException e){
-            MainWindow.stackedLogBar.logAndWarning("No modules here");
+            StackedLogBar.instance().logAndWarning("No modules here");
             return false;
         }
 
@@ -74,7 +75,7 @@ public class PipelineManager {
         try {
             pipeline = new org.json.JSONObject(jsonString);
         }catch (JSONException e){
-            MainWindow.stackedLogBar.logAndWarning("No modules here");
+            StackedLogBar.instance().logAndWarning("No modules here");
         }
 
         if(pipeline == null)
@@ -82,7 +83,7 @@ public class PipelineManager {
 
         JSONObject jsonModules = null;
         JSONArray jsonLinks = null;
-        String jsonSource = MainWindow.getSource();
+        String jsonSource = Module.getSource();
 
         if (pipeline.has("source")) {
             jsonSource = (String) pipeline.get("source");

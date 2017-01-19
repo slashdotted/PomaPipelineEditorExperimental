@@ -40,7 +40,7 @@ public class Main extends Application {
         confManager.load(conf);
 
 
-        root = new MainWindow();
+        root = MainWindow.instance();
 
 
         primaryStage.setTitle("Poma Pipeline Editor");

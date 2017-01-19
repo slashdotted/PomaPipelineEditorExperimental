@@ -18,7 +18,7 @@ public class Move implements Command {
 
 
     public Move(String dragRef, Point2D oldCoords, Point2D newCoords, Point2D oldOffset, Point2D newOffset) {
-        this.draggableModule = MainWindow.allDraggableModule.get(dragRef);
+        this.draggableModule = MainWindow.instance().getModuleByName(dragRef);
         this.dragId = dragRef;
         this.oldCoords = oldCoords;
         this.newCoords = newCoords;
@@ -29,7 +29,7 @@ public class Move implements Command {
 
     @Override
     public boolean execute() {
-        this.draggableModule = MainWindow.allDraggableModule.get(dragId);
+        this.draggableModule = MainWindow.instance().getModuleByName(dragId);
 
         draggableModule.relocateToPoint(new Point2D(newCoords.getX(), newCoords.getY()), newOffset);
 

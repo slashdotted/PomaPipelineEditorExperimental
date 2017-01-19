@@ -1,6 +1,7 @@
 package utils;
 
 import controller.DraggableModule;
+import controller.MainWindow;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
@@ -15,30 +16,24 @@ import java.util.Map;
  * Class used for perform a selection with a selection rectangle
  */
 public class SelectionArea {
-    private Group selectionGroup = new Group();
     private Rectangle selectionShape = null;
     boolean drawing = false;
     private Color color = Color.BLUE;
     private AnchorPane pane;
-    private Group intersectionGroup;
-    private Map<String, DraggableModule> draggableModules;
     private double startingY;
     private double startingX;
 
 
-    public SelectionArea(AnchorPane pane, Group intersectionGroup, Map<String, DraggableModule> draggableModules) {
+    public SelectionArea(AnchorPane pane) {
         this.pane = pane;
-        this.intersectionGroup = intersectionGroup;
-        this.draggableModules = draggableModules;
-
-        pane.getChildren().add(selectionGroup);
-
     }
 
     private void setHandlers() {
-        pane.setOnMousePressed((MouseEvent event) -> {
+
+        pane.setOnDragDetected((MouseEvent event) -> {
+            MainWindow.instance().unselectAll();
             Point2D actualPosition = new Point2D(event.getX(), event.getY());
-            if (pane.contains(actualPosition) && !drawing && !intersectionGroup.contains(actualPosition)) {
+            if (pane.contains(actualPosition) && !drawing) {
                 startingX = event.getX();
                 startingY = event.getY();
                 selectionShape = new Rectangle();
@@ -47,11 +42,12 @@ public class SelectionArea {
                 selectionShape.setStroke(Color.DARKBLUE);
                 selectionShape.setStrokeType(StrokeType.CENTERED);
                 selectionShape.setStrokeWidth(2);
-                selectionGroup.getChildren().add(selectionShape);
-
+                pane.getChildren().add(selectionShape);
                 drawing = true;
+                event.consume();
             }
         });
+        
         pane.setOnMouseDragged((MouseEvent event) -> {
             if (drawing == true) {
                 double currentMouseX = event.getX();
@@ -62,23 +58,21 @@ public class SelectionArea {
                         currentMouseX,
                         currentMouseY,
                         selectionShape);
-
-                draggableModules.keySet().forEach(key -> {
-
-                    DraggableModule current = draggableModules.get(key);
+                
+                for (DraggableModule current : MainWindow.instance().getModules()) {
                     if (selectionShape.getBoundsInLocal().intersects(current.getBoundsInParent())) {
                         current.select();
 
                     } else if (current.isSelected()) {
                         current.unselect();
                     }
-                });
+                }
             }
         });
         pane.setOnMouseReleased((MouseEvent event) -> {
             if (drawing == true) {
                 selectionShape.setFill(color);
-                selectionGroup.getChildren().remove(selectionShape);
+                pane.getChildren().remove(selectionShape);
                 selectionShape = null;
                 drawing = false;
             }

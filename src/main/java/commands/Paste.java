@@ -14,6 +14,7 @@ import utils.PipelineManager;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import utils.StackedLogBar;
 
 /**
  * Created by felipe on 23/03/16.
@@ -70,7 +71,7 @@ public class Paste implements Command {
             if (importElements != null)
                 importElements.execute();
             else
-                MainWindow.stackedLogBar.displayWarning("No pipeline found in clipboard!");
+                StackedLogBar.instance().displayWarning("No pipeline found in clipboard!");
         }
 
 

@@ -64,8 +64,8 @@ public class ChannelsManager extends BorderPane {
 
         stage.show();
         stage.setOnCloseRequest(event -> {
-            (MainWindow.allLinkView.get(link.getID())).unselectImage(orientation);
-            (MainWindow.allLinkView.get(link.getID())).updateImageViews(orientation);
+            (MainWindow.instance().getLinkByName(link.getID())).unselectImage(orientation);
+            (MainWindow.instance().getLinkByName(link.getID())).updateImageViews(orientation);
             if (link.getNumberOfChannels() == 0) {
                 Command removeLink = new RemoveLink(link);
                 removeLink.execute();

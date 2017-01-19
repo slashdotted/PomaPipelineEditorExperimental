@@ -36,12 +36,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import utils.StackedLogBar;
 
 /**
  * SideBar Class, this component is used for edit a module from GUI
  */
 public class SideBar extends VBox {
 
+    private static AtomicBoolean pinnedSidebar = new AtomicBoolean(false);
     private static ImageView pinImageView = GraphicsElementsFactory.getPinImage(20);
     private static ImageView closeImageView = GraphicsElementsFactory.getCloseImage(20);
     private static ImageView unPinImageView = GraphicsElementsFactory.getUnpinImage(20);
@@ -87,14 +89,11 @@ public class SideBar extends VBox {
     private VBox mandatoryBox;
     private VBox optionalBox;
 
-    private boolean creation;
-
-    public SideBar(Module module, double expandedSize, boolean creation) {
+    public SideBar(Module module, double expandedSize) {
         this.module = module;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sideBar.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
-        this.creation = creation;
         try {
             fxmlLoader.load();
 
@@ -105,20 +104,24 @@ public class SideBar extends VBox {
         this.setCache(true);
         this.setCacheHint(CacheHint.SPEED);
     }
+    
+    public Module getModule() {
+        return module;
+    }
 
     @FXML
     public void initialize() {
         this.template = module.getTemplate();
         sourceCheckBox.setVisible(module.getCanBeSource());
-        sourceCheckBox.setSelected(MainWindow.isSource(module.getName()));
+        sourceCheckBox.setSelected(Module.isSource(module.getName()));
         sourceCheckBox.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             String newSource = newValue.booleanValue() ? module.getName() : null;
             Command editSource = new EditModule(module, EditModule.Type.Source, newSource);
             if (editSource.execute()) {
                 CareTaker.addMemento(editSource);
-                MainWindow.stackedLogBar.logAndSuccess("Source changed to " + MainWindow.getSource());
+                StackedLogBar.instance().logAndSuccess("Source changed to " + Module.getSource());
             } else {
-                MainWindow.stackedLogBar.logAndWarning("Failed to set source");
+                StackedLogBar.instance().logAndWarning("Failed to set source");
             }
         });
 
@@ -163,7 +166,7 @@ public class SideBar extends VBox {
         addCParam.setGraphic(new ImageView("images/plus.png"));
         ProgramUtils.setOnPressedButton(addCParam);
 
-        if (MainWindow.pinnedSidebar.get()) {
+        if (pinnedSidebar.get()) {
             pinButton.setGraphic(pinImageView);
         } else {
             pinButton.setGraphic(unPinImageView);
@@ -180,11 +183,11 @@ public class SideBar extends VBox {
         });
 
         pinButton.setOnAction(event1 -> {
-            if (MainWindow.pinnedSidebar.get()) {
-                MainWindow.pinnedSidebar.set(false);
+            if (pinnedSidebar.get()) {
+                pinnedSidebar.set(false);
                 pinButton.setGraphic(unPinImageView);
             } else {
-                MainWindow.pinnedSidebar.set(true);
+                pinnedSidebar.set(true);
                 pinButton.setGraphic(pinImageView);
             }
         });
@@ -221,6 +224,7 @@ public class SideBar extends VBox {
 
         setModuleAsValid();
         setVisible(false);
+        setPrefWidth(0);
     }
 
     private void setModuleAsValid() {
@@ -254,7 +258,7 @@ public class SideBar extends VBox {
             if (editName.execute()) {
                 CareTaker.addMemento(editName);
                 nameLabel.setText(module.getName());
-                MainWindow.stackedLogBar.logAndSuccess("Name changed: " + module.getName());
+                StackedLogBar.instance().logAndSuccess("Name changed: " + module.getName());
             }
 
         }
@@ -321,6 +325,6 @@ public class SideBar extends VBox {
     }
 
     public boolean isPinned() {
-        return MainWindow.pinnedSidebar.get();
+        return pinnedSidebar.get();
     }
 }

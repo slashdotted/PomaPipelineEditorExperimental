@@ -17,7 +17,7 @@ public class AddModule implements Command{
     @Override
     public boolean execute() {
         Main.modules.put(module.getName(), module);
-        MainWindow.addDraggableModule(module);
+        MainWindow.instance().addDraggableModule(module);
         return true;
     }
 

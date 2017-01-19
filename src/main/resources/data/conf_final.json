@@ -27,19 +27,19 @@
 		{"name" : "color", "type" : "Boolean", "description" : "use color information", "default" : false},
 		{"name" : "shadow", "type" : "Boolean", "description" : "detect shadow", "default" : true},
 		{"name" : "fulltrack", "type" : "Boolean", "description" : "full tracking mode (forward only when", "default" : false},
-		{"name" : "minarea", "type" : "Long", "description" : "minimum zone area", "default" : "2000"},
-		{"name" : "maxarea", "type" : "Long", "description" : "maximum zone area", "default" : "40000"},
-		{"name" : "distance", "type" : "Long", "description" : "distance between zones", "default" : "400"},
-		{"name" : "frames", "type" : "Long", "description" : "minimum frames without zone", "default" : "4"},
-		{"name" : "saveinterval", "type" : "Long", "description" : "zone save save interval", "default" : "3"},
-		{"name" : "saved", "type" : "Long", "description" : "zone save count", "default" : "2"},
-		{"name" : "boundsize", "type" : "Long", "description" : "bound size", "default" : "20"},
-		{"name" : "history", "type" : "Long", "description" : "history", "default" : "300"},
-		{"name" : "maskthreshold", "type" : "Long", "description" : "mask threshold", "default" : "128"},
-		{"name" : "resize", "type" : "Long", "description" : "resize factor", "default" : "1"},
-		{"name" : "structsize", "type" : "Long", "description" : "structuring element size", "default" : "7"},
-		{"name" : "structpoint", "type" : "Long", "description" : "structuring element point", "default" : "3"},
-		{"name" : "backsubthreshold", "type" : "Long", "description" : "background substractor threshold", "default" : "32"},
+		{"name" : "minarea", "type" : "Long", "description" : "minimum zone area", "default" : 2000},
+		{"name" : "maxarea", "type" : "Long", "description" : "maximum zone area", "default" : 40000},
+		{"name" : "distance", "type" : "Long", "description" : "distance between zones", "default" : 400},
+		{"name" : "frames", "type" : "Long", "description" : "minimum frames without zone", "default" : 4},
+		{"name" : "saveinterval", "type" : "Long", "description" : "zone save save interval", "default" : 3},
+		{"name" : "saved", "type" : "Long", "description" : "zone save count", "default" : 2},
+		{"name" : "boundsize", "type" : "Long", "description" : "bound size", "default" : 20},
+		{"name" : "history", "type" : "Long", "description" : "history", "default" : 300},
+		{"name" : "maskthreshold", "type" : "Long", "description" : "mask threshold", "default" : 128},
+		{"name" : "resize", "type" : "Long", "description" : "resize factor", "default" : 1},
+		{"name" : "structsize", "type" : "Long", "description" : "structuring element size", "default" : 7},
+		{"name" : "structpoint", "type" : "Long", "description" : "structuring element point", "default" : 3},
+		{"name" : "backsubthreshold", "type" : "Long", "description" : "background substractor threshold", "default" : 32},
 		{"name" : "vector", "type" : "String", "description" : "(=20,20,580,20,580,434,20,434)", "default" : "20,20,580,20,580,434,20,434"},
 		{"name" : "debug", "type" : "Boolean", "description" : "enable debug", "default" : false}
 	],
@@ -53,19 +53,19 @@
 	"optParams" : [
 		{"name" : "color", "type" : "Boolean", "description" : "use color information", "default" : false},
 		{"name" : "shadow", "type" : "Boolean", "description" : "detect shadow", "default" : true},
-		{"name" : "minarea", "type" : "Long", "description" : "minimum zone area", "default" : "2000"},
-		{"name" : "maxarea", "type" : "Long", "description" : "maximum zone area", "default" : "40000"},
-		{"name" : "distance", "type" : "Long", "description" : "distance between zones", "default" : "400"},
-		{"name" : "frames", "type" : "Long", "description" : "minimum frames without zone", "default" : "4"},
-		{"name" : "saveinterval", "type" : "Long", "description" : "zone save save interval", "default" : "3"},
-		{"name" : "saved", "type" : "Long", "description" : "zone save count", "default" : "2"},
-		{"name" : "boundsize", "type" : "Long", "description" : "bound size", "default" : "20"},
-		{"name" : "history", "type" : "Long", "description" : "history", "default" : "300"},
-		{"name" : "maskthreshold", "type" : "Long", "description" : "mask threshold", "default" : "128"},
-		{"name" : "resize", "type" : "Long", "description" : "resize factor", "default" : "1"},
-		{"name" : "structsize", "type" : "Long", "description" : "structuring element size", "default" : "7"},
-		{"name" : "structpoint", "type" : "Long", "description" : "structuring element point", "default" : "3"},
-		{"name" : "backsubthreshold", "type" : "Long", "description" : "background substractor threshold", "default" : "32"},
+		{"name" : "minarea", "type" : "Long", "description" : "minimum zone area", "default" : 2000},
+		{"name" : "maxarea", "type" : "Long", "description" : "maximum zone area", "default" : 40000},
+		{"name" : "distance", "type" : "Long", "description" : "distance between zones", "default" : 400},
+		{"name" : "frames", "type" : "Long", "description" : "minimum frames without zone", "default" : 4},
+		{"name" : "saveinterval", "type" : "Long", "description" : "zone save save interval", "default" : 3},
+		{"name" : "saved", "type" : "Long", "description" : "zone save count", "default" : 2},
+		{"name" : "boundsize", "type" : "Long", "description" : "bound size", "default" : 20},
+		{"name" : "history", "type" : "Long", "description" : "history", "default" : 300},
+		{"name" : "maskthreshold", "type" : "Long", "description" : "mask threshold", "default" : 128},
+		{"name" : "resize", "type" : "Long", "description" : "resize factor", "default" : 1},
+		{"name" : "structsize", "type" : "Long", "description" : "structuring element size", "default" : 7},
+		{"name" : "structpoint", "type" : "Long", "description" : "structuring element point", "default" : 3},
+		{"name" : "backsubthreshold", "type" : "Long", "description" : "background substractor threshold", "default" : 32},
 		{"name" : "vector", "type" : "String", "description" : "(=20,20,580,20,580,434,20,434)", "default" : "20,20,580,20,580,434,20,434"},
 		{"name" : "debug", "type" : "Boolean", "description" : "enable debug", "default" : false}
 	],
@@ -113,8 +113,8 @@
 	"imageURL" : "images/templates/record.png",
 	"optParams" : [
 		{"name" : "dontcopy", "type" : "Boolean", "description" : "do not copy frames", "default" : false},
-		{"name" : "warnsize", "type" : "Long", "description" : "buffer warn size", "default" : "1024"},
-		{"name" : "frameskip", "type" : "Long", "description" : "number of skip frames", "default" : "1"}
+		{"name" : "warnsize", "type" : "Long", "description" : "buffer warn size", "default" : 1024},
+		{"name" : "frameskip", "type" : "Long", "description" : "number of skip frames", "default" : 1}
 	],
 	"mandatoryParams" : [
 	]
@@ -170,14 +170,14 @@
         "canBeSource" : true,
 	"optParams" : [
 		{"name" : "retry", "type" : "Boolean", "description" : "retry when stream closes", "default" : false},
-		{"name" : "retryinterval", "type" : "Long", "description" : "retry interval (ms)", "default" : "60000"},
-		{"name" : "devid", "type" : "Long", "description" : "set device id", "default" : "0"},
-		{"name" : "height", "type" : "Long", "description" : "set capture height", "default" : "-1"},
-		{"name" : "width", "type" : "Long", "description" : "set capture width", "default" : "-1"}
+		{"name" : "retryinterval", "type" : "Long", "description" : "retry interval (ms)", "default" : 60000},
+		{"name" : "devid", "type" : "Long", "description" : "set device id", "default" : 0},
+		{"name" : "height", "type" : "Long", "description" : "set capture height", "default" : -1},
+                {"name" : "camdirection", "type" : "String", "description" : "camera direction (N NE E SE S SO O NO)"},
+		{"name" : "width", "type" : "Long", "description" : "set capture width", "default" : -1}
 	],
 	"mandatoryParams" : [
 		{"name" : "name", "type" : "String", "description" : "set camera name"},
-		{"name" : "camdirection", "type" : "String", "description" : "camera direction (N NE E SE S SO O NO)"},
 		{"name" : "fps", "type" : "Long", "description" : "fps (-1 for autodetect)"}
 	]
 } ,
@@ -205,7 +205,7 @@
 	"description" : "Filters blob depending on image entropy",
 	"imageURL" : "images/templates/idea.png",
 	"optParams" : [
-		{"name" : "threshold", "type" : "Double", "description" : "threshold level (2.0)", "default" : "2"}
+		{"name" : "threshold", "type" : "Double", "description" : "threshold level (2.0)", "default" : 2}
 	],
 	"mandatoryParams" : [
 	]
@@ -215,7 +215,7 @@
 	"description" : "Detects faces in the frame",
 	"imageURL" : "images/templates/face.png",
 	"optParams" : [
-		{"name" : "expansion", "type" : "Double", "description" : "expansion ratio", "default" : "0"}
+		{"name" : "expansion", "type" : "Double", "description" : "expansion ratio", "default" : 0}
 	],
 	"mandatoryParams" : [
 	]
@@ -264,8 +264,8 @@
 	"description" : "Counts blob crossing a virtual vertical line",
 	"imageURL" : "images/templates/search.png",
 	"optParams" : [
-		{"name" : "direction", "type" : "Long", "description" : "direction (1/-1)", "default" : "1"},
-		{"name" : "position", "type" : "Long", "description" : "horizontal cross position", "default" : "640"}
+		{"name" : "direction", "type" : "Long", "description" : "direction (1/-1)", "default" : 1},
+		{"name" : "position", "type" : "Long", "description" : "horizontal cross position", "default" : 640}
 	],
 	"mandatoryParams" : [
 	]
@@ -307,7 +307,7 @@
 	"imageURL" : "images/templates/processing.png",
 	"optParams" : [
 		{"name" : "random", "type" : "Boolean", "description" : "use random selection instead of round robin", "default" : false},
-		{"name" : "sinks", "type" : "Long", "description" : "number of sinks", "default" : "0"}
+		{"name" : "sinks", "type" : "Long", "description" : "number of sinks", "default" : 0}
 	],
 	"mandatoryParams" : [
 	]
@@ -317,7 +317,7 @@
 	"description" : "Write to MongoDB",
 	"imageURL" : "images/templates/storage.png",
 	"optParams" : [
-		{"name" : "compressionlevel", "type" : "Long", "description" : "PNG compression level 0-9", "default" : "5"},
+		{"name" : "compressionlevel", "type" : "Long", "description" : "PNG compression level 0-9", "default" : 5},
 		{"name" : "format", "type" : "String", "description" : "image format (JPG or PNG)", "default" : "JPG"},
 		{"name" : "collection", "type" : "String", "description" : "collection name", "default" : "data"},
 		{"name" : "mongourl", "type" : "String", "description" : "(=mongodb://drive.dti.supsi.ch:27017)", "default" : "mongodb://drive.dti.supsi.ch:27017"},
@@ -331,7 +331,7 @@
 	"description" : "Performs OCR on incoming frames",
 	"imageURL" : "images/templates/text.png",
 	"optParams" : [
-		{"name" : "page_seg_mode", "type" : "Long", "description" : "tesseract page seg mode", "default" : "7"},
+		{"name" : "page_seg_mode", "type" : "Long", "description" : "tesseract page seg mode", "default" : 7},
 		{"name" : "vector", "type" : "String", "description" : "area vector", "default" : ""}
 	],
 	"mandatoryParams" : [
@@ -342,7 +342,7 @@
 	"description" : "Parallel executor",
 	"imageURL" : "images/templates/processing.png",
 	"optParams" : [
-		{"name" : "threads", "type" : "Long", "description" : "force number of threads", "default" : "-1"}
+		{"name" : "threads", "type" : "Long", "description" : "force number of threads", "default" : -1}
 	],
 	"mandatoryParams" : [
 	]
@@ -383,7 +383,7 @@
 	"description" : "Skip frames",
 	"imageURL" : "images/templates/idea.png",
 	"optParams" : [
-		{"name" : "skipinterval", "type" : "Long", "description" : "interval (frames) between submitted frames", "default" : "1"}
+		{"name" : "skipinterval", "type" : "Long", "description" : "interval (frames) between submitted frames", "default" : 1}
 	],
 	"mandatoryParams" : [
 	]
@@ -402,7 +402,7 @@
 	"description" : "Prints stats on the console",
 	"imageURL" : "images/templates/stats.png",
 	"optParams" : [
-		{"name" : "statsinterval", "type" : "Long", "description" : "interval (frames) between stats printout", "default" : "256"}
+		{"name" : "statsinterval", "type" : "Long", "description" : "interval (frames) between stats printout", "default" : 256}
 	],
 	"mandatoryParams" : [
 	]
@@ -412,8 +412,8 @@
 	"description" : "Discards strange looking blobs",
 	"imageURL" : "images/templates/idea.png",
 	"optParams" : [
-		{"name" : "minratio", "type" : "String", "description" : "minimum ration", "default" : "0.5625"},
-		{"name" : "maxratio", "type" : "String", "description" : "maximum ration", "default" : "1.77"}
+		{"name" : "minratio", "type" : "Double", "description" : "minimum ration", "default" : 0.5625},
+		{"name" : "maxratio", "type" : "Double", "description" : "maximum ration", "default" : 1.77}
 	],
 	"mandatoryParams" : [
 	]
@@ -425,7 +425,7 @@
         "canBeSource" : true,
 	"optParams" : [
 		{"name" : "retry", "type" : "Boolean", "description" : "retry when stream closes", "default" : false},
-		{"name" : "retryinterval", "type" : "Long", "description" : "retry interval (ms)", "default" : "60000"}
+		{"name" : "retryinterval", "type" : "Long", "description" : "retry interval (ms)", "default" : 60000}
 	],
 	"mandatoryParams" : [
 		{"name" : "path", "type" : "String", "description" : "set stream path"},
@@ -439,8 +439,8 @@
 	"description" : "Counts blobs crossing a virtual horizontal line",
 	"imageURL" : "images/templates/search.png",
 	"optParams" : [
-		{"name" : "direction", "type" : "Long", "description" : "direction (1/-1)", "default" : "1"},
-		{"name" : "position", "type" : "Long", "description" : "vertical cross position", "default" : "360"}
+		{"name" : "direction", "type" : "Long", "description" : "direction (1/-1)", "default" : 1},
+		{"name" : "position", "type" : "Long", "description" : "vertical cross position", "default" : 360}
 	],
 	"mandatoryParams" : [
 	]
@@ -483,7 +483,7 @@
 	"description" : "Sends blob to ZeroMQ url",
 	"imageURL" : "images/templates/network.png",
 	"optParams" : [
-		{"name" : "compressionlevel", "type" : "Long", "description" : "PNG compression level 0-9", "default" : "5"},
+		{"name" : "compressionlevel", "type" : "Long", "description" : "PNG compression level 0-9", "default" : 5},
 		{"name" : "sinkaddress", "type" : "String", "description" : "(=tcp://localhost:7467)", "default" : "tcp://localhost:7467"}
 	],
 	"mandatoryParams" : [
