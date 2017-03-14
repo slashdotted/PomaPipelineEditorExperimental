@@ -210,6 +210,7 @@ public class SideBar extends VBox {
     }
 
     public void show() {
+        setWidth(400);
         setVisible(true);
     }
 
@@ -220,6 +221,7 @@ public class SideBar extends VBox {
         }
 
         setModuleAsValid();
+        setWidth(0);
         setVisible(false);
     }
 
@@ -322,5 +324,9 @@ public class SideBar extends VBox {
 
     public boolean isPinned() {
         return MainWindow.pinnedSidebar.get();
+    }
+
+    Module getModule() {
+        return module;
     }
 }

@@ -906,9 +906,13 @@ public class MainWindow extends BorderPane {
         return new Task<SideBar>() {
             @Override
             protected SideBar call() throws Exception {
-                if (currentSidebar != null)
+                if (currentSidebar != null && currentSidebar.getModule() != module) {
                     closeSidebar(true);
-                currentSidebar = new SideBar(module, 400, creation);
+                    currentSidebar = null;
+                }
+                if (currentSidebar == null || currentSidebar.getModule() != module) {
+                    currentSidebar = new SideBar(module, 400, creation);
+                }
                 return currentSidebar;
             }
         };
@@ -921,9 +925,8 @@ public class MainWindow extends BorderPane {
         if (!currentSidebar.isPinned() || force) {
             currentSidebar.hide(force);
             currentSidebar = null;
+            Main.root.setRight(null);
         }
-
-
     }
 
     /*

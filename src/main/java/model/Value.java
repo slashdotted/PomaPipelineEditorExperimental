@@ -30,10 +30,21 @@ public class Value<T> {
         this.name = value.getName();
         this.mandatory = value.isMandatory();
         Object val = null;
+        this.defaultValue = (T) value.getDefaultValue();
+        
         Constructor ctor = null;
         try {
-            ctor = Class.forName(value.getClassName()).getConstructor(String.class);
-            val = ctor.newInstance("0");
+            if (value.getClassName().endsWith("String")) {
+               ctor = Class.forName(value.getClassName()).getConstructor(String.class);
+               val = ctor.newInstance(""); 
+            } else if (defaultValue != null) {
+               ctor = Class.forName(value.getClassName()).getConstructor(String.class);
+               val = ctor.newInstance(defaultValue.toString()); 
+            } else {
+               ctor = Class.forName(value.getClassName()).getConstructor(String.class);
+               val = ctor.newInstance("0"); 
+            }
+            
 
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -47,7 +58,6 @@ public class Value<T> {
             e.printStackTrace();
         }
         this.value = (T) val;
-        this.defaultValue = (T) value.getDefaultValue();
         this.valid = value.isValid();
         this.description = value.description;
 

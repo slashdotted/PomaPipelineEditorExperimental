@@ -1,503 +1,591 @@
 [
-{
-	"type" : "drive::BlobCapture",
-	"description" : "Capture blobs (JPG) from specified directory",
-	"imageURL" : "images/templates/image.png",
-        "canBeSource" : true,
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-		{"name" : "blobdir", "type" : "String", "description" : "blob directory"}
-	]
-} ,
-{
-	"type" : "drive::BlobColor",
-	"description" : "Determines blob color",
-	"imageURL" : "images/templates/color.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::BlobTracker",
-	"description" : "Track blobs",
-	"imageURL" : "images/templates/search.png",
-	"optParams" : [
-		{"name" : "color", "type" : "Boolean", "description" : "use color information", "default" : false},
-		{"name" : "shadow", "type" : "Boolean", "description" : "detect shadow", "default" : true},
-		{"name" : "fulltrack", "type" : "Boolean", "description" : "full tracking mode (forward only when", "default" : false},
-		{"name" : "minarea", "type" : "Long", "description" : "minimum zone area", "default" : "2000"},
-		{"name" : "maxarea", "type" : "Long", "description" : "maximum zone area", "default" : "40000"},
-		{"name" : "distance", "type" : "Long", "description" : "distance between zones", "default" : "400"},
-		{"name" : "frames", "type" : "Long", "description" : "minimum frames without zone", "default" : "4"},
-		{"name" : "saveinterval", "type" : "Long", "description" : "zone save save interval", "default" : "3"},
-		{"name" : "saved", "type" : "Long", "description" : "zone save count", "default" : "2"},
-		{"name" : "boundsize", "type" : "Long", "description" : "bound size", "default" : "20"},
-		{"name" : "history", "type" : "Long", "description" : "history", "default" : "300"},
-		{"name" : "maskthreshold", "type" : "Long", "description" : "mask threshold", "default" : "128"},
-		{"name" : "resize", "type" : "Long", "description" : "resize factor", "default" : "1"},
-		{"name" : "structsize", "type" : "Long", "description" : "structuring element size", "default" : "7"},
-		{"name" : "structpoint", "type" : "Long", "description" : "structuring element point", "default" : "3"},
-		{"name" : "backsubthreshold", "type" : "Long", "description" : "background substractor threshold", "default" : "32"},
-		{"name" : "vector", "type" : "String", "description" : "(=20,20,580,20,580,434,20,434)", "default" : "20,20,580,20,580,434,20,434"},
-		{"name" : "debug", "type" : "Boolean", "description" : "enable debug", "default" : false}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::BlobTrackerEx",
-	"description" : "Track blobs",
-	"imageURL" : "images/templates/search.png",
-	"optParams" : [
-		{"name" : "color", "type" : "Boolean", "description" : "use color information", "default" : false},
-		{"name" : "shadow", "type" : "Boolean", "description" : "detect shadow", "default" : true},
-		{"name" : "minarea", "type" : "Long", "description" : "minimum zone area", "default" : "2000"},
-		{"name" : "maxarea", "type" : "Long", "description" : "maximum zone area", "default" : "40000"},
-		{"name" : "distance", "type" : "Long", "description" : "distance between zones", "default" : "400"},
-		{"name" : "frames", "type" : "Long", "description" : "minimum frames without zone", "default" : "4"},
-		{"name" : "saveinterval", "type" : "Long", "description" : "zone save save interval", "default" : "3"},
-		{"name" : "saved", "type" : "Long", "description" : "zone save count", "default" : "2"},
-		{"name" : "boundsize", "type" : "Long", "description" : "bound size", "default" : "20"},
-		{"name" : "history", "type" : "Long", "description" : "history", "default" : "300"},
-		{"name" : "maskthreshold", "type" : "Long", "description" : "mask threshold", "default" : "128"},
-		{"name" : "resize", "type" : "Long", "description" : "resize factor", "default" : "1"},
-		{"name" : "structsize", "type" : "Long", "description" : "structuring element size", "default" : "7"},
-		{"name" : "structpoint", "type" : "Long", "description" : "structuring element point", "default" : "3"},
-		{"name" : "backsubthreshold", "type" : "Long", "description" : "background substractor threshold", "default" : "32"},
-		{"name" : "vector", "type" : "String", "description" : "(=20,20,580,20,580,434,20,434)", "default" : "20,20,580,20,580,434,20,434"},
-		{"name" : "debug", "type" : "Boolean", "description" : "enable debug", "default" : false}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::BodyColorClassifier",
-	"description" : "Classifies upper and lower body colors",
-	"imageURL" : "images/templates/color.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-		{"name" : "bodycolortemplatesdir", "type" : "String", "description" : "body color classes template directory"}
-	]
-} ,
-{
-	"type" : "drive::BodyColorClassifierEx",
-	"description" : "Classifies upper and lower body colors",
-	"imageURL" : "images/templates/color.png",
-	"optParams" : [
-		{"name" : "renormalize", "type" : "Boolean", "description" : "normalize histogram before comparison", "default" : false},
-		{"name" : "denoise", "type" : "Boolean", "description" : "denoise image before comparison", "default" : false},
-		{"name" : "correlation", "type" : "Boolean", "description" : "enable correlation", "default" : false},
-		{"name" : "chisquare", "type" : "Boolean", "description" : "enable chi-square", "default" : false},
-		{"name" : "intersection", "type" : "Boolean", "description" : "enable intersection", "default" : false},
-		{"name" : "bhattacharyya", "type" : "Boolean", "description" : "enable bhattacharyya", "default" : false}
-	],
-	"mandatoryParams" : [
-		{"name" : "bodycolortemplatesdir", "type" : "String", "description" : "body color classes template directory"}
-	]
-} ,
-{
-	"type" : "drive::BogusData",
-	"description" : "Generates bogus data packets",
-	"imageURL" : "images/templates/junk.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::Buffer",
-	"description" : "Data packet buffer",
-	"imageURL" : "images/templates/record.png",
-	"optParams" : [
-		{"name" : "dontcopy", "type" : "Boolean", "description" : "do not copy frames", "default" : false},
-		{"name" : "warnsize", "type" : "Long", "description" : "buffer warn size", "default" : "1024"},
-		{"name" : "frameskip", "type" : "Long", "description" : "number of skip frames", "default" : "1"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::ColorClassifier",
-	"description" : "Blob color classifier",
-	"imageURL" : "images/templates/color.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-		{"name" : "colortemplatesdir", "type" : "String", "description" : "color classes template directory"}
-	]
-} ,
-{
-	"type" : "drive::ColorClassifierEx",
-	"description" : "Blob color classifier",
-	"imageURL" : "images/templates/color.png",
-	"optParams" : [
-		{"name" : "renormalize", "type" : "Boolean", "description" : "normalize histogram before comparison", "default" : false},
-		{"name" : "denoise", "type" : "Boolean", "description" : "denoise image before comparison", "default" : false},
-		{"name" : "correlation", "type" : "Boolean", "description" : "enable correlation", "default" : false},
-		{"name" : "chisquare", "type" : "Boolean", "description" : "enable chi-square", "default" : false},
-		{"name" : "intersection", "type" : "Boolean", "description" : "enable intersection", "default" : false},
-		{"name" : "bhattacharyya", "type" : "Boolean", "description" : "enable bhattacharyya", "default" : false}
-	],
-	"mandatoryParams" : [
-		{"name" : "colortemplatesdir", "type" : "String", "description" : "color classes template directory"}
-	]
-} ,
-{
-	"type" : "drive::ColorMatcher",
-	"description" : "Blob color classifier (discrete color palette)",
-	"imageURL" : "images/templates/color.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::Denoiser",
-	"description" : "Applies denoise filter",
-	"imageURL" : "images/templates/processing.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::DeviceCapture",
-	"description" : "Capture video stream from device",
-	"imageURL" : "images/templates/camera.png",
-        "canBeSource" : true,
-	"optParams" : [
-		{"name" : "retry", "type" : "Boolean", "description" : "retry when stream closes", "default" : false},
-		{"name" : "retryinterval", "type" : "Long", "description" : "retry interval (ms)", "default" : "60000"},
-		{"name" : "devid", "type" : "Long", "description" : "set device id", "default" : "0"},
-		{"name" : "height", "type" : "Long", "description" : "set capture height", "default" : "-1"},
-		{"name" : "width", "type" : "Long", "description" : "set capture width", "default" : "-1"}
-	],
-	"mandatoryParams" : [
-		{"name" : "name", "type" : "String", "description" : "set camera name"},
-		{"name" : "camdirection", "type" : "String", "description" : "camera direction (N NE E SE S SO O NO)"},
-		{"name" : "fps", "type" : "Long", "description" : "fps (-1 for autodetect)"}
-	]
-} ,
-{
-	"type" : "drive::DirectionEstimator",
-	"description" : "Estimate blob movement direction (depends on tracking)",
-	"imageURL" : "images/templates/steps.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-		{"name" : "camdirection", "type" : "String", "description" : "camera direction (N NE E SE S SO O NO)"}
-	]
-} ,
-{
-	"type" : "drive::Dummy",
-	"description" : "Dummy module",
-	"imageURL" : "images/templates/junk.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::EntropyFilter",
-	"description" : "Filters blob depending on image entropy",
-	"imageURL" : "images/templates/idea.png",
-	"optParams" : [
-		{"name" : "threshold", "type" : "Double", "description" : "threshold level (2.0)", "default" : "2"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::FaceDetector",
-	"description" : "Detects faces in the frame",
-	"imageURL" : "images/templates/face.png",
-	"optParams" : [
-		{"name" : "expansion", "type" : "Double", "description" : "expansion ratio", "default" : "0"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::FaceExtractor",
-	"description" : "Extract faces as individual blobs (depends on FaceDetector)",
-	"imageURL" : "images/templates/face.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::FileCapture",
-	"description" : "Captures files (JPG) from specified directory",
-	"imageURL" : "images/templates/movie.png",
-        "canBeSource" : true,
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-		{"name" : "filecapturedir", "type" : "String", "description" : "file capture directory"}
-	]
-} ,
-{
-	"type" : "drive::GenericClassifier",
-	"description" : "Generic Caffe based classifier",
-	"imageURL" : "images/templates/classifier.png",
-	"optParams" : [
-		{"name" : "cpuonly", "type" : "Boolean", "description" : "use only CPU", "default" : false}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::GenericSplitter",
-	"description" : "Splits output on different channels depending on the classification (depends on GenericClassifier)",
-	"imageURL" : "images/templates/classifier.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::HorizontalCrossingCounter",
-	"description" : "Counts blob crossing a virtual vertical line",
-	"imageURL" : "images/templates/search.png",
-	"optParams" : [
-		{"name" : "direction", "type" : "Long", "description" : "direction (1/-1)", "default" : "1"},
-		{"name" : "position", "type" : "Long", "description" : "horizontal cross position", "default" : "640"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::ImageWriter",
-	"description" : "Writes image to disk",
-	"imageURL" : "images/templates/storage.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-		{"name" : "imgpath", "type" : "String", "description" : "path for saved images"}
-	]
-} ,
-{
-	"type" : "drive::JSONFilter",
-	"description" : "Filters depending on JSON value",
-	"imageURL" : "images/templates/idea.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-		{"name" : "field", "type" : "String", "description" : "JSON field to be compared"},
-		{"name" : "op", "type" : "String", "description" : "Comparison operation (>,<,=,!=,<=,>=)"},
-		{"name" : "value", "type" : "String", "description" : "Value to compare to"}
-	]
-} ,
-{
-	"type" : "drive::Joiner",
-	"description" : "Join parallel execution paths",
-	"imageURL" : "images/templates/processing.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::LoadBalancer",
-	"description" : "Balances incoming blobs on multiple output paths",
-	"imageURL" : "images/templates/processing.png",
-	"optParams" : [
-		{"name" : "random", "type" : "Boolean", "description" : "use random selection instead of round robin", "default" : false},
-		{"name" : "sinks", "type" : "Long", "description" : "number of sinks", "default" : "0"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::Mongo",
-	"description" : "Write to MongoDB",
-	"imageURL" : "images/templates/storage.png",
-	"optParams" : [
-		{"name" : "compressionlevel", "type" : "Long", "description" : "PNG compression level 0-9", "default" : "5"},
-		{"name" : "format", "type" : "String", "description" : "image format (JPG or PNG)", "default" : "JPG"},
-		{"name" : "collection", "type" : "String", "description" : "collection name", "default" : "data"},
-		{"name" : "mongourl", "type" : "String", "description" : "(=mongodb://drive.dti.supsi.ch:27017)", "default" : "mongodb://drive.dti.supsi.ch:27017"},
-		{"name" : "db", "type" : "String", "description" : "database name", "default" : "drive"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::OCR",
-	"description" : "Performs OCR on incoming frames",
-	"imageURL" : "images/templates/text.png",
-	"optParams" : [
-		{"name" : "page_seg_mode", "type" : "Long", "description" : "tesseract page seg mode", "default" : "7"},
-		{"name" : "vector", "type" : "String", "description" : "area vector", "default" : ""}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::ParExecutor",
-	"description" : "Parallel executor",
-	"imageURL" : "images/templates/processing.png",
-	"optParams" : [
-		{"name" : "threads", "type" : "Long", "description" : "force number of threads", "default" : "-1"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::ParProcessor",
-	"description" : "Parallel processor",
-	"imageURL" : "images/templates/processing.png",
-        "canBeSource" : true,
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::SEMSSQLite",
-	"description" : "Writes data to SEMS SQLite database",
-	"imageURL" : "images/templates/storage.png",
-	"optParams" : [
-		{"name" : "path", "type" : "String", "description" : "(=/var/db/SEMSEye-device.db)", "default" : "/var/db/SEMSEye-device.db"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::SQLite",
-	"description" : "Writes data to SQLite database",
-	"imageURL" : "images/templates/storage.png",
-	"optParams" : [
-		{"name" : "path", "type" : "String", "description" : "SQLite DB path", "default" : "drive.sqlite"},
-		{"name" : "table", "type" : "String", "description" : "SQLite table name", "default" : "PeopleFlowEvents"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::Skipper",
-	"description" : "Skip frames",
-	"imageURL" : "images/templates/idea.png",
-	"optParams" : [
-		{"name" : "skipinterval", "type" : "Long", "description" : "interval (frames) between submitted frames", "default" : "1"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::SpeedEstimator",
-	"description" : "Estimates blob speed (depends on BlobTracker and GenericClassifier)",
-	"imageURL" : "images/templates/steps.png",
-	"optParams" : [
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::Stats",
-	"description" : "Prints stats on the console",
-	"imageURL" : "images/templates/stats.png",
-	"optParams" : [
-		{"name" : "statsinterval", "type" : "Long", "description" : "interval (frames) between stats printout", "default" : "256"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::StrangeBlobs",
-	"description" : "Discards strange looking blobs",
-	"imageURL" : "images/templates/idea.png",
-	"optParams" : [
-		{"name" : "minratio", "type" : "String", "description" : "minimum ration", "default" : "0.5625"},
-		{"name" : "maxratio", "type" : "String", "description" : "maximum ration", "default" : "1.77"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::StreamCapture",
-	"description" : "Captures video from a network stream",
-	"imageURL" : "images/templates/movie.png",
-        "canBeSource" : true,
-	"optParams" : [
-		{"name" : "retry", "type" : "Boolean", "description" : "retry when stream closes", "default" : false},
-		{"name" : "retryinterval", "type" : "Long", "description" : "retry interval (ms)", "default" : "60000"}
-	],
-	"mandatoryParams" : [
-		{"name" : "path", "type" : "String", "description" : "set stream path"},
-		{"name" : "name", "type" : "String", "description" : "set camera name"},
-		{"name" : "camdirection", "type" : "String", "description" : "camera direction (N NE E SE S SO O NO)"},
-		{"name" : "fps", "type" : "Long", "description" : "fps (-1 for autodetect)"}
-	]
-} ,
-{
-	"type" : "drive::VerticalCrossingCounter",
-	"description" : "Counts blobs crossing a virtual horizontal line",
-	"imageURL" : "images/templates/search.png",
-	"optParams" : [
-		{"name" : "direction", "type" : "Long", "description" : "direction (1/-1)", "default" : "1"},
-		{"name" : "position", "type" : "Long", "description" : "vertical cross position", "default" : "360"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::PipeConfigurator",
-	"description" : "Enables live configuration of some module parameters",
-	"imageURL" : "images/templates/idea.png",
-	"optParams" : [
-		{"name" : "inputpipe", "type" : "String", "description" : "FIFO input (command) path", "default" : "pomaconfigurator.input"},
-		{"name" : "outputpipe", "type" : "String", "description" : "FIFO output (result) path", "default" : "pomaconfigurator.output"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::Viewer",
-	"description" : "Displays incoming frames",
-	"imageURL" : "images/templates/display.png",
-	"optParams" : [
-		{"name" : "noshow", "type" : "Boolean", "description" : "don't show frames", "default" : false},
-		{"name" : "stop", "type" : "Boolean", "description" : "stop after each frame", "default" : false}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::ZeroMQ",
-	"description" : "Sends blobs to ZeroMQ url",
-	"imageURL" : "images/templates/network.png",
-	"optParams" : [
-		{"name" : "tag", "type" : "String", "description" : "0MQ publish tag", "default" : "det"},
-		{"name" : "zmqurl", "type" : "String", "description" : "0MQ publish url", "default" : "tcp://localhost:5563"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::ZeroMQSink",
-	"description" : "Sends blob to ZeroMQ url",
-	"imageURL" : "images/templates/network.png",
-	"optParams" : [
-		{"name" : "compressionlevel", "type" : "Long", "description" : "PNG compression level 0-9", "default" : "5"},
-		{"name" : "sinkaddress", "type" : "String", "description" : "(=tcp://localhost:7467)", "default" : "tcp://localhost:7467"}
-	],
-	"mandatoryParams" : [
-	]
-} ,
-{
-	"type" : "drive::ZeroMQSource",
-	"description" : "Captures blobs from ZeroMQ source",
-	"imageURL" : "images/templates/network.png",
-        "canBeSource" : true,
-	"optParams" : [
-		{"name" : "sourceaddress", "type" : "String", "description" : "0MQ source socket address", "default" : "tcp://*:7467"}
-	],
-	"mandatoryParams" : [
-	]
-} 
+  {
+   "type" : "drive::EntropyFilter",
+   "description" : "Filter incoming blobs based on entropy",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "threshold", "description": "threshold level (2.0)", "default": 2, "type": "Double"}
+   ]
+  },
+  {
+   "type" : "drive::ZeroMQSource",
+   "description" : "ZeroMQ Source module",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "sourceaddress", "description": "0MQ source socket address", "default": "tcp://*:7467", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::ColorClassifier",
+   "description" : "Generic color classifier module (using histograms)",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "colortemplatesdir", "description": "color classes template directory", "type": "String" }
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::Viewer",
+   "description" : "Display blobs on screen",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "noshow", "description": "don't show frames", "default": false, "type": "Boolean"},
+        { "name": "stop", "description": "stop after each frame", "default": false, "type": "Boolean"}
+   ]
+  },
+  {
+   "type" : "drive::HorizontalCrossingCounter",
+   "description" : "Checks if blob crosses virtual horizontal border (requires tracking module)",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "direction", "description": "direction (1/-1)", "default": 1, "type": "Integer"},
+        { "name": "position", "description": "horizontal cross position", "default": 640, "type": "Integer"}
+   ]
+  },
+  {
+   "type" : "drive::Joiner",
+   "description" : "Join after a fork",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::ZeroMQ",
+   "description" : "ZeroMQ module",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "tag", "description": "0MQ publish tag", "default": "det", "type": "String" },
+        { "name": "zmqurl", "description": "0MQ publish url", "default": "tcp://localhost:5563", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::SpeedEstimator",
+   "description" : "Estimate speeds",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::SQLite",
+   "description" : "SQLite connector",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "path", "description": "SQLite DB path", "default": "drive.sqlite", "type": "String" },
+        { "name": "table", "description": "SQLite table name", "default": "PeopleFlowEvents", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::DeviceCapture",
+   "description" : "Captures frames from a local device",
+   "canBeSource" : true, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "name", "description": "set camera name", "type": "String" },
+        { "name": "fps", "description": "fps (-1 for autodetect)", "type": "String" }
+   ],
+   "optParams" : [
+        { "name": "retry", "description": "retry when stream closes", "default": false, "type": "Boolean"},
+        { "name": "retryinterval", "description": "retry interval (ms)", "default": 60000, "type": "Long"},
+        { "name": "devid", "description": "set device id", "default": 0, "type": "Integer"},
+        { "name": "height", "description": "set capture height", "default": -1, "type": "Integer"},
+        { "name": "width", "description": "set capture width", "default": -1, "type": "Integer"},
+        { "name": "camdirection", "description": "camera direction (N NE E SE S SO O NO)", "default": "", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::OCR",
+   "description" : "Tesseract OCR",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "page_seg_mode", "description": "tesseract page seg mode", "default": 7, "type": "Integer"},
+        { "name": "vector", "description": "area vector", "default": "0, 0, 200, 200", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::LoadBalancer",
+   "description" : "Load balancer",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "random", "description": "use random selection instead of round robin", "default": false, "type": "Boolean"},
+        { "name": "sinks", "description": "number of sinks", "default": 0, "type": "Integer"}
+   ]
+  },
+  {
+   "type" : "drive::BogusData",
+   "description" : "Bogus data generator",
+   "canBeSource" : true, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::Buffer",
+   "description" : "Buffering module",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "dontcopy", "description": "do not copy frames", "default": false, "type": "Boolean"},
+        { "name": "warnsize", "description": "buffer warn size", "default": 1024, "type": "Integer"},
+        { "name": "frameskip", "description": "number of skip frames", "default": 1, "type": "Integer"}
+   ]
+  },
+  {
+   "type" : "drive::BlobCapture",
+   "description" : "Reads blob from disk as source",
+   "canBeSource" : true, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "blobdir", "description": "blob directory", "type": "String" }
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::Canny",
+   "description" : "Canny edge detector module",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::ColorClassifierEx",
+   "description" : "Extended color classifier module (using histograms)",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "colortemplatesdir", "description": "color classes template directory", "type": "String" }
+   ],
+   "optParams" : [
+        { "name": "renormalize", "description": "normalize histogram before comparison", "default": false, "type": "Boolean"},
+        { "name": "denoise", "description": "denoise image before comparison", "default": false, "type": "Boolean"},
+        { "name": "correlation", "description": "enable correlation", "default": false, "type": "Boolean"},
+        { "name": "chisquare", "description": "enable chi-square", "default": false, "type": "Boolean"},
+        { "name": "intersection", "description": "enable intersection", "default": false, "type": "Boolean"},
+        { "name": "bhattacharyya", "description": "enable bhattacharyya", "default": false, "type": "Boolean"}
+   ]
+  },
+  {
+   "type" : "drive::ZeroMQSink",
+   "description" : "ZeroMQ Sink module",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "compressionlevel", "description": "PNG compression level 0-9", "default": 5, "type": "Integer"},
+        { "name": "sinkaddress", "description": "0MQ sink socket address", "default": "tcp://localhost:7467", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::PipelineHelper",
+   "description" : "Pipeline helper",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "pipeline", "description": "pipeline file (bogus)", "type": "String" }
+   ],
+   "optParams" : [
+        { "name": "json", "description": "pipeline description file (json)", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::JSONFilter",
+   "description" : "Filter blobs depending on JSON values",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "field", "description": "JSON field to be compared", "type": "String" },
+        { "name": "op", "description": "Comparison operation (>,<,=,!=,<=,>=)", "type": "String" },
+        { "name": "value", "description": "Value to compare to", "type": "String" }
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::FaceExtractor",
+   "description" : "Extracts detected faces from incoming blobs",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::Blur",
+   "description" : "Blurs the incoming blob",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::BlobColor",
+   "description" : "Determines blob dominant color",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::PipeConfigurator",
+   "description" : "Pipeline configurator",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "inputpipe", "description": "FIFO input (command) path", "default": "pomaconfigurator.input", "type": "String" },
+        { "name": "outputpipe", "description": "FIFO output (result) path", "default": "pomaconfigurator.output", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::BodyColorClassifier",
+   "description" : "Provides color information for people",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "bodycolortemplatesdir", "description": "body color classes template directory", "type": "String" }
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::GenericSplitter",
+   "description" : "Sends data on different channels depending on class",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::Mongo",
+   "description" : "MongoDB connector",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "compressionlevel", "description": "PNG compression level 0-9", "default": 5, "type": "Integer"},
+        { "name": "format", "description": "image format (JPG or PNG)", "default": "JPG", "type": "String" },
+        { "name": "collection", "description": "collection name", "default": "data", "type": "String" },
+        { "name": "mongourl", "description": "mongo server url", "default": "mongodb://drive.dti.supsi.ch:27017", "type": "String" },
+        { "name": "db", "description": "database name", "default": "drive", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::Stats",
+   "description" : "Write processing stats",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "statsinterval", "description": "interval (frames) between stats printout", "default": 256, "type": "Integer"}
+   ]
+  },
+  {
+   "type" : "drive::ParExecutor",
+   "description" : "Parallel executor (Fork)",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "threads", "description": "force number of threads", "default": -1, "type": "Integer"}
+   ]
+  },
+  {
+   "type" : "drive::ParProcessor",
+   "description" : "Parallel processor",
+   "canBeSource" : true, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::ColorMatcher",
+   "description" : "Color matching",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::BodyColorClassifierEx",
+   "description" : "Provides extended color information for people",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "bodycolortemplatesdir", "description": "body color classes template directory", "type": "String" }
+   ],
+   "optParams" : [
+        { "name": "renormalize", "description": "normalize histogram before comparison", "default": false, "type": "Boolean"},
+        { "name": "denoise", "description": "denoise image before comparison", "default": false, "type": "Boolean"},
+        { "name": "correlation", "description": "enable correlation", "default": false, "type": "Boolean"},
+        { "name": "chisquare", "description": "enable chi-square", "default": false, "type": "Boolean"},
+        { "name": "intersection", "description": "enable intersection", "default": false, "type": "Boolean"},
+        { "name": "bhattacharyya", "description": "enable bhattacharyya", "default": false, "type": "Boolean"}
+   ]
+  },
+  {
+   "type" : "drive::Skipper",
+   "description" : "Skip some blobs",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "skipinterval", "description": "interval (frames) between submitted frames", "default": 1, "type": "Integer"}
+   ]
+  },
+  {
+   "type" : "drive::DirectionEstimator",
+   "description" : "Estimates blob direction after tracking",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "camdirection", "description": "camera direction (N NE E SE S SO O NO)", "default": "", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::FileCapture",
+   "description" : "Sources data from a file stream",
+   "canBeSource" : true, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "filecapturedir", "description": "file capture directory", "type": "String" }
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::StreamCapture",
+   "description" : "Captures data from a network stream",
+   "canBeSource" : true, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+        { "name": "path", "description": "set stream path", "type": "String" },
+        { "name": "name", "description": "set camera name", "type": "String" },
+        { "name": "fps", "description": "fps (-1 for autodetect)", "type": "String" }
+   ],
+   "optParams" : [
+        { "name": "retry", "description": "retry when stream closes", "default": false, "type": "Boolean"},
+        { "name": "retryinterval", "description": "retry interval (ms)", "default": 60000, "type": "Long"},
+        { "name": "camdirection", "description": "camera direction (N NE E SE S SO O NO)", "default": "", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::SEMSSQLite",
+   "description" : "SQLite adapter with SEMS format",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "path", "description": "SQLite DB path", "default": "/var/db/SEMSEye-device.db", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::FaceDetector",
+   "description" : "Detect faces in incoming blobs",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "expansion", "description": "expansion ratio", "default": 0, "type": "Double"}
+   ]
+  },
+  {
+   "type" : "drive::VerticalCrossingCounter",
+   "description" : "Detects when an object crosses a virtual vertical border",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "direction", "description": "direction (1/-1)", "default": 1, "type": "Integer"},
+        { "name": "position", "description": "vertical cross position", "default": 360, "type": "Integer"}
+   ]
+  },
+  {
+   "type" : "drive::BlobTrackerEx",
+   "description" : "Extended blob tracking module",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "color", "description": "use color information", "default": false, "type": "Boolean"},
+        { "name": "shadow", "description": "detect shadow", "default": true, "type": "Boolean"},
+        { "name": "minarea", "description": "minimum zone area", "default": 2000, "type": "Integer"},
+        { "name": "maxarea", "description": "maximum zone area", "default": 40000, "type": "Integer"},
+        { "name": "distance", "description": "distance between zones", "default": 400, "type": "Integer"},
+        { "name": "frames", "description": "minimum frames without zone", "default": 4, "type": "Integer"},
+        { "name": "saveinterval", "description": "zone save save interval", "default": 3, "type": "Integer"},
+        { "name": "saved", "description": "zone save count", "default": 2, "type": "Integer"},
+        { "name": "boundsize", "description": "bound size", "default": 20, "type": "Integer"},
+        { "name": "history", "description": "history", "default": 300, "type": "Integer"},
+        { "name": "maskthreshold", "description": "mask threshold", "default": 128, "type": "Integer"},
+        { "name": "resize", "description": "resize factor", "default": 1, "type": "Integer"},
+        { "name": "structsize", "description": "structuring element size", "default": 7, "type": "Integer"},
+        { "name": "structpoint", "description": "structuring element point", "default": 3, "type": "Integer"},
+        { "name": "backsubthreshold", "description": "background substractor threshold", "default": 32, "type": "Integer"},
+        { "name": "vector", "description": "vector", "default": "20,20,580,20,580,434,20,434", "type": "String" },
+        { "name": "debug", "description": "enable debug", "default": false, "type": "Boolean"}
+   ]
+  },
+  {
+   "type" : "drive::Dummy",
+   "description" : "Dummy module",
+   "canBeSource" : true, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::Denoiser",
+   "description" : "Applies a denoising filter to the incoming blob",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::Crop",
+   "description" : "Crops the incoming blob",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "top", "description": "top", "type": "String" },
+        { "name": "left", "description": "left", "type": "String" },
+        { "name": "width", "description": "width", "type": "String" },
+        { "name": "height", "description": "height", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::BlobTracker",
+   "description" : "Blob tracking module",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "color", "description": "use color information", "default": false, "type": "Boolean"},
+        { "name": "shadow", "description": "detect shadow", "default": true, "type": "Boolean"},
+        { "name": "fulltrack", "description": "full tracking mode (forward only when blob disappears)", "default": false, "type": "Boolean"},
+        { "name": "detectintersecting", "description": "detect crossing objects", "default": false, "type": "Boolean"},
+        { "name": "minarea", "description": "minimum zone area", "default": 2000, "type": "Integer"},
+        { "name": "maxarea", "description": "maximum zone area", "default": 40000, "type": "Integer"},
+        { "name": "distance", "description": "distance between zones", "default": 400, "type": "Integer"},
+        { "name": "frames", "description": "minimum frames without zone", "default": 4, "type": "Integer"},
+        { "name": "saveinterval", "description": "zone save save interval", "default": 3, "type": "Integer"},
+        { "name": "saved", "description": "zone save count", "default": 2, "type": "Integer"},
+        { "name": "fulltrackratio", "description": "full tracking mode ratio", "default": 1.3, "type": "Double"},
+        { "name": "boundsize", "description": "bound size", "default": 20, "type": "Integer"},
+        { "name": "history", "description": "history", "default": 300, "type": "Integer"},
+        { "name": "maskthreshold", "description": "mask threshold", "default": 128, "type": "Integer"},
+        { "name": "resize", "description": "resize factor", "default": 1, "type": "Integer"},
+        { "name": "structsize", "description": "structuring element size", "default": 7, "type": "Integer"},
+        { "name": "structpoint", "description": "structuring element point", "default": 3, "type": "Integer"},
+        { "name": "backsubthreshold", "description": "background substractor threshold", "default": 32, "type": "Integer"},
+        { "name": "vector", "description": "vector", "default": "20,20,580,20,580,434,20,434", "type": "String" },
+        { "name": "bsubtype", "description": "background subtraction type (mog2,cnt)", "default": "mog2", "type": "String" },
+        { "name": "grayscalebgsub", "description": "grayscale background subtraction (forced when using cnt)", "default": false, "type": "Boolean"},
+        { "name": "debug", "description": "enable debug", "default": false, "type": "Boolean"}
+   ]
+  },
+  {
+   "type" : "drive::GenericClassifier",
+   "description" : "Generic object classifier based on Caffe",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "cpuonly", "description": "use only CPU", "default": false, "type": "Boolean"}
+   ]
+  },
+  {
+   "type" : "drive::ImageWriter",
+   "description" : "Writes image to disk",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "semsformat", "description": "save image with SEMS name format", "default": false, "type": "Boolean"},
+        { "name": "imgpath", "description": "path for saved images", "default": "", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::StrangeBlobs",
+   "description" : "Skip blobs with strange aspect ratios",
+   "canBeSource" : false, 
+   "imageURL" : "images/templates/idea.png",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "minratio", "description": "minimum ration", "default": 0.5625, "type": "Double"},
+        { "name": "maxratio", "description": "maximum ration", "default": 1.77, "type": "Double"}
+   ]
+  }
 ]

@@ -94,8 +94,13 @@ public class EditorConfManager {
             Object val = null;
 
             try {
-                Constructor ctor = Class.forName("java.lang." + paramType).getConstructor(String.class);
-                val = ctor.newInstance("0");
+                if (paramType.equals("String")) {
+                    Constructor ctor = Class.forName("java.lang." + paramType).getConstructor(String.class);
+                    val = ctor.newInstance("");
+                } else {
+                   Constructor ctor = Class.forName("java.lang." + paramType).getConstructor(String.class);
+                   val = ctor.newInstance("0"); 
+                }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (NoSuchMethodException e) {
