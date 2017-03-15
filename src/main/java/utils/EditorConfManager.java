@@ -56,6 +56,7 @@ public class EditorConfManager {
             String description = (String) object.get("description");
             String type = (String) object.get("type");
             String imageURL = (String) object.get("imageURL");
+            imageURL = "images/templates/" + imageURL.replace(":", "_")+".png";
             
            
 

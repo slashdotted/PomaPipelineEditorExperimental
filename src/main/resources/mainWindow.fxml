@@ -107,6 +107,8 @@
                   <Menu mnemonicParsing="false" text="Tools">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#parametersEditor" text="Edit common parameters" />
+                      <MenuItem fx:id="alignVerticallyMenuItem" mnemonicParsing="false" onAction="#alignVertically" text="Align vertically" />
+                      <MenuItem fx:id="alignHorizontallyMenuItem" mnemonicParsing="false" onAction="#alignHorizontally" text="Align horizontally" />                      
                     </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Help">

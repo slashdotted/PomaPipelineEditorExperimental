@@ -353,10 +353,12 @@ public class DraggableModule extends Pane {
 
 
     public void select() {
+        
         selected = true;
         //if(selected) {
         MainWindow.selectedModules.put(module.getName(), module);
         this.toFront();
+        MainWindow.instance.updateSelection();
 
         //  dragging=true;
         //Main.modulesClipboard.put(module.getName(), Converter.moduleToJSON(module));
@@ -391,6 +393,7 @@ public class DraggableModule extends Pane {
         this.setStyle("-fx-border-color:rgba(119,85,51,255)");
         this.setStyle("-fx-effect: null");
         unselectLinks();
+        MainWindow.instance.updateSelection();
     }
 
     /*
@@ -560,7 +563,11 @@ public class DraggableModule extends Pane {
     public void setmDragOffset(Point2D mDragOffset) {
         this.mDragOffset = mDragOffset;
     }
-
+    
+    public Point2D getmDragOffset() {
+        return mDragOffset;
+    }
+    
     public Point2D getPosition() {
         return position;
     }

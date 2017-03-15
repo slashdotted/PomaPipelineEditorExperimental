@@ -3,7 +3,7 @@
    "type" : "drive::EntropyFilter",
    "description" : "Filter incoming blobs based on entropy",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::EntropyFilter",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -11,10 +11,22 @@
    ]
   },
   {
+   "type" : "drive::Viewer",
+   "description" : "Display blobs on screen",
+   "canBeSource" : false, 
+   "imageURL" : "drive::Viewer",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "noshow", "description": "don't show frames", "default": false, "type": "Boolean"},
+        { "name": "stop", "description": "stop after each frame", "default": false, "type": "Boolean"}
+   ]
+  },
+  {
    "type" : "drive::ZeroMQSource",
    "description" : "ZeroMQ Source module",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::ZeroMQSource",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -25,7 +37,7 @@
    "type" : "drive::ColorClassifier",
    "description" : "Generic color classifier module (using histograms)",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::ColorClassifier",
    "mandatoryParams" : [
         { "name": "colortemplatesdir", "description": "color classes template directory", "type": "String" }
    ],
@@ -33,34 +45,10 @@
    ]
   },
   {
-   "type" : "drive::Viewer",
-   "description" : "Display blobs on screen",
-   "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
-   "mandatoryParams" : [
-   ],
-   "optParams" : [
-        { "name": "noshow", "description": "don't show frames", "default": false, "type": "Boolean"},
-        { "name": "stop", "description": "stop after each frame", "default": false, "type": "Boolean"}
-   ]
-  },
-  {
-   "type" : "drive::HorizontalCrossingCounter",
-   "description" : "Checks if blob crosses virtual horizontal border (requires tracking module)",
-   "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
-   "mandatoryParams" : [
-   ],
-   "optParams" : [
-        { "name": "direction", "description": "direction (1/-1)", "default": 1, "type": "Integer"},
-        { "name": "position", "description": "horizontal cross position", "default": 640, "type": "Integer"}
-   ]
-  },
-  {
    "type" : "drive::Joiner",
    "description" : "Join after a fork",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::Joiner",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -70,7 +58,7 @@
    "type" : "drive::ZeroMQ",
    "description" : "ZeroMQ module",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::ZeroMQ",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -79,20 +67,10 @@
    ]
   },
   {
-   "type" : "drive::SpeedEstimator",
-   "description" : "Estimate speeds",
-   "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
-   "mandatoryParams" : [
-   ],
-   "optParams" : [
-   ]
-  },
-  {
    "type" : "drive::SQLite",
    "description" : "SQLite connector",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::SQLite",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -101,10 +79,20 @@
    ]
   },
   {
+   "type" : "drive::SpeedEstimator",
+   "description" : "Estimate speeds",
+   "canBeSource" : false, 
+   "imageURL" : "drive::SpeedEstimator",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
    "type" : "drive::DeviceCapture",
    "description" : "Captures frames from a local device",
    "canBeSource" : true, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::DeviceCapture",
    "mandatoryParams" : [
         { "name": "name", "description": "set camera name", "type": "String" },
         { "name": "fps", "description": "fps (-1 for autodetect)", "type": "String" }
@@ -122,7 +110,7 @@
    "type" : "drive::OCR",
    "description" : "Tesseract OCR",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::OCR",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -134,7 +122,7 @@
    "type" : "drive::LoadBalancer",
    "description" : "Load balancer",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::LoadBalancer",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -146,7 +134,7 @@
    "type" : "drive::BogusData",
    "description" : "Bogus data generator",
    "canBeSource" : true, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::BogusData",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -156,7 +144,7 @@
    "type" : "drive::Buffer",
    "description" : "Buffering module",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::Buffer",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -169,7 +157,7 @@
    "type" : "drive::BlobCapture",
    "description" : "Reads blob from disk as source",
    "canBeSource" : true, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::BlobCapture",
    "mandatoryParams" : [
         { "name": "blobdir", "description": "blob directory", "type": "String" }
    ],
@@ -180,7 +168,7 @@
    "type" : "drive::Canny",
    "description" : "Canny edge detector module",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::Canny",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -190,7 +178,7 @@
    "type" : "drive::ColorClassifierEx",
    "description" : "Extended color classifier module (using histograms)",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::ColorClassifierEx",
    "mandatoryParams" : [
         { "name": "colortemplatesdir", "description": "color classes template directory", "type": "String" }
    ],
@@ -207,7 +195,7 @@
    "type" : "drive::ZeroMQSink",
    "description" : "ZeroMQ Sink module",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::ZeroMQSink",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -219,7 +207,7 @@
    "type" : "drive::PipelineHelper",
    "description" : "Pipeline helper",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::PipelineHelper",
    "mandatoryParams" : [
         { "name": "pipeline", "description": "pipeline file (bogus)", "type": "String" }
    ],
@@ -231,7 +219,7 @@
    "type" : "drive::JSONFilter",
    "description" : "Filter blobs depending on JSON values",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::JSONFilter",
    "mandatoryParams" : [
         { "name": "field", "description": "JSON field to be compared", "type": "String" },
         { "name": "op", "description": "Comparison operation (>,<,=,!=,<=,>=)", "type": "String" },
@@ -244,7 +232,7 @@
    "type" : "drive::FaceExtractor",
    "description" : "Extracts detected faces from incoming blobs",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::FaceExtractor",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -254,97 +242,43 @@
    "type" : "drive::Blur",
    "description" : "Blurs the incoming blob",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::Blur",
    "mandatoryParams" : [
    ],
    "optParams" : [
    ]
   },
   {
-   "type" : "drive::BlobColor",
-   "description" : "Determines blob dominant color",
+   "type" : "drive::HorizontalCrossingCounter",
+   "description" : "Checks if blob crosses virtual horizontal border (requires tracking module)",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::HorizontalCrossingCounter",
    "mandatoryParams" : [
    ],
    "optParams" : [
+        { "name": "direction", "description": "direction (1/-1)", "default": 1, "type": "Integer"},
+        { "name": "position", "description": "horizontal cross position", "default": 640, "type": "Integer"}
    ]
   },
   {
-   "type" : "drive::PipeConfigurator",
-   "description" : "Pipeline configurator",
+   "type" : "drive::JSONCombiner",
+   "description" : "Combines values in JSON",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::JSONCombiner",
    "mandatoryParams" : [
+        { "name": "infield1", "description": "JSON field to be used as first operand", "type": "String" },
+        { "name": "infield2", "description": "JSON field to be used as second operand", "type": "String" },
+        { "name": "op", "description": "Combination operation (+,-,*,/,average)", "type": "String" },
+        { "name": "outfield", "description": "Destination field", "type": "String" }
    ],
    "optParams" : [
-        { "name": "inputpipe", "description": "FIFO input (command) path", "default": "pomaconfigurator.input", "type": "String" },
-        { "name": "outputpipe", "description": "FIFO output (result) path", "default": "pomaconfigurator.output", "type": "String" }
-   ]
-  },
-  {
-   "type" : "drive::BodyColorClassifier",
-   "description" : "Provides color information for people",
-   "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
-   "mandatoryParams" : [
-        { "name": "bodycolortemplatesdir", "description": "body color classes template directory", "type": "String" }
-   ],
-   "optParams" : [
-   ]
-  },
-  {
-   "type" : "drive::GenericSplitter",
-   "description" : "Sends data on different channels depending on class",
-   "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
-   "mandatoryParams" : [
-   ],
-   "optParams" : [
-   ]
-  },
-  {
-   "type" : "drive::Mongo",
-   "description" : "MongoDB connector",
-   "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
-   "mandatoryParams" : [
-   ],
-   "optParams" : [
-        { "name": "compressionlevel", "description": "PNG compression level 0-9", "default": 5, "type": "Integer"},
-        { "name": "format", "description": "image format (JPG or PNG)", "default": "JPG", "type": "String" },
-        { "name": "collection", "description": "collection name", "default": "data", "type": "String" },
-        { "name": "mongourl", "description": "mongo server url", "default": "mongodb://drive.dti.supsi.ch:27017", "type": "String" },
-        { "name": "db", "description": "database name", "default": "drive", "type": "String" }
-   ]
-  },
-  {
-   "type" : "drive::Stats",
-   "description" : "Write processing stats",
-   "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
-   "mandatoryParams" : [
-   ],
-   "optParams" : [
-        { "name": "statsinterval", "description": "interval (frames) between stats printout", "default": 256, "type": "Integer"}
-   ]
-  },
-  {
-   "type" : "drive::ParExecutor",
-   "description" : "Parallel executor (Fork)",
-   "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
-   "mandatoryParams" : [
-   ],
-   "optParams" : [
-        { "name": "threads", "description": "force number of threads", "default": -1, "type": "Integer"}
    ]
   },
   {
    "type" : "drive::ParProcessor",
    "description" : "Parallel processor",
    "canBeSource" : true, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::ParProcessor",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -354,7 +288,7 @@
    "type" : "drive::ColorMatcher",
    "description" : "Color matching",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::ColorMatcher",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -364,7 +298,7 @@
    "type" : "drive::BodyColorClassifierEx",
    "description" : "Provides extended color information for people",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::BodyColorClassifierEx",
    "mandatoryParams" : [
         { "name": "bodycolortemplatesdir", "description": "body color classes template directory", "type": "String" }
    ],
@@ -381,7 +315,7 @@
    "type" : "drive::Skipper",
    "description" : "Skip some blobs",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::Skipper",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -389,10 +323,90 @@
    ]
   },
   {
+   "type" : "drive::BlobColor",
+   "description" : "Determines blob dominant color",
+   "canBeSource" : false, 
+   "imageURL" : "drive::BlobColor",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::PipeConfigurator",
+   "description" : "Pipeline configurator",
+   "canBeSource" : false, 
+   "imageURL" : "drive::PipeConfigurator",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "inputpipe", "description": "FIFO input (command) path", "default": "pomaconfigurator.input", "type": "String" },
+        { "name": "outputpipe", "description": "FIFO output (result) path", "default": "pomaconfigurator.output", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::BodyColorClassifier",
+   "description" : "Provides color information for people",
+   "canBeSource" : false, 
+   "imageURL" : "drive::BodyColorClassifier",
+   "mandatoryParams" : [
+        { "name": "bodycolortemplatesdir", "description": "body color classes template directory", "type": "String" }
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::GenericSplitter",
+   "description" : "Sends data on different channels depending on class",
+   "canBeSource" : false, 
+   "imageURL" : "drive::GenericSplitter",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+   ]
+  },
+  {
+   "type" : "drive::Mongo",
+   "description" : "MongoDB connector",
+   "canBeSource" : false, 
+   "imageURL" : "drive::Mongo",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "compressionlevel", "description": "PNG compression level 0-9", "default": 5, "type": "Integer"},
+        { "name": "format", "description": "image format (JPG or PNG)", "default": "JPG", "type": "String" },
+        { "name": "collection", "description": "collection name", "default": "data", "type": "String" },
+        { "name": "mongourl", "description": "mongo server url", "default": "mongodb://drive.dti.supsi.ch:27017", "type": "String" },
+        { "name": "db", "description": "database name", "default": "drive", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::Stats",
+   "description" : "Write processing stats",
+   "canBeSource" : false, 
+   "imageURL" : "drive::Stats",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "statsinterval", "description": "interval (frames) between stats printout", "default": 256, "type": "Integer"}
+   ]
+  },
+  {
+   "type" : "drive::ParExecutor",
+   "description" : "Parallel executor (Fork)",
+   "canBeSource" : false, 
+   "imageURL" : "drive::ParExecutor",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "threads", "description": "force number of threads", "default": -1, "type": "Integer"}
+   ]
+  },
+  {
    "type" : "drive::DirectionEstimator",
    "description" : "Estimates blob direction after tracking",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::DirectionEstimator",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -403,7 +417,7 @@
    "type" : "drive::FileCapture",
    "description" : "Sources data from a file stream",
    "canBeSource" : true, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::FileCapture",
    "mandatoryParams" : [
         { "name": "filecapturedir", "description": "file capture directory", "type": "String" }
    ],
@@ -414,7 +428,7 @@
    "type" : "drive::StreamCapture",
    "description" : "Captures data from a network stream",
    "canBeSource" : true, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::StreamCapture",
    "mandatoryParams" : [
         { "name": "path", "description": "set stream path", "type": "String" },
         { "name": "name", "description": "set camera name", "type": "String" },
@@ -430,7 +444,7 @@
    "type" : "drive::SEMSSQLite",
    "description" : "SQLite adapter with SEMS format",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::SEMSSQLite",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -441,7 +455,7 @@
    "type" : "drive::FaceDetector",
    "description" : "Detect faces in incoming blobs",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::FaceDetector",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -452,7 +466,7 @@
    "type" : "drive::VerticalCrossingCounter",
    "description" : "Detects when an object crosses a virtual vertical border",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::VerticalCrossingCounter",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -464,7 +478,7 @@
    "type" : "drive::BlobTrackerEx",
    "description" : "Extended blob tracking module",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::BlobTrackerEx",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -491,7 +505,7 @@
    "type" : "drive::Dummy",
    "description" : "Dummy module",
    "canBeSource" : true, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::Dummy",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -501,7 +515,7 @@
    "type" : "drive::Denoiser",
    "description" : "Applies a denoising filter to the incoming blob",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::Denoiser",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -511,7 +525,7 @@
    "type" : "drive::Crop",
    "description" : "Crops the incoming blob",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::Crop",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -525,7 +539,7 @@
    "type" : "drive::BlobTracker",
    "description" : "Blob tracking module",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::BlobTracker",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -557,7 +571,7 @@
    "type" : "drive::GenericClassifier",
    "description" : "Generic object classifier based on Caffe",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::GenericClassifier",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -568,7 +582,7 @@
    "type" : "drive::ImageWriter",
    "description" : "Writes image to disk",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::ImageWriter",
    "mandatoryParams" : [
    ],
    "optParams" : [
@@ -580,7 +594,7 @@
    "type" : "drive::StrangeBlobs",
    "description" : "Skip blobs with strange aspect ratios",
    "canBeSource" : false, 
-   "imageURL" : "images/templates/idea.png",
+   "imageURL" : "drive::StrangeBlobs",
    "mandatoryParams" : [
    ],
    "optParams" : [

@@ -55,7 +55,7 @@ public class MainWindow extends BorderPane {
     public static double voffset = 0;
 
     private static String sourceModule;
-    
+
     public static void setSource(String source) {
         if (source == null) {
             sourceModule = null;
@@ -63,16 +63,18 @@ public class MainWindow extends BorderPane {
             sourceModule = source;
         }
     }
-    
+
     public static boolean isSource(String source) {
-        if (sourceModule == null) return false;
+        if (sourceModule == null) {
+            return false;
+        }
         return sourceModule.equals(source);
     }
-    
+
     public static String getSource() {
         return sourceModule;
     }
-    
+
     public static void validateSelectedModules() {
         for (Module m : selectedModules.values()) {
             m.validate();
@@ -127,13 +129,21 @@ public class MainWindow extends BorderPane {
     private MenuItem saveSelMenuItem;
     private Effect oldEffectButton;
 
+    @FXML
+    private MenuItem alignHorizontallyMenuItem;
+
+    @FXML
+    private MenuItem alignVerticallyMenuItem;
 
     private EventHandler<DragEvent> mModuleItemOverRoot = null;
     private EventHandler<DragEvent> mModuleItemDropped = null;
     private EventHandler<DragEvent> mModuleItemOverMainScrollPane = null;
     private ContextualMenu contextualMenu;
 
+    public static MainWindow instance;
+
     public MainWindow() {
+        instance = this;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mainWindow.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -148,7 +158,6 @@ public class MainWindow extends BorderPane {
 
         contextualMenu = new ContextualMenu();
 
-
     }
 
     /*
@@ -158,7 +167,8 @@ public class MainWindow extends BorderPane {
     * */
     @FXML
     public void initialize() {
-
+        alignHorizontallyMenuItem.setDisable(true);
+        alignVerticallyMenuItem.setDisable(true);
 
         boolean isShadow = true;
         shadowModule = ModuleTemplate.getInstance();
@@ -190,7 +200,6 @@ public class MainWindow extends BorderPane {
 
         mainGroup.getChildren().add(new Pane());
 
-
         buildDragHandlers();
         setButtons();
         stackedLogBar = new StackedLogBar();
@@ -201,10 +210,67 @@ public class MainWindow extends BorderPane {
 
     }
 
+    @FXML
+    public void alignVertically() {
+        List<DraggableModule> smodules = getSelectedModules();
+        if (!smodules.isEmpty()) {
+            ArrayList<Command> allCommands = new ArrayList<>();
+            double fy = smodules.get(0).getPosition().getY();
+            for (DraggableModule dm : smodules) {
+                Command move = new Move(dm.getName(), dm.getPosition(),
+                        new Point2D(dm.getPosition().getX(), fy), dm.getmDragOffset(), dm.getmDragOffset());
+                allCommands.add(move);
+            }
+            Command executeAll = new ExecuteAll(allCommands);
+            executeAll.execute();
+            CareTaker.addMemento(executeAll);
+        } else {
+            stackedLogBar.logAndWarning("Please select some modules first...");
+        }
+    }
+
+    List<DraggableModule> getSelectedModules() {
+        ArrayList<DraggableModule> l = new ArrayList<DraggableModule>();
+        for (DraggableModule m : allDraggableModule.values()) {
+            if (m.isSelected()) {
+                l.add(m);
+            }
+        }
+        return l;
+    }
+
+    @FXML
+    public void alignHorizontally() {
+        List<DraggableModule> smodules = getSelectedModules();
+        if (!smodules.isEmpty()) {
+            ArrayList<Command> allCommands = new ArrayList<>();
+            double fx = smodules.get(0).getPosition().getX();
+            for (DraggableModule dm : smodules) {
+                Command move = new Move(dm.getName(), dm.getPosition(),
+                        new Point2D(fx, dm.getPosition().getY()), dm.getmDragOffset(), dm.getmDragOffset());
+                allCommands.add(move);
+            }
+            Command executeAll = new ExecuteAll(allCommands);
+            executeAll.execute();
+            CareTaker.addMemento(executeAll);
+        } else {
+            stackedLogBar.logAndWarning("Please select some modules first...");
+        }
+    }
+
+    public void updateSelection() {
+        if (getSelectedModules().size() < 2) {
+            alignHorizontallyMenuItem.setDisable(true);
+            alignVerticallyMenuItem.setDisable(true);
+        } else {
+            alignHorizontallyMenuItem.setDisable(false);
+            alignVerticallyMenuItem.setDisable(false);
+        }
+    }
+
     public void initializeSelectionArea() {
         selectionArea.initialize();
     }
-
 
     private void setButtons() {
         // new button settings
@@ -232,7 +298,6 @@ public class MainWindow extends BorderPane {
         saveButton.setBackground(Background.EMPTY);
         saveButton.disableProperty().bind(Main.dirty.not());
         ProgramUtils.setOnPressedButton(saveButton);
-
 
         // undo button settings
         undoButton.setGraphic(new ImageView("images/undo.png"));
@@ -266,15 +331,15 @@ public class MainWindow extends BorderPane {
         saveSelMenuItem.disableProperty().bind(Main.dirty.not());
     }
 
-
     @FXML
     private void newPipeline() {
         if (currentSidebar != null) {
             closeSidebar(true);
         }
         if (Main.dirty.getValue()) {
-            if (!GraphicsElementsFactory.saveDialog("create new"))
+            if (!GraphicsElementsFactory.saveDialog("create new")) {
                 return;
+            }
         }
         CareTaker.removeAllElements();
     }
@@ -286,8 +351,9 @@ public class MainWindow extends BorderPane {
         }
         if (Main.dirty.getValue()) {
 
-            if (!GraphicsElementsFactory.saveDialog("open another"))
+            if (!GraphicsElementsFactory.saveDialog("open another")) {
                 return;
+            }
         }
         CareTaker.removeAllElements();
         sourceModule = null;
@@ -295,7 +361,6 @@ public class MainWindow extends BorderPane {
 
         Main.dirty.setValue(false);
     }
-
 
     @FXML
     private void importPipeline() {
@@ -313,20 +378,26 @@ public class MainWindow extends BorderPane {
         File pipelineFile = fileChooser.showOpenDialog(Main.root.getScene().getWindow());
 
         if (pipelineFile != null) {
-            Command importPipeline = new Import(pipelineFile);
-            boolean success = importPipeline.execute();
-            CareTaker.addMemento(importPipeline);
+            try {
+                Command importPipeline = new Import(pipelineFile);
+                boolean success = importPipeline.execute();
+                CareTaker.addMemento(importPipeline);
 
-            if (success) {
-                stackedLogBar.logAndSuccess("Pipeline imported");
-            } else {
-                stackedLogBar.logAndWarning("There was an error while importing");
+                if (success) {
+                    stackedLogBar.logAndSuccess("Pipeline imported");
+                } else {
+                    stackedLogBar.logAndWarning("There was an error while importing");
+                }
+            } catch (Exception e) {
+                for (StackTraceElement el : e.getStackTrace()) {
+                    System.out.println(el);
+                }
+                System.out.println(e.getCause());
             }
 
         }
 
     }
-
 
     @FXML
     public void savePipeline() {
@@ -335,18 +406,18 @@ public class MainWindow extends BorderPane {
             closeSidebar(false);
         }
 
-
-        if (Main.modules.isEmpty())
+        if (Main.modules.isEmpty()) {
             return;
+        }
 
-        if (Main.modulesClipboard.isEmpty() && Main.linksClipboard.isEmpty())
+        if (Main.modulesClipboard.isEmpty() && Main.linksClipboard.isEmpty()) {
             Converter.populateClipBoards(Main.modules, Main.links);
+        }
 
         /*if (!ProgramUtils.validateModules(Main.modulesClipboard.keySet())) {
             stackedLogBar.logAndWarning("Attention, save not possible! Before saving make sure all modules are filled right.");
             return;
         }*/
-
         File destination = null;
         if (PipelineManager.CURRENT_PIPELINE_PATH != null) {
             destination = new File(PipelineManager.CURRENT_PIPELINE_PATH);
@@ -359,7 +430,6 @@ public class MainWindow extends BorderPane {
         }
 
         if (destination != null) {
-
 
             Command save = new Save(destination);
             if (save.execute()) {
@@ -382,10 +452,8 @@ public class MainWindow extends BorderPane {
             return;
         }
 
-
         String previousPath = PipelineManager.CURRENT_PIPELINE_PATH;
         Converter.populateClipBoards(selectedModules, selectedLinks);
-
 
         saveAs();
         PipelineManager.CURRENT_PIPELINE_PATH = previousPath;
@@ -433,12 +501,12 @@ public class MainWindow extends BorderPane {
             closeSidebar(true);
         }
         if (Main.dirty.getValue()) {
-            if (!GraphicsElementsFactory.saveDialog("closing"))
+            if (!GraphicsElementsFactory.saveDialog("closing")) {
                 return;
+            }
         }
         System.exit(0);
     }
-
 
     @FXML
     private void about() {
@@ -468,7 +536,6 @@ public class MainWindow extends BorderPane {
 
     }
 
-
     private void setMouseAndKeys() {
 
         originalScaleX = mainGroup.getScaleX();
@@ -492,7 +559,7 @@ public class MainWindow extends BorderPane {
         });
 
 
-/*
+        /*
 *   Calcolate offset relatives to the cuarrent viewport
 * */
         ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
@@ -502,8 +569,8 @@ public class MainWindow extends BorderPane {
             double contentWidth = dragBoard.getLayoutBounds().getWidth();
             double viewportWidth = mainScrollPane.getViewportBounds().getWidth();
 
-            hoffset =
-                    Math.max(0, contentWidth - viewportWidth) * (hvalue - hmin) / (hmax - hmin);
+            hoffset
+                    = Math.max(0, contentWidth - viewportWidth) * (hvalue - hmin) / (hmax - hmin);
 
             double vmin = mainScrollPane.getVmin();
             double vmax = mainScrollPane.getVmax();
@@ -511,16 +578,14 @@ public class MainWindow extends BorderPane {
             double contentHeight = dragBoard.getLayoutBounds().getHeight();
             double viewportHeight = mainScrollPane.getViewportBounds().getHeight();
 
-            voffset =
-                    Math.max(0, contentHeight - viewportHeight) * (vvalue - vmin) / (vmax - vmin);
+            voffset
+                    = Math.max(0, contentHeight - viewportHeight) * (vvalue - vmin) / (vmax - vmin);
 
         };
-
 
         mainScrollPane.viewportBoundsProperty().addListener(changeListener);
         mainScrollPane.hvalueProperty().addListener(changeListener);
         mainScrollPane.vvalueProperty().addListener(changeListener);
-
 
         mainScrollPane.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
 
@@ -557,7 +622,6 @@ public class MainWindow extends BorderPane {
 
         });
 
-
     }
 
 
@@ -579,7 +643,6 @@ public class MainWindow extends BorderPane {
                 lv.fromTo = true;
                 lv.updateImageViews("fromTo");
 
-
             }
 
             if (link.getChannelsBToA().size() != 0) {
@@ -589,7 +652,6 @@ public class MainWindow extends BorderPane {
                 lv.updateImageViews("toFrom");
 
             }
-
 
             group.getChildren().add(0, lv);
         }
@@ -646,8 +708,9 @@ public class MainWindow extends BorderPane {
             }
 
         }
-        if (maxPosY + 150 < posYAssign) return posYAssign;
-
+        if (maxPosY + 150 < posYAssign) {
+            return posYAssign;
+        }
 
         return maxPosY;
     }
@@ -656,7 +719,6 @@ public class MainWindow extends BorderPane {
     * Handlers to manage the creation of new modules from a moduleItem,
     * Drag detect of Module item to start with Drag & drop proccess
     * */
-
     private void addDragDetection(ModuleItem moduleItem) {
 
         moduleItem.setOnDragDetected(event -> {
@@ -671,10 +733,8 @@ public class MainWindow extends BorderPane {
 
             //drag operations
             //set shadowModule of draggableModuleItem
-
             draggableModuleItem.setParameters(itemClicked.getTemplateType());
             draggableModuleItem.relocate(new Point2D(event.getSceneX(), event.getSceneY()));
-
 
             ClipboardContent content = new ClipboardContent();
             DragContainer container = new DragContainer();
@@ -691,13 +751,11 @@ public class MainWindow extends BorderPane {
 
     }
 
-
     private void buildDragHandlers() {
 
         /*
         * Handler to start event to accept Drag and Drop of files to the mainWindows
         * */
-
         mainScrollPane.setOnDragOver(event -> {
             Dragboard db = event.getDragboard();
             if (db.hasFiles()) {
@@ -729,12 +787,10 @@ public class MainWindow extends BorderPane {
                     stackedLogBar.logAndWarning("There was an error while importing");
                 }
 
-
             }
             event.setDropCompleted(success);
             event.consume();
         });
-
 
         //to manage the movement from left to right pane
         mModuleItemOverRoot = event -> {
@@ -778,7 +834,7 @@ public class MainWindow extends BorderPane {
                 event.setDropCompleted(true);
             }
         };
-/*
+        /*
 *   The final process of Drag&Drop than will create a DraggableModule, or a LinkView
 * */
         this.setOnDragDone(event -> {
@@ -816,16 +872,14 @@ public class MainWindow extends BorderPane {
                 }
             }
             //AddLink drag operation
-            container =
-                    (DragContainer) event.getDragboard().getContent(DragContainer.AddLink);
+            container
+                    = (DragContainer) event.getDragboard().getContent(DragContainer.AddLink);
 
             if (container != null) {
 
                 //bind the ends of our link to the nodes whose id's are stored in the drag container
-
                 String fromId = container.getValue("fromId");
                 String toId = container.getValue("toId");
-
 
                 if ((fromId != null && toId != null) && (!fromId.equals(toId))) {
 
@@ -857,7 +911,6 @@ public class MainWindow extends BorderPane {
                                         addChannel = new AddChannel(channel, Main.links.get(idLink).getChannelList(orientationLink), Main.links.get(idLink), orientationLink);
                                         addChannel.execute();
 
-
                                     }
                                     break;
                                 case "toFrom":
@@ -875,7 +928,6 @@ public class MainWindow extends BorderPane {
                                     break;
                             }
 
-
                         }
                     }
                 }
@@ -885,7 +937,7 @@ public class MainWindow extends BorderPane {
 
     }
 
-/*
+    /*
 *   SideBar Manager
 * */
     public static void openSideBar(Module module, boolean creation) {
@@ -918,10 +970,10 @@ public class MainWindow extends BorderPane {
         };
     }
 
-
     public static void closeSidebar(boolean force) {
-        if (currentSidebar == null)
+        if (currentSidebar == null) {
             return;
+        }
         if (!currentSidebar.isPinned() || force) {
             currentSidebar.hide(force);
             currentSidebar = null;
@@ -946,10 +998,9 @@ public class MainWindow extends BorderPane {
         return null;
     }
 
- /*
+    /*
  * Remove a linkView
  * */
-
     public static void removeLinkView(LinkView lv) {
         DraggableModule dmFrom = lv.getFrom();
         DraggableModule dmTo = lv.getTo();
@@ -986,7 +1037,7 @@ public class MainWindow extends BorderPane {
         lv.bindButtonChannels(orientation);
     }
 
-/*
+    /*
 * Select all nodes in the mainWindows
 * */
     public void selectAll() {
@@ -996,7 +1047,7 @@ public class MainWindow extends BorderPane {
         });
     }
 
-/*
+    /*
 *   Unselect all nodes in the mainWindows
 * */
     public static void unselectAll() {
@@ -1009,17 +1060,16 @@ public class MainWindow extends BorderPane {
 
         selected = new HashSet<>(selectedLinks.keySet());
         selected.forEach(key -> {
-            allLinkView.get(key).unselect();
+            if (allLinkView.containsKey(key))
+                allLinkView.get(key).unselect();
         });
         Main.linksClipboard.clear();
         selectedLinks.clear();
 
     }
 
-
     @FXML
     private void deleteSelected() {
-
 
         Set<String> selected = null;
         ArrayList<Command> allRemoved = new ArrayList<>();
@@ -1037,7 +1087,6 @@ public class MainWindow extends BorderPane {
 
         }
 
-
         if (!selectedLinks.isEmpty()) {
             selected = new HashSet<>(selectedLinks.keySet());
 
@@ -1049,7 +1098,6 @@ public class MainWindow extends BorderPane {
             }
 
         }
-
 
         if (!allRemoved.isEmpty()) {
             Command remModAll = new ExecuteAll(allRemoved);
@@ -1065,6 +1113,5 @@ public class MainWindow extends BorderPane {
         stackedLogBar.logAndWarning("Deleted " + allRemoved.size() + " elements");
 
     }
-
 
 }
