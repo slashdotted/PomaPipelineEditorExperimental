@@ -30,15 +30,16 @@ public class Main extends Application {
     public static String sourceClipBoard = null;
     public static Scene mScene;
     public static MainWindow root;
+    public static Stage primary;
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        primary = primaryStage;
         EditorConfManager confManager = new EditorConfManager();
         File conf = new File("conf_final.json");
         confManager.load(conf);
-
+        
 
         root = new MainWindow();
 

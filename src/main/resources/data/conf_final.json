@@ -23,6 +23,36 @@
    ]
   },
   {
+   "type" : "drive::DeviceCapture",
+   "description" : "Captures frames from a local device",
+   "canBeSource" : true, 
+   "imageURL" : "drive::DeviceCapture",
+   "mandatoryParams" : [
+        { "name": "name", "description": "set camera name", "type": "String" },
+        { "name": "fps", "description": "fps (-1 for autodetect)", "type": "String" }
+   ],
+   "optParams" : [
+        { "name": "retry", "description": "retry when stream closes", "default": false, "type": "Boolean"},
+        { "name": "retryinterval", "description": "retry interval (ms)", "default": 60000, "type": "Long"},
+        { "name": "devid", "description": "set device id", "default": 0, "type": "Integer"},
+        { "name": "height", "description": "set capture height", "default": -1, "type": "Integer"},
+        { "name": "width", "description": "set capture width", "default": -1, "type": "Integer"},
+        { "name": "camdirection", "description": "camera direction (N NE E SE S SO O NO)", "default": "", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::StrangeBlobs",
+   "description" : "Skip blobs with strange aspect ratios",
+   "canBeSource" : false, 
+   "imageURL" : "drive::StrangeBlobs",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "minratio", "description": "minimum ration", "default": 0.5625, "type": "Double"},
+        { "name": "maxratio", "description": "maximum ration", "default": 1.77, "type": "Double"}
+   ]
+  },
+  {
    "type" : "drive::ZeroMQSource",
    "description" : "ZeroMQ Source module",
    "canBeSource" : false, 
@@ -89,24 +119,6 @@
    ]
   },
   {
-   "type" : "drive::DeviceCapture",
-   "description" : "Captures frames from a local device",
-   "canBeSource" : true, 
-   "imageURL" : "drive::DeviceCapture",
-   "mandatoryParams" : [
-        { "name": "name", "description": "set camera name", "type": "String" },
-        { "name": "fps", "description": "fps (-1 for autodetect)", "type": "String" }
-   ],
-   "optParams" : [
-        { "name": "retry", "description": "retry when stream closes", "default": false, "type": "Boolean"},
-        { "name": "retryinterval", "description": "retry interval (ms)", "default": 60000, "type": "Long"},
-        { "name": "devid", "description": "set device id", "default": 0, "type": "Integer"},
-        { "name": "height", "description": "set capture height", "default": -1, "type": "Integer"},
-        { "name": "width", "description": "set capture width", "default": -1, "type": "Integer"},
-        { "name": "camdirection", "description": "camera direction (N NE E SE S SO O NO)", "default": "", "type": "String" }
-   ]
-  },
-  {
    "type" : "drive::OCR",
    "description" : "Tesseract OCR",
    "canBeSource" : false, 
@@ -116,6 +128,17 @@
    "optParams" : [
         { "name": "page_seg_mode", "description": "tesseract page seg mode", "default": 7, "type": "Integer"},
         { "name": "vector", "description": "area vector", "default": "0, 0, 200, 200", "type": "String" }
+   ]
+  },
+  {
+   "type" : "drive::StatelessParExecutor",
+   "description" : "Stateless parallel executor (Fork)",
+   "canBeSource" : false, 
+   "imageURL" : "drive::StatelessParExecutor",
+   "mandatoryParams" : [
+   ],
+   "optParams" : [
+        { "name": "threads", "description": "force number of threads", "default": -1, "type": "Integer"}
    ]
   },
   {
@@ -568,6 +591,17 @@
    ]
   },
   {
+   "type" : "drive::JSONProcessor",
+   "description" : "Processes values in JSON",
+   "canBeSource" : false, 
+   "imageURL" : "drive::JSONProcessor",
+   "mandatoryParams" : [
+        { "name": "code", "description": "Code to be executed", "type": "String" }
+   ],
+   "optParams" : [
+   ]
+  },
+  {
    "type" : "drive::GenericClassifier",
    "description" : "Generic object classifier based on Caffe",
    "canBeSource" : false, 
@@ -588,18 +622,6 @@
    "optParams" : [
         { "name": "semsformat", "description": "save image with SEMS name format", "default": false, "type": "Boolean"},
         { "name": "imgpath", "description": "path for saved images", "default": "", "type": "String" }
-   ]
-  },
-  {
-   "type" : "drive::StrangeBlobs",
-   "description" : "Skip blobs with strange aspect ratios",
-   "canBeSource" : false, 
-   "imageURL" : "drive::StrangeBlobs",
-   "mandatoryParams" : [
-   ],
-   "optParams" : [
-        { "name": "minratio", "description": "minimum ration", "default": 0.5625, "type": "Double"},
-        { "name": "maxratio", "description": "maximum ration", "default": 1.77, "type": "Double"}
    ]
   }
 ]

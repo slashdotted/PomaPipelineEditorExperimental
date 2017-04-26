@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -18,6 +19,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * Class for the editor conf management
@@ -32,8 +37,23 @@ public class EditorConfManager {
         JSONTokener parser;
         JSONArray jsonModules = null;
         
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Open Pipeline Configuration File");
+        fc.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"));
+        File sel = fc.showOpenDialog(Main.primary);
         InputStream is;
-        is = ClassLoader.getSystemResourceAsStream("data/conf_final.json");
+        if (sel != null) {
+            try {
+                is = new FileInputStream(sel.getAbsolutePath());
+            } catch (FileNotFoundException ex) {
+                is = ClassLoader.getSystemResourceAsStream("data/conf_final.json");
+            }
+        } else {
+           is = ClassLoader.getSystemResourceAsStream("data/conf_final.json");
+        }
+        
+        
+
         InputStreamReader isr;
         isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);
