@@ -19,6 +19,7 @@ public class ModuleTemplate {
     private boolean cansource;
 
     private String imageURL = DEFAULT_TEMPLATE_IMAGE_URL;
+    private String cparams;
 
     private ModuleTemplate() {
 
@@ -105,5 +106,13 @@ public class ModuleTemplate {
 
     boolean getCanBeSource() {
         return cansource;
+    }
+
+    public void setCParams(String p) {
+        cparams = p;
+    }
+    
+    public String getCParams() {
+        return cparams;
     }
 }

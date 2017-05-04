@@ -46,6 +46,10 @@ public class Module {
     public boolean getCanBeSource() {
         return template.getCanBeSource();
     }
+    
+    public String getCParams() {
+        return template.getCParams();
+    }
 
     public String getType() {
         return template.getType();

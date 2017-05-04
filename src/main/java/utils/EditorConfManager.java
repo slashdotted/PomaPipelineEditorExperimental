@@ -74,6 +74,7 @@ public class EditorConfManager {
             Map<String, Value> mandatoryParameters = new HashMap<>();
 
             String description = (String) object.get("description");
+            String cparams = (String) object.get("cparams");
             String type = (String) object.get("type");
             String imageURL = (String) object.get("imageURL");
             imageURL = "images/templates/" + imageURL.replace(":", "_")+".png";
@@ -88,6 +89,7 @@ public class EditorConfManager {
 
             moduleTemplate.setMandatoryParameters(mandatoryParameters);
             moduleTemplate.setOptParameters(optParameters);
+            moduleTemplate.setCParams(cparams);
 
             moduleTemplate.setDescription(description);
             moduleTemplate.setType(type);

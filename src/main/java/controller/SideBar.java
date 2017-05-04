@@ -131,6 +131,9 @@ public class SideBar extends VBox {
 
         this.cparamsBox.setMaxWidth(Double.MAX_VALUE);
         this.cparamsBox.setFillWidth(true);
+        this.cparamsBox.setVisible(!module.getCParams().equals(""));
+        addCParam.setVisible(!module.getCParams().equals(""));
+        addCParam.setTooltip(new Tooltip(module.getCParams()));
         hostTextField.setText(module.getHost());
         mandatoryFormBoxes = new ArrayList<>();
         setParametersArea();
