@@ -42,7 +42,7 @@
                         <Font name="SansSerif Regular" size="12.0" />
                      </font>
                   </Label>
-                  <TextArea editable="false" focusTraversable="false" prefHeight="357.0" prefWidth="561.0" text="Poma Pipeline Editor, version 1.1&#10;&#10;Developers:&#10;  Felipe Cardoso&#10;  Marco Diaz Lopez&#10;  Amos Brocco (amos.brocco@supsi.ch)&#10;&#10;Icons from the Tango project" wrapText="true">
+                  <TextArea editable="false" focusTraversable="false" prefHeight="357.0" prefWidth="561.0" text="Poma Pipeline Editor, version 1.1&#10;&#10;Developers:&#10;  Felipe Cardoso&#10;  Marco Diaz Lopez&#10;&#10;Icons from the Tango project" wrapText="true">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>

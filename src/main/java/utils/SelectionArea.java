@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
 import java.util.Map;
+import main.CanvasPane;
 
 /**
  * Class used for perform a selection with a selection rectangle
@@ -19,14 +20,14 @@ public class SelectionArea {
     private Rectangle selectionShape = null;
     boolean drawing = false;
     private Color color = Color.BLUE;
-    private AnchorPane pane;
+    private CanvasPane pane;
     private Group intersectionGroup;
     private Map<String, DraggableModule> draggableModules;
     private double startingY;
     private double startingX;
 
 
-    public SelectionArea(AnchorPane pane, Group intersectionGroup, Map<String, DraggableModule> draggableModules) {
+    public SelectionArea(CanvasPane pane, Group intersectionGroup, Map<String, DraggableModule> draggableModules) {
         this.pane = pane;
         this.intersectionGroup = intersectionGroup;
         this.draggableModules = draggableModules;

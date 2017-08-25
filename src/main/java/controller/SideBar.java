@@ -179,6 +179,7 @@ public class SideBar extends VBox {
     private void setEvents() {
 
         closeSidebar.setOnAction(event -> {
+            MainWindow.pinnedSidebar.set(false);
             hide(true);
         });
 
@@ -218,7 +219,7 @@ public class SideBar extends VBox {
     }
 
     public void hide(boolean force) {
-
+        
         if (!force && isPinned()) {
             return;
         }

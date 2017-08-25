@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import main.CanvasPane;
 
 public class MainWindow extends BorderPane {
 
@@ -39,7 +40,7 @@ public class MainWindow extends BorderPane {
     public static StackedLogBar stackedLogBar;
     public static Map<String, Link> selectedLinks = new HashMap<>();
     public static Map<String, Module> selectedModules = new HashMap<>();
-    public static AnchorPane dragBoard;
+    public static CanvasPane dragBoard;
     public static SelectionArea selectionArea;
     private ModuleTemplate shadowModule = null;
     private ModuleItem draggableModuleItem = null;
@@ -192,7 +193,7 @@ public class MainWindow extends BorderPane {
         mainGroup = new Group();
 
         mainGroup.setId("mainGroup");
-        dragBoard = new AnchorPane();
+        dragBoard = new CanvasPane();
         dragBoard.getChildren().add(mainGroup);
         mainScrollPane.setContent(dragBoard);
 
@@ -204,7 +205,6 @@ public class MainWindow extends BorderPane {
         setButtons();
         stackedLogBar = new StackedLogBar();
         this.setBottom(stackedLogBar);
-        mainScrollPane.setPannable(false);
         selectionArea = new SelectionArea(dragBoard, mainGroup, allDraggableModule);
         sourceModule = null;
 
@@ -959,7 +959,7 @@ public class MainWindow extends BorderPane {
             @Override
             protected SideBar call() throws Exception {
                 if (currentSidebar != null && currentSidebar.getModule() != module) {
-                    closeSidebar(true);
+                    //closeSidebar(true);
                     currentSidebar = null;
                 }
                 if (currentSidebar == null || currentSidebar.getModule() != module) {
